@@ -141,6 +141,12 @@ services:
       - "./common:/src/common"
     ports:
       - 8170:8170
+  dff-book-skill:
+    volumes:
+      - "./skills/dff_book_skill:/src"
+      - "./common:/src/common"
+    ports:
+      - 8032:8032
   summarization-annotator:
     volumes:
       - "./annotators/summarization_annotator:/src"
@@ -157,6 +163,13 @@ services:
       - "./common:/src/common"
     ports:
       - 8167:8167
+  dialogpt:
+    volumes:
+      - "./services/dialogpt:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8125:8125
   speech-function-classifier:
     volumes:
       - "./annotators/speech_function_classifier:/src"
