@@ -95,6 +95,32 @@ def test_model_with_one_previous_phrase():
     
     assert model_hypothesis == ["React.Rejoinder.Support.Response.Resolve"], f"Unexpected response: {model_hypothesis}"
 
+@allure.description("Test launch time")
+def test_component_launch_time():
+    model_test_data = {
+        "phrases": ["fine, thank you. and you?"],
+        "prev_phrases": ["How are you doing today?"],
+        "prev_speech_functions": ["Open.Demand.Fact"],
+    }
+    start_time = time.time()
+    response = False
+    while True:
+        try:
+            current_time = time.time()
+            response = requests.post(URL, json=model_test_data).status_code == 200
+            if response:
+                break
+        except Exception as e:
+            print(f"Exception occurred: {e}")
+            current_time = time.time()
+            if current_time - start_time < 20 * 60: 
+                time.sleep(15)
+                continue
+            else:
+                break
+    assert response
+
+    
 @allure.description("Test annotation with several previous phrases")
 @time_test(limit=4)
 def test_annotation_with_batches():
@@ -130,3 +156,4 @@ if __name__ == "__main__":
     test_annotation_with_batches()
     test_annotation_no_previous_context()
     test_weighted_f1_score()
+    test_component_launch_time()
