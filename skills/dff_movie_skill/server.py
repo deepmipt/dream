@@ -9,8 +9,9 @@ from flask import Flask, request, jsonify
 from healthcheck import HealthCheck
 import sentry_sdk
 from sentry_sdk.integrations.logging import ignore_logger
-
-
+import sys
+sys.path.append("/src")
+# raise RuntimeError(str([__file__,os.listdir(os.path.dirname(os.path.abspath(__file__))), os.listdir("/src"), os.listdir("/src/common")]))
 import common.dialogflow_framework.utils.dialogflow as dialogflow_utils
 import common.dialogflow_framework.programy.text_preprocessing as text_utils
 import dialogflows.main as main_dialogflow

@@ -5,11 +5,11 @@ services:
       WAIT_HOSTS: "sentseg:8011, ranking-and-sf-based-response-selector:8082,
           speech-function-predictor:8107, speech-function-classifier:8108,
           dff-intent-responder-skill:8012, intent-catcher:8014, ner:8021,
-          factoid-qa:8071, kbqa:8072, entity-linking:8075, wiki-parser:8077, text-qa:8078,
-          combined-classification:8087, fact-retrieval:8100, entity-detection:8103,
-          sentence-ranker:8128, property-extraction:8136, prompt-selector:8135, openai-api-chatgpt:8145,
-          dff-dream-persona-chatgpt-prompted-skill:8137, dff-dream-faq-prompted-skill:8170,
-          openai-api-chatgpt-16k:8167, summarization-annotator:8058, dialog-summarizer:8059"
+          factoid-qa:8071, kbqa:8072, entity-linking:8075, wiki-parser:8077, text-qa:8078, openai-api-chatgpt:8145,
+          dff-dream-persona-chatgpt-prompted-skill:8137, openai-api-chatgpt-16k:8167, dialogpt:8125, 
+          combined-classification:8087, fact-retrieval:8100, entity-detection:8103, 
+          sentence-ranker:8128, property-extraction:8136, prompt-selector:8135, 
+          summarization-annotator:8058, dialog-summarizer:8059"
       WAIT_HOSTS_TIMEOUT: ${WAIT_TIMEOUT:-1000}
       HIGH_PRIORITY_INTENTS: 1
       RESTRICTION_FOR_SENSITIVE_CASE: 1
@@ -330,7 +330,7 @@ services:
           memory: 3G
 
   openai-api-chatgpt:
-    env_file: [ .env ]
+    env_file: [ .env, .env_secret ]
     build:
       args:
         SERVICE_PORT: 8145
@@ -370,21 +370,43 @@ services:
         reservations:
           memory: 128M
 
-  dff-google-api-skill:
-    env_file: [ .env,.env_secret ]
+  # dff-google-api-skill:
+  #   env_file: [ .env,.env_secret ]
+  #   build:
+  #     args:
+  #       SERVICE_PORT: 8162
+  #       SERVICE_NAME: dff_google_api_skill
+  #       ENVVARS_TO_SEND: OPENAI_API_KEY,GOOGLE_CSE_ID,GOOGLE_API_KEY
+  #     context: .
+  #     dockerfile: ./skills/dff_google_api_skill/Dockerfile
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128M
+  #       reservations:
+  #         memory: 128M
+  dialogpt:
+    env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8162
-        SERVICE_NAME: dff_google_api_skill
-        ENVVARS_TO_SEND: OPENAI_API_KEY,GOOGLE_CSE_ID,GOOGLE_API_KEY
+        SERVICE_PORT: 8125
+        SERVICE_NAME: dialogpt
+        PRETRAINED_MODEL_NAME_OR_PATH: microsoft/DialoGPT-medium
+        N_HYPOTHESES_TO_GENERATE: 5
+        CONFIG_NAME: dialogpt_en.json
+        MAX_HISTORY_DEPTH: 2
       context: .
-      dockerfile: ./skills/dff_google_api_skill/Dockerfile
+      dockerfile: ./services/dialogpt/Dockerfile
+    command: flask run -h 0.0.0.0 -p 8125
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - FLASK_APP=server
     deploy:
       resources:
         limits:
-          memory: 128M
+          memory: 2G
         reservations:
-          memory: 128M
+          memory: 2G
 
   property-extraction:
     env_file: [.env]
@@ -427,24 +449,42 @@ services:
         reservations:
           memory: 128M
 
-  openai-api-chatgpt-16k:
-    env_file: [ .env ]
-    build:
-      args:
-        SERVICE_PORT: 8167
-        SERVICE_NAME: openai_api_chatgpt_16k
-        PRETRAINED_MODEL_NAME_OR_PATH: gpt-3.5-turbo-16k
-      context: .
-      dockerfile: ./services/openai_api_lm/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8167
-    environment:
-      - FLASK_APP=server
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-        reservations:
-          memory: 100M
+
+    # dff-book-skill:
+    # env_file: [.env]
+    # build:
+    #   args:
+    #     SERVICE_PORT: 8032
+    #     SERVICE_NAME: dff_book_skill
+    #     QUERY_DICT: http://files.deeppavlov.ai/alexaprize_data/book_query_dict.pkl
+    #   context: .
+    #   dockerfile: ./skills/dff_book_skill/Dockerfile
+    # command: gunicorn --workers=1 server:app -b 0.0.0.0:8032 --reload
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 512M
+    #     reservations:
+    #       memory: 512M
+
+  # openai-api-chatgpt-16k:
+  #   env_file: [ .env ]
+  #   build:
+  #     args:
+  #       SERVICE_PORT: 8167
+  #       SERVICE_NAME: openai_api_chatgpt_16k
+  #       PRETRAINED_MODEL_NAME_OR_PATH: gpt-3.5-turbo-16k
+  #     context: .
+  #     dockerfile: ./services/openai_api_lm/Dockerfile
+  #   command: flask run -h 0.0.0.0 -p 8167
+  #   environment:
+  #     - FLASK_APP=server
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 500M
+  #       reservations:
+  #         memory: 100M
 
   summarization-annotator:
     env_file: [ .env ]

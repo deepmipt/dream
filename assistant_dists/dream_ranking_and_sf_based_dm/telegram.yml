@@ -1,6 +1,6 @@
 services:
   agent-tg:
-    command: sh -c 'bin/wait && python -m deeppavlov_agent.run agent.channel=telegram agent.telegram_token=$TG_TOKEN agent.pipeline_config=assistant_dists/dream_ranking_and_sf_based_dm/pipeline_conf.json agent.db_config=assistant_dists/dream_ranking_and_sf_based_dm/db_conf.json'
+    command: sh -c 'bin/wait && python -m deeppavlov_agent.run agent.channel=telegram agent.telegram_token=6721988319:AAFFevf9tVwUE33LRXjXe6v9IJc4qS_UB7M agent.pipeline_config=assistant_dists/dream_ranking_and_sf_based_dm/pipeline_conf.json agent.db_config=assistant_dists/dream_ranking_and_sf_based_dm/db_conf.json'
     env_file: [.env]
     build:
       context: ./
