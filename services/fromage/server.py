@@ -60,7 +60,7 @@ def respond():
 
     frmg_answers = []
     for image_path, sentence in zip(image_paths, sentences):
-        if image_path:
+        if image_path and image_path.lower().endswith(('.png', '.jpg', '.jpeg')):
             try:
                 outputs = generate_responses(image_path, sentence)
                 frmg_answers += outputs
@@ -74,4 +74,5 @@ def respond():
     total_time = time.time() - st_time
     logger.info(f"fromage results: {frmg_answers}")
     logger.info(f"fromage exec time: {total_time:.3f}s")
+    logger.info(jsonify(frmg_answers))
     return jsonify(frmg_answers)

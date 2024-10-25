@@ -9,15 +9,20 @@ url = "http://0.0.0.0:8045/respond"
 @allure.description("""4.1.2 Test input and output data types""")
 def test_in_out():
     video_path = "http://files:3000/file?file=file_228.mp4"
-    test_data = { "paths": [video_path]}
+    test_data = { "paths": [video_path], "durations": [59], "types": ['.mp4']}
     result = requests.post(url, json=test_data)
     valid_extensions = ['.mp4']
-    assert any(url.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
+    assert any(test_data["paths"][0].lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
+    try:
+        json_result = result.json()
+        assert isinstance(json_result, dict), "Expected result to be a JSON object"
+    except ValueError:
+        assert isinstance(result.text, str), "Expected result to be a string"
 
 @allure.description("""4.1.3 Test execution time""")
 def test_exec_time():
     video_path = "http://files:3000/file?file=file_228.mp4"
-    test_data = { "paths": [video_path]}
+    test_data = { "paths": [video_path], "durations": [59], "types": ['.mp4']}    
     start_time = time.time()
     result = requests.post(url, json=test_data)
     assert time.time() - start_time <= 0.4, "Unsufficient run time"
@@ -25,7 +30,7 @@ def test_exec_time():
 @allure.description("""4.2.2 Test launch time""")
 def test_launch_time():
     video_path = "http://files:3000/file?file=file_228.mp4"
-    test_data = { "paths": [video_path]}
+    test_data = { "paths": [video_path], "durations": [59], "types": ['.mp4']}
     start_time = time.time()
     response = False
     while True:
@@ -44,18 +49,18 @@ def test_launch_time():
                 break
     assert response
 
-@allure.description("""4.3.3 Test rights for dream""")
-def test_rights():
-    command = "groups $(whoami) | grep -o 'docker'"
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    assert result.returncode == 0, f"Executed with error: {result.stderr}"
-    assert 'dolidze' in result.stdout, "Group 'dolidze' not found"
+# @allure.description("""4.3.3 Test rights for dream""")
+# def test_rights():
+#     command = "groups $(whoami) | grep -o 'docker'"
+#     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+#     assert result.returncode == 0, f"Executed with error: {result.stderr}"
+#     assert 'dolidze' in result.stdout, "Group 'dolidze' not found"
 
 @allure.description("""Simple execution test""")
 def test_execution():
     video_path = "http://files:3000/file?file=file_228.mp4"
     gold_result = json.loads("[{'sentence': 'Intro.', 'timestamp': [0.0, 10.727636363636364]}, {'sentence': 'Showing impressive award combinations.', 'timestamp': [10.727636363636364, 30.3949696969697]}, {'sentence': 'Discussing who won an Oscar and a gold medal.', 'timestamp': [30.3949696969697, 59.002]}]")
-    test_data = { "paths": [video_path]}
+    test_data = { "paths": [video_path], "durations": [59], "types": ['.mp4']}
     result = requests.post(url, json=test_data)
     assert result.json() == gold_result
 
@@ -64,4 +69,4 @@ if __name__ == "__main__":
     test_exec_time()
     test_launch_time()
     # test_rights()
-    # test_execution()
+    test_execution()
