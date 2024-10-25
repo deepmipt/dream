@@ -20,47 +20,61 @@
 
 import requests
 import time
-import subprocess
+# import subprocess
 import allure
 import json
+import pytest
 
-url = "http://0.0.0.0:8333/respond"
+URL = "http://0.0.0.0:8333/respond"
 
 @allure.description("""4.1.2 Test input and output data types""")
-def test_in_out():
-    sound_paths = "http://files:3000/file?file=file_50.oga"
-    # video_paths = "http://files:3000/file?file=file_228.mp4"
-    sound_durations = 5
-    sound_types = 'oga'
-    test_data = { "paths": [sound_paths], "durations": [sound_durations], "types": [sound_types]}
-    result = requests.post(url, json=test_data)
-    valid_extensions = [".oga", ".mp3", ".MP3", ".ogg", ".flac", ".mp4"]
-    assert any(url.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
+@pytest.mark.parametrize("test_in_out_data", [
+    {
+        "paths": ["http://files:3000/file?file=file_50.wav"], #TODO: change path
+        "durations": [5],
+        "types": ['wav']
+    },
+    {
+        "paths": ["http://files:3000/file?file=file_228.mp3"], #TODO: change path
+        "durations": [10],
+        "types": ['mp3']
+    }
+])
+def test_in_out(test_in_out_data):
+    result = requests.post(URL, json=test_in_out_data)
+    valid_extensions = [".oga", ".mp3", ".MP3", ".ogg", ".flac", ".mp4", ".wav"]
+    for path in test_in_out_data['paths']:
+        assert any(path.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
+    try:
+        json_result = result.json()
+        assert isinstance(json_result, dict), "Expected result to be a JSON object"
+    except ValueError:
+        assert isinstance(result.text, str), "Expected result to be a string"
 
 @allure.description("""4.1.3 Test execution time""")
 def test_exec_time():
-    sound_paths = "http://files:3000/file?file=file_50.oga"
+    sound_paths = "http://files:3000/file?file=file_50.mp3"
     # video_paths = "http://files:3000/file?file=file_228.mp4"
     sound_durations = 5
-    sound_types = 'oga'
+    sound_types = 'mp3'
     test_data = { "paths": [sound_paths], "durations": [sound_durations], "types": [sound_types]}
     start_time = time.time()
-    result = requests.post(url, json=test_data)
+    result = requests.post(URL, json=test_data)
     assert time.time() - start_time <= 0.4, "Unsufficient run time"
 
 @allure.description("""4.2.2 Test launch time""")
 def test_launch_time():
-    sound_paths = "http://files:3000/file?file=file_50.oga"
+    sound_paths = "http://files:3000/file?file=file_50.mp3"
     # video_paths = "http://files:3000/file?file=file_228.mp4"
     sound_durations = 5
-    sound_types = 'oga'
+    sound_types = 'mp3'
     test_data = { "paths": [sound_paths], "durations": [sound_durations], "types": [sound_types]}
     start_time = time.time()
     response = False
     while True:
         try:
             current_time = time.time()
-            response = requests.post(url, json=test_data).status_code == 200
+            response = requests.post(URL, json=test_data).status_code == 200
             if response:
                 break
         except Exception as e:
@@ -73,16 +87,27 @@ def test_launch_time():
                 break
     assert response
 
-@allure.description("""4.3.3 Test rights for dream""")
-def test_rights():
-    command = "groups $(whoami) | grep -o 'docker'"
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    assert result.returncode == 0, f"Executed with error: {result.stderr}"
-    assert 'dolidze' in result.stdout, "Group 'dolidze' not found"
+# @allure.description("""4.3.3 Test rights for dream""")
+# def test_rights():
+#     command = "groups $(whoami) | grep -o 'docker'"
+#     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+#     assert result.returncode == 0, f"Executed with error: {result.stderr}"
+#     assert 'dolidze' in result.stdout, "Group 'dolidze' not found"
+
+
+@allure.description("""Simple execution test or BLEU-metrics""")
+def test_execution():
+    sound_paths = "http://files:3000/file?file=file_50.wav"  #TODO: change path
+    sound_durations = [5]
+    sound_types = ['wav']
+    gold_result = json.loads("") # TODO: insert golden result
+    test_data = { "paths": [sound_paths], "durations": [sound_durations], "types": [sound_types]}
+    result = requests.post(URL, json=test_data)
+    assert result.json() == gold_result
 
 if __name__ == "__main__":
     test_in_out()
     test_exec_time()
     test_launch_time()
     # test_rights()
-    # test_execution()
+    test_execution()

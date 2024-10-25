@@ -34,5 +34,5 @@ click==8.0
 git+https://github.com/openai/whisper.git 
 git+https://github.com/m-bain/whisperx.git 
 
-pytest==7.4.2
-allure-pytest==2.13.2
+pytest
+allure-pytest

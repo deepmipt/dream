@@ -45,3 +45,5 @@ transformers==4.21.3
 typing_extensions==4.4.0
 urllib3==1.21.1
 gitpython==3.1.31
+pytest
+allure-pytest
