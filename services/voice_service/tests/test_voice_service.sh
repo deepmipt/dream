@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python ../test.py
+pytest -vv test.py

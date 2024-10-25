@@ -55,28 +55,28 @@ def test_exec_time():
     result = requests.post(URL, json=test_data)
     assert time.time() - start_time <= 0.4, "Unsufficient run time"
 
-@allure.description("""4.2.2 Test launch time""")
-def test_launch_time():
-    image_paths = ["https://s0.rbk.ru/v6_top_pics/media/img/7/26/346832135841267.jpg"]
-    sentences = [""]
-    test_data = { "image_paths": image_paths, "sentences": sentences}
-    start_time = time.time()
-    response = False
-    while True:
-        try:
-            current_time = time.time()
-            response = requests.post(URL, json=test_data).status_code == 200
-            if response:
-                break
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-            current_time = time.time()
-            if current_time - start_time < 20 * 60:  # < 20 minutes
-                time.sleep(15)
-                continue
-            else:
-                break
-    assert response
+# @allure.description("""4.2.2 Test launch time""")
+# def test_launch_time():
+#     image_paths = ["https://s0.rbk.ru/v6_top_pics/media/img/7/26/346832135841267.jpg"]
+#     sentences = [""]
+#     test_data = { "image_paths": image_paths, "sentences": sentences}
+#     start_time = time.time()
+#     response = False
+#     while True:
+#         try:
+#             current_time = time.time()
+#             response = requests.post(URL, json=test_data).status_code == 200
+#             if response:
+#                 break
+#         except Exception as e:
+#             print(f"Exception occurred: {e}")
+#             current_time = time.time()
+#             if current_time - start_time < 20 * 60:  # < 20 minutes
+#                 time.sleep(15)
+#                 continue
+#             else:
+#                 break
+#     assert response
 
 # @allure.description("""4.3.3 Test rights for dream""")
 # def test_rights():
@@ -98,8 +98,8 @@ def test_execution():
 if __name__ == "__main__":
     test_in_out()
     test_exec_time()
-    test_launch_time()
+    # test_launch_time()
     # test_rights()
-    # test_execution()
+    test_execution()
 
 

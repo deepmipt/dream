@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install git -y
 
 RUN mkdir /fromage && \
     git clone https://github.com/ciwwwnd/fromage.git /fromage
-
+    
 RUN mkdir -p /services/fromage/fromage_model
 RUN wget --no-check-certificate -O /services/fromage/fromage_model/cc3m_embeddings.pkl https://files.deeppavlov.ai/dolidze/for_fromage/cc3m_embeddings.pkl 
 RUN wget --no-check-certificate -O /services/fromage/fromage_model/model_args.json https://files.deeppavlov.ai/dolidze/for_fromage/model_args.json
