@@ -14,6 +14,8 @@ RUN python -m pip install --upgrade pip
 
 COPY ./requirements.txt /src/requirements.txt
 COPY ./server.py /src/server.py
+COPY ./tests /src/tests
+COPY ./test.py /src/test.py
 
 RUN mkdir -p /src/aux_files/AudioCaption/
 RUN wget --no-check-certificate -O /src/aux_files/AudioCaption/experiments.zip https://files.deeppavlov.ai/dolidze/for_voice_service/AudioCaption.zip
@@ -39,3 +41,5 @@ RUN wget https://github.com/wsntxxn/AudioCaption/releases/download/v0.0.2/audioc
 RUN unzip audiocaps_cntrstv_cnn14rnn_trm.zip -d pretrained_feature_extractors
 
 RUN pip install -e /src/AudioCaption
+
+
