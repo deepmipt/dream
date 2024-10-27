@@ -96,7 +96,6 @@ def respond():
     responses = []
 
     for path, duration, atype in zip_longest(paths, durations, types):
-    # for path in zip_longest(paths):
         logger.info(f"Processing batch at vidchapters annotator: {path}")
         filename_els = path.split("=")
         filename = filename_els[-1]
