@@ -97,7 +97,10 @@ def respond():
 
     for path, duration, atype in zip_longest(paths, durations, types):
         logger.info(f"Processing batch at vidchapters annotator: {path}")
-        filename_els = path.split("=")
+        if '=' in path:
+            filename_els = path.split("=")
+        else:
+            filename_els = path.split('/')
         filename = filename_els[-1]
 
         if not os.path.exists(DATA_DIR):

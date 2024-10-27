@@ -44,5 +44,8 @@ RUN unzip clotho_cntrstv_cnn14rnn_trm.zip
 RUN mv clotho_cntrstv_cnn14rnn_trm AudioCaption
 
 RUN pip install -e /src/AudioCaption
-COPY ./audiomodel.pth /src/AudioCaption/audiomodel.pth
+RUN mkdir -p audio_input
+RUN wget "https://raw.githubusercontent.com/deeppavlov/mmodal_files_bkp/refs/heads/main/rain.wav" -O audio_input/rain.wav
+RUN wget https://raw.githubusercontent.com/deeppavlov/mmodal_files_bkp/refs/heads/main/rain.mp3 -O audio_input/rain.mp3
+
 
