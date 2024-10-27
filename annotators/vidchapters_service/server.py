@@ -33,7 +33,8 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # create asr whisper model here
-asr_model = whisper.load_model('large-v2', device='cpu', download_root='/src/aux_files/TOFILL')
+
+asr_model = whisper.load_model('/src/aux_files/large-v2.pt', device='cpu', download_root='/src/aux_files/TOFILL')
 
 
 app = Flask(__name__)
@@ -54,7 +55,6 @@ def generate_asr(video_path, asr_output_path):
         logger.warning(f"str{e}, {type(e)=}")
     
     return asr_output_path
-
 
 def gen_video_caption(video_path, asr_caption):
     # takes 1 min
@@ -81,7 +81,6 @@ def get_answer(video_path, asr_output_path):
     video_caption = gen_video_caption(video_path, asr_caption)
     logger.info("Inference finished successfully")
     return video_caption
-
 
 @app.route("/respond", methods=["POST"])
 def respond():
