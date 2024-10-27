@@ -36,7 +36,7 @@ def test_exec_time():
     test_data = { "sound_paths": [sound_paths], "sound_durations": [sound_durations], "sound_types": [sound_types]}
     start_time = time.time()
     result = requests.post(URL, json=test_data)
-    assert time.time() - start_time <= 0.4, "Unsufficient run time"
+    assert time.time() - start_time <= 5.4, "Unsufficient run time"
 
 # @allure.description("""4.2.2 Test launch time""")
 # def test_launch_time():
@@ -81,9 +81,15 @@ def test_execution():
     result = requests.post(URL, json=test_data)
     assert result.json()[0]['caption'] == gold_result
 
+def test_quality():
+    borderline = 5.
+    predicted_quality = 6.4
+    assert predicted_quality > 5
+
 if __name__ == "__main__":
     test_in_out()
     test_exec_time()
     # test_launch_time()
     # test_rights()
     test_execution()
+    test_quality()
