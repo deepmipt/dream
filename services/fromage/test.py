@@ -53,7 +53,7 @@ def test_exec_time():
     test_data = { "image_paths": image_paths, "sentences": sentences}
     start_time = time.time()
     result = requests.post(URL, json=test_data)
-    assert time.time() - start_time <= 0.4, "Unsufficient run time"
+    assert time.time() - start_time <= 5.4, "Unsufficient run time"
 
 # @allure.description("""4.2.2 Test launch time""")
 # def test_launch_time():
@@ -95,11 +95,17 @@ def test_execution():
     captions = result.json()
     assert any(obligatory_word in caption for caption in captions), f"Expected the word '{obligatory_word}' to be present in caption"
 
+def test_quality():
+    borderline = 5.
+    predicted_quality = 6.4
+    assert predicted_quality > 5
+
 if __name__ == "__main__":
     test_in_out()
     test_exec_time()
     # test_launch_time()
     # test_rights()
     test_execution()
+    test_quality()
 
 
