@@ -76,10 +76,10 @@ def test_execution():
     sound_paths = "http://files:3000/file?file=file_240.mp3"  #TODO: change path
     sound_durations = [42]
     sound_types = ['mp3']
-    gold_result = "Error"
+    gold_result = "rain is falling on the ground as the wind is blowing in the background"
     test_data = { "sound_paths": [sound_paths], "sound_durations": [sound_durations], "sound_types": [sound_types]}
     result = requests.post(URL, json=test_data)
-    assert result.json()[0][0]['caption'] == gold_result
+    assert result.json()[0]['caption'] == gold_result
 
 if __name__ == "__main__":
     test_in_out()
