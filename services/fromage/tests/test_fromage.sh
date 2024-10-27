@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pytest -vv test.py 
+pytest -s --disable-warnings test.py 
