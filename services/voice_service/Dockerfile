@@ -39,7 +39,10 @@ RUN mkdir -p pretrained_feature_extractors
 RUN wget https://github.com/wsntxxn/AudioCaption/releases/download/v0.0.2/contrastive_pretrain_cnn14_bertm.pth -O pretrained_feature_extractors/contrastive_pretrain_cnn14_bertm.pth
 RUN wget https://github.com/wsntxxn/AudioCaption/releases/download/v0.0.2/audiocaps_cntrstv_cnn14rnn_trm.zip -O audiocaps_cntrstv_cnn14rnn_trm.zip
 RUN unzip audiocaps_cntrstv_cnn14rnn_trm.zip -d pretrained_feature_extractors
+RUN wget https://github.com/deeppavlov/AudioCaptionBKP/releases/download/bkp/clotho_cntrstv_cnn14rnn_trm.zip
+RUN unzip clotho_cntrstv_cnn14rnn_trm.zip
+RUN mv clotho_cntrstv_cnn14rnn_trm AudioCaption
 
 RUN pip install -e /src/AudioCaption
-
+COPY ./audiomodel.pth /src/AudioCaption/audiomodel.pth
 
