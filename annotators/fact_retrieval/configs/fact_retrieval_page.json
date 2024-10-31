@@ -1,58 +1,51 @@
 {
   "chainer": {
-    "in": ["utterance"],
+    "in": [
+      "question_raw"
+    ],
+    "out": [
+      "doc_title_text"
+    ],
     "pipe": [
       {
-        "class_name": "bpr:BPR",
-        "load_path": "{MODEL_PATH}",
+        "class_name": "bpr",
+        "load_path": "{MODELS_PATH}/bpr/eng",
         "query_encoder_file": "query_encoder_en.pth.tar",
-        "bpr_index": "ivf_nq_pruned.idx",
+        "bpr_index": "bpr_finetuned_nq_adv.idx",
         "pretrained_model": "bert-base-uncased",
-        "top_n": 70,
-        "nprobe": 8,
-        "in": ["utterance"],
-        "out": ["par_ids"]
+        "top_n": 10,
+        "in": [
+          "question_raw"
+        ],
+        "out": [
+          "doc_ids"
+        ]
       },
       {
-        "class_name": "wiki_sqlite:WikiSQLiteVocab",
-        "in": ["par_ids"],
-        "out": ["top_facts"],
+        "class_name": "wiki_sqlite_vocab:WikiSQLiteVocab",
+        "in": [
+          "doc_ids"
+        ],
+        "out": [
+          "doc_title_text"
+        ],
         "join_docs": false,
         "shuffle": false,
-        "load_path": "{DOWNLOADS_PATH}/bpr/eng/enwiki_l100.db"
+        "load_path": "{DOWNLOADS_PATH}/odqa/enwiki_l100.db"
       }
-    ],
-    "out": ["top_facts"]
+    ]
   },
   "metadata": {
     "variables": {
       "ROOT_PATH": "~/.deeppavlov",
       "DOWNLOADS_PATH": "{ROOT_PATH}/downloads",
       "MODELS_PATH": "{ROOT_PATH}/models",
-      "MODEL_PATH": "{MODELS_PATH}/bpr/eng",
       "CONFIGS_PATH": "{DEEPPAVLOV_PATH}/configs"
     },
-    "requirements": [
-      "{DEEPPAVLOV_PATH}/requirements/tf.txt",
-      "{DEEPPAVLOV_PATH}/requirements/spacy.txt",
-      "{DEEPPAVLOV_PATH}/requirements/en_core_web_sm.txt"
-    ],
     "download": [
       {
-        "url": "http://files.deeppavlov.ai/deeppavlov_data/bpr/bpr_db_eng_l100.tar.gz",
-        "subdir": "{DOWNLOADS_PATH}/bpr/eng"
-      },
-      {
-        "url": "http://files.deeppavlov.ai/deeppavlov_data/bpr/query_encoder_en.tar.gz",
-        "subdir": "{MODEL_PATH}"
-      },
-      {
-        "url": "http://files.deeppavlov.ai/deeppavlov_data/bpr/bpr_lite_eng.tar.gz",
-        "subdir": "{MODEL_PATH}"
-      },
-      {
-        "url": "http://files.deeppavlov.ai/kbqa/wikidata/entity_types_sets.pickle",
-        "subdir": "{DOWNLOADS_PATH}/wikidata"
+        "url": "http://files.deeppavlov.ai/deeppavlov_data/odqa/bpr_encoder_index_eng.tar.gz",
+        "subdir": "{MODELS_PATH}/bpr/eng"
       }
     ]
   }

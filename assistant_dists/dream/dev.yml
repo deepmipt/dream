@@ -76,6 +76,13 @@ services:
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
       - 8078:8078
+  spacy-nounphrases:
+    # volumes:
+    #   - "./services/spacy-nounphrases:/src"
+    #   - "~/.deeppavlov:/root/.deeppavlov"
+    #   - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8006:8006
   combined-classification:
     volumes:
       - "./common:/src/common"
