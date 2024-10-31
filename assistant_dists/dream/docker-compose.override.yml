@@ -188,7 +188,7 @@ services:
       dockerfile: Dockerfile
     command: flask run -h 0.0.0.0 -p 8078
     environment:
-      - CUDA_VISIBLE_DEVICES=1
+      - CUDA_VISIBLE_DEVICES=1∂`
       - FLASK_APP=server
       - LANGUAGE=EN
     deploy:
@@ -231,7 +231,7 @@ services:
       dockerfile: ./annotators/combined_classification/Dockerfile
     command: gunicorn --workers=1 server:app -b 0.0.0.0:8087 --timeout 600
     environment:
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
