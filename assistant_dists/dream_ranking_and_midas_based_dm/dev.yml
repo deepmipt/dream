@@ -23,6 +23,13 @@ services:
       - "./common:/src/common"
     ports:
       - 8012:8012
+  dialogpt:
+    volumes:
+      - "./services/dialogpt:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8125:8125
   intent-catcher:
     volumes:
       - "./annotators/IntentCatcherTransformers:/src"
@@ -84,6 +91,12 @@ services:
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
       - 8087:8087
+  openai-api-chatgpt:
+    volumes:
+      - "./services/openai_api_lm:/src"
+      - "./common:/src/common"
+    ports:
+      - 8145:8145
   fact-retrieval:
     volumes:
       - "./annotators/fact_retrieval:/src"
@@ -123,12 +136,6 @@ services:
       - "./common:/src/common"
     ports:
       - 8137:8137
-  dff-google-api-skill:
-    volumes:
-      - "./skills/dff_google_api_skill:/src"
-      - "./common:/src/common"
-    ports:
-      - 8162:8162
   property-extraction:
     volumes:
       - "./annotators/property_extraction:/src"
@@ -151,10 +158,4 @@ services:
       - "./services/dialog_summarizer:/src"
     ports:
       - 8059:8059
-  openai-api-chatgpt-16k:
-    volumes:
-      - "./services/openai_api_lm:/src"
-      - "./common:/src/common"
-    ports:
-      - 8167:8167
 version: "3.7"

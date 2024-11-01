@@ -194,6 +194,7 @@ def respond():
             bot_uttr = dialog["bot_utterances"][-1]
         except IndexError:
             logger.info("bot_uttrs is empty for this dialog")
+        # selected_resp = random.choice(hypotheses)
         selected_resp = select_response(
             dialog_context,
             hypotheses,
@@ -202,7 +203,6 @@ def respond():
         )
         try:
             best_id = hypotheses.index(selected_resp)
-
             selected_responses.append(hypotheses[best_id].pop("text"))
             selected_skill_names.append(hypotheses[best_id].pop("skill_name"))
             selected_confidences.append(hypotheses[best_id].pop("confidence"))
@@ -238,7 +238,7 @@ def respond():
                 selected_confidences,
                 selected_human_attributes,
                 selected_bot_attributes,
-                selected_attributes,
+                selected_attributes
             )
         )
     )

@@ -1,0 +1,968 @@
+{
+    "dialogs": [
+        {
+            "utt_id": "074639f72af4876607f5f75f2c65bc60",
+            "text": "!",
+            "user": {
+                "id": "671b214f8d5c059141bacaa7",
+                "user_external_id": "359797125",
+                "persona": {},
+                "profile": {
+                    "name": null,
+                    "gender": null,
+                    "birthdate": null,
+                    "location": null,
+                    "home_coordinates": null,
+                    "work_coordinates": null,
+                    "occupation": null,
+                    "income_per_year": null
+                },
+                "attributes": {
+                    "prompts_goals": {},
+                    "age_group": "",
+                    "dff_dream_persona_prompted_skill_state": {
+                        "context": {
+                            "actor_state": {},
+                            "id": "6104663b-9c84-4c88-999d-26ac790b9495",
+                            "labels": {
+                                "3": [
+                                    "generation",
+                                    "generative_response_node"
+                                ],
+                                "4": [
+                                    "generation",
+                                    "generative_response_node"
+                                ]
+                            },
+                            "misc": {},
+                            "requests": {
+                                "3": ".",
+                                "4": "Good morning!"
+                            },
+                            "responses": {
+                                "3": [
+                                    [
+                                        "That's a classic choice! What do you enjoy most about that movie?",
+                                        0.9,
+                                        {},
+                                        {},
+                                        {
+                                            "can_continue": "no"
+                                        }
+                                    ]
+                                ],
+                                "4": [
+                                    [
+                                        "Good morning! How are you today?",
+                                        0.9,
+                                        {},
+                                        {},
+                                        {
+                                            "can_continue": "no"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "validation": false
+                        },
+                        "current_turn_dff_suspended": false,
+                        "history": {
+                            "0": [
+                                "generation",
+                                "generative_response_node"
+                            ],
+                            "1": [
+                                "generation",
+                                "generative_response_node"
+                            ]
+                        },
+                        "previous_human_utter_index": 0,
+                        "shared_memory": {}
+                    },
+                    "dff_shared_state": {
+                        "cross_links": {},
+                        "cross_states": {}
+                    },
+                    "disliked_skills": {},
+                    "used_links": {},
+                    "dff_dream_faq_prompted_skill_state": {
+                        "context": {
+                            "actor_state": {},
+                            "id": "e74987d1-fb07-476a-84f1-c7a317d34e86",
+                            "labels": {
+                                "0": [
+                                    "generation",
+                                    "generative_response_node"
+                                ]
+                            },
+                            "misc": {},
+                            "requests": {
+                                "0": "!"
+                            },
+                            "responses": {
+                                "0": [
+                                    [
+                                        "Hello! How can I assist you today?",
+                                        0.9,
+                                        {},
+                                        {},
+                                        {
+                                            "can_continue": "no"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "validation": false
+                        },
+                        "current_turn_dff_suspended": false,
+                        "history": {
+                            "1": [
+                                "generation",
+                                "generative_response_node"
+                            ]
+                        },
+                        "previous_human_utter_index": 1,
+                        "shared_memory": {}
+                    }
+                },
+                "user_type": "human"
+            },
+            "annotations": {
+                "sentseg": {
+                    "punct_sent": "!",
+                    "segments": [
+                        "!"
+                    ]
+                },
+                "combined_classification": {
+                    "cobot_dialogact_intents": {
+                        "ClarificationIntent": 0.02,
+                        "General_ChatIntent": 0.64,
+                        "Information_DeliveryIntent": 0.29,
+                        "Information_RequestIntent": 0.02,
+                        "InteractiveIntent": 0.0,
+                        "Multiple_GoalsIntent": 0.0,
+                        "Opinion_ExpressionIntent": 0.01,
+                        "Opinion_RequestIntent": 0.0,
+                        "OtherIntent": 0.0,
+                        "Topic_SwitchIntent": 0.0,
+                        "User_InstructionIntent": 0.01
+                    },
+                    "cobot_dialogact_topics": {
+                        "Entertainment_Books": 0.12,
+                        "Entertainment_General": 0.14,
+                        "Entertainment_Movies": 0.32,
+                        "Entertainment_Music": 0.18,
+                        "Inappropriate_Content": 0.0,
+                        "Interactive": 0.0,
+                        "Other": 0.0,
+                        "Phatic": 0.1,
+                        "Politics": 0.01,
+                        "Science_and_Technology": 0.04,
+                        "Sports": 0.1
+                    },
+                    "cobot_topics": {
+                        "Art_Event": 0.04,
+                        "Celebrities": 0.06,
+                        "Entertainment": 0.0,
+                        "Fashion": 0.0,
+                        "Food_Drink": 0.0,
+                        "Games": 0.02,
+                        "Literature": 0.04,
+                        "Math": 0.01,
+                        "Movies_TV": 0.23,
+                        "Music": 0.05,
+                        "News": 0.0,
+                        "Other": 0.11,
+                        "Pets_Animals": 0.0,
+                        "Phatic": 0.0,
+                        "Politics": 0.04,
+                        "Psychology": 0.01,
+                        "Religion": 0.06,
+                        "SciTech": 0.12,
+                        "Sex_Profanity": 0.0,
+                        "Sports": 0.2,
+                        "Travel_Geo": 0.01,
+                        "Weather_Time": 0.0
+                    },
+                    "deeppavlov_topics": {
+                        "Animals&Pets": 0.0,
+                        "Art&Hobbies": 0.01,
+                        "ArtificialIntelligence": 0.02,
+                        "Beauty": 0.0,
+                        "Books&Literature": 0.01,
+                        "Celebrities&Events": 0.13,
+                        "Clothes": 0.01,
+                        "Depression": 0.0,
+                        "Disasters": 0.09,
+                        "Education": 0.01,
+                        "Family&Relationships": 0.01,
+                        "Finance": 0.04,
+                        "Food": 0.0,
+                        "Gadgets": 0.0,
+                        "Garden": 0.0,
+                        "Health&Medicine": 0.01,
+                        "Home&Design": 0.01,
+                        "Job": 0.03,
+                        "Leisure": 0.01,
+                        "MassTransit": 0.0,
+                        "Movies&Tv": 0.09,
+                        "Music": 0.04,
+                        "News": 0.07,
+                        "PersonalTransport": 0.0,
+                        "Politics": 0.03,
+                        "Psychology": 0.03,
+                        "Religion": 0.11,
+                        "Science&Technology": 0.05,
+                        "Space": 0.02,
+                        "Sports": 0.05,
+                        "Toys&Games": 0.01,
+                        "Travel": 0.01,
+                        "Videogames": 0.08
+                    },
+                    "emotion_classification": {
+                        "anger": 0.01,
+                        "disgust": 0.0,
+                        "fear": 0.0,
+                        "joy": 0.03,
+                        "neutral": 0.95,
+                        "sadness": 0.0,
+                        "surprise": 0.01
+                    },
+                    "factoid_classification": {
+                        "is_conversational": 0.46,
+                        "is_factoid": 0.54
+                    },
+                    "midas_classification": {
+                        "appreciation": 0.01,
+                        "clarifying_question": 0.0,
+                        "command": 0.08,
+                        "comment": 0.01,
+                        "complaint": 0.06,
+                        "dev_command": 0.02,
+                        "neg_answer": 0.02,
+                        "open_question_factual": 0.03,
+                        "open_question_opinion": 0.01,
+                        "open_question_personal": 0.0,
+                        "opinion": 0.47,
+                        "other_answers": 0.01,
+                        "pos_answer": 0.05,
+                        "statement": 0.23,
+                        "yes_no_question": 0.01
+                    },
+                    "sentiment_classification": {
+                        "negative": 0.0,
+                        "neutral": 0.93,
+                        "positive": 0.06
+                    },
+                    "toxic_classification": {
+                        "identity_hate": 0.0,
+                        "insult": 0.0,
+                        "not_toxic": 1.0,
+                        "obscene": 0.0,
+                        "severe_toxic": 0.0,
+                        "sexual_explicit": 0.0,
+                        "threat": 0.0,
+                        "toxic": 0.0
+                    }
+                },
+                "speech_function_classifier": "Open.Attend",
+                "speech_function_predictor": [
+                    {
+                        "confidence": 0.47,
+                        "prediction": "Open.Give"
+                    },
+                    {
+                        "confidence": 0.41,
+                        "prediction": "Open.Demand"
+                    },
+                    {
+                        "confidence": 0.06,
+                        "prediction": "React.Respond.Support.Register"
+                    },
+                    {
+                        "confidence": 0.06,
+                        "prediction": "Sustain.Continue.Prolong"
+                    }
+                ],
+                "ner": [
+                    []
+                ],
+                "entity_detection": {},
+                "prompt_selector": {
+                    "max_similarity": 0.13526169955730438,
+                    "prompts": [
+                        "dream_persona",
+                        "dream_faq",
+                        "dream_faq"
+                    ]
+                },
+                "intent_catcher": {
+                    "cant_do": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "choose_topic": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "doing_well": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "dont_understand": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "exit": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "lets_chat_about": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "no": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "opinion_request": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "repeat": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "stupid": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "tell_me_a_story": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "tell_me_more": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "topic_switching": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "weather_forecast_intent": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "what_are_you_talking_about": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "what_can_you_do": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "what_is_your_job": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "what_is_your_name": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "what_time": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "where_are_you_from": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "who_made_you": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    },
+                    "yes": {
+                        "confidence": 0.0,
+                        "detected": 0
+                    }
+                },
+                "entity_linking": [],
+                "fact_retrieval": {
+                    "facts": [],
+                    "topic_facts": []
+                },
+                "kbqa": {
+                    "answer": "",
+                    "confidence": 0.0,
+                    "qa_system": "kbqa"
+                },
+                "wiki_parser": {
+                    "animals_skill_entities_info": {},
+                    "entities_info": {},
+                    "topic_skill_entities_info": {},
+                    "utt_num": 2,
+                    "wiki_skill_entities_info": {}
+                }
+            },
+            "hypotheses": [
+                {
+                    "skill_name": "dummy_skill",
+                    "annotations": {
+                        "sentence_ranker": 0.14277911186218262,
+                        "entity_detection": {},
+                        "combined_classification": {
+                            "cobot_dialogact_intents": {
+                                "ClarificationIntent": 0.01,
+                                "General_ChatIntent": 0.01,
+                                "Information_DeliveryIntent": 0.0,
+                                "Information_RequestIntent": 0.96,
+                                "InteractiveIntent": 0.0,
+                                "Multiple_GoalsIntent": 0.0,
+                                "Opinion_ExpressionIntent": 0.0,
+                                "Opinion_RequestIntent": 0.0,
+                                "OtherIntent": 0.01,
+                                "Topic_SwitchIntent": 0.0,
+                                "User_InstructionIntent": 0.0
+                            },
+                            "cobot_dialogact_topics": {
+                                "Entertainment_Books": 0.04,
+                                "Entertainment_General": 0.05,
+                                "Entertainment_Movies": 0.17,
+                                "Entertainment_Music": 0.16,
+                                "Inappropriate_Content": 0.0,
+                                "Interactive": 0.0,
+                                "Other": 0.0,
+                                "Phatic": 0.21,
+                                "Politics": 0.02,
+                                "Science_and_Technology": 0.27,
+                                "Sports": 0.07
+                            },
+                            "cobot_topics": {
+                                "Art_Event": 0.0,
+                                "Celebrities": 0.0,
+                                "Entertainment": 0.0,
+                                "Fashion": 0.0,
+                                "Food_Drink": 0.0,
+                                "Games": 0.0,
+                                "Literature": 0.0,
+                                "Math": 0.0,
+                                "Movies_TV": 0.0,
+                                "Music": 0.01,
+                                "News": 0.0,
+                                "Other": 0.98,
+                                "Pets_Animals": 0.0,
+                                "Phatic": 0.0,
+                                "Politics": 0.0,
+                                "Psychology": 0.0,
+                                "Religion": 0.01,
+                                "SciTech": 0.0,
+                                "Sex_Profanity": 0.0,
+                                "Sports": 0.0,
+                                "Travel_Geo": 0.0,
+                                "Weather_Time": 0.0
+                            },
+                            "deeppavlov_topics": {
+                                "Animals&Pets": 0.01,
+                                "Art&Hobbies": 0.02,
+                                "ArtificialIntelligence": 0.01,
+                                "Beauty": 0.01,
+                                "Books&Literature": 0.0,
+                                "Celebrities&Events": 0.0,
+                                "Clothes": 0.06,
+                                "Depression": 0.02,
+                                "Disasters": 0.02,
+                                "Education": 0.0,
+                                "Family&Relationships": 0.04,
+                                "Finance": 0.01,
+                                "Food": 0.14,
+                                "Gadgets": 0.0,
+                                "Garden": 0.01,
+                                "Health&Medicine": 0.02,
+                                "Home&Design": 0.05,
+                                "Job": 0.04,
+                                "Leisure": 0.05,
+                                "MassTransit": 0.01,
+                                "Movies&Tv": 0.04,
+                                "Music": 0.23,
+                                "News": 0.01,
+                                "PersonalTransport": 0.0,
+                                "Politics": 0.02,
+                                "Psychology": 0.01,
+                                "Religion": 0.04,
+                                "Science&Technology": 0.02,
+                                "Space": 0.01,
+                                "Sports": 0.07,
+                                "Toys&Games": 0.01,
+                                "Travel": 0.01,
+                                "Videogames": 0.0
+                            },
+                            "emotion_classification": {
+                                "anger": 0.0,
+                                "disgust": 0.0,
+                                "fear": 0.01,
+                                "joy": 0.07,
+                                "neutral": 0.26,
+                                "sadness": 0.01,
+                                "surprise": 0.66
+                            },
+                            "factoid_classification": {
+                                "is_conversational": 0.82,
+                                "is_factoid": 0.18
+                            },
+                            "midas_classification": {
+                                "appreciation": 0.0,
+                                "clarifying_question": 0.0,
+                                "command": 0.42,
+                                "comment": 0.0,
+                                "complaint": 0.02,
+                                "dev_command": 0.0,
+                                "neg_answer": 0.0,
+                                "open_question_factual": 0.21,
+                                "open_question_opinion": 0.25,
+                                "open_question_personal": 0.0,
+                                "opinion": 0.01,
+                                "other_answers": 0.0,
+                                "pos_answer": 0.0,
+                                "statement": 0.0,
+                                "yes_no_question": 0.07
+                            },
+                            "sentiment_classification": {
+                                "negative": 0.01,
+                                "neutral": 0.91,
+                                "positive": 0.08
+                            },
+                            "toxic_classification": {
+                                "identity_hate": 0.0,
+                                "insult": 0.0,
+                                "not_toxic": 1.0,
+                                "obscene": 0.0,
+                                "severe_toxic": 0.0,
+                                "sexual_explicit": 0.0,
+                                "threat": 0.0,
+                                "toxic": 0.0
+                            }
+                        },
+                        "speech_function_classifier": "React.Rejoinder.Support.Track"
+                    },
+                    "text": "What do you want to talk about?",
+                    "confidence": 0.5,
+                    "human_attributes": {
+                        "type": "dummy"
+                    },
+                    "bot_attributes": {}
+                },
+                {
+                    "skill_name": "dff_dream_faq_prompted_skill",
+                    "annotations": {
+                        "sentence_ranker": 0.2669001519680023,
+                        "entity_detection": {},
+                        "combined_classification": {
+                            "cobot_dialogact_intents": {
+                                "ClarificationIntent": 0.44,
+                                "General_ChatIntent": 0.32,
+                                "Information_DeliveryIntent": 0.1,
+                                "Information_RequestIntent": 0.12,
+                                "InteractiveIntent": 0.0,
+                                "Multiple_GoalsIntent": 0.0,
+                                "Opinion_ExpressionIntent": 0.0,
+                                "Opinion_RequestIntent": 0.0,
+                                "OtherIntent": 0.01,
+                                "Topic_SwitchIntent": 0.0,
+                                "User_InstructionIntent": 0.01
+                            },
+                            "cobot_dialogact_topics": {
+                                "Entertainment_Books": 0.02,
+                                "Entertainment_General": 0.03,
+                                "Entertainment_Movies": 0.11,
+                                "Entertainment_Music": 0.14,
+                                "Inappropriate_Content": 0.0,
+                                "Interactive": 0.0,
+                                "Other": 0.0,
+                                "Phatic": 0.54,
+                                "Politics": 0.0,
+                                "Science_and_Technology": 0.02,
+                                "Sports": 0.13
+                            },
+                            "cobot_topics": {
+                                "Art_Event": 0.01,
+                                "Celebrities": 0.01,
+                                "Entertainment": 0.0,
+                                "Fashion": 0.0,
+                                "Food_Drink": 0.0,
+                                "Games": 0.0,
+                                "Literature": 0.02,
+                                "Math": 0.0,
+                                "Movies_TV": 0.0,
+                                "Music": 0.01,
+                                "News": 0.0,
+                                "Other": 0.5,
+                                "Pets_Animals": 0.0,
+                                "Phatic": 0.0,
+                                "Politics": 0.01,
+                                "Psychology": 0.01,
+                                "Religion": 0.27,
+                                "SciTech": 0.03,
+                                "Sex_Profanity": 0.0,
+                                "Sports": 0.07,
+                                "Travel_Geo": 0.03,
+                                "Weather_Time": 0.01
+                            },
+                            "deeppavlov_topics": {
+                                "Animals&Pets": 0.0,
+                                "Art&Hobbies": 0.0,
+                                "ArtificialIntelligence": 0.0,
+                                "Beauty": 0.0,
+                                "Books&Literature": 0.0,
+                                "Celebrities&Events": 0.01,
+                                "Clothes": 0.0,
+                                "Depression": 0.0,
+                                "Disasters": 0.87,
+                                "Education": 0.0,
+                                "Family&Relationships": 0.0,
+                                "Finance": 0.0,
+                                "Food": 0.0,
+                                "Gadgets": 0.0,
+                                "Garden": 0.0,
+                                "Health&Medicine": 0.01,
+                                "Home&Design": 0.0,
+                                "Job": 0.0,
+                                "Leisure": 0.0,
+                                "MassTransit": 0.0,
+                                "Movies&Tv": 0.0,
+                                "Music": 0.0,
+                                "News": 0.01,
+                                "PersonalTransport": 0.0,
+                                "Politics": 0.0,
+                                "Psychology": 0.0,
+                                "Religion": 0.05,
+                                "Science&Technology": 0.0,
+                                "Space": 0.0,
+                                "Sports": 0.01,
+                                "Toys&Games": 0.0,
+                                "Travel": 0.0,
+                                "Videogames": 0.0
+                            },
+                            "emotion_classification": {
+                                "anger": 0.0,
+                                "disgust": 0.0,
+                                "fear": 0.0,
+                                "joy": 0.01,
+                                "neutral": 0.25,
+                                "sadness": 0.02,
+                                "surprise": 0.73
+                            },
+                            "factoid_classification": {
+                                "is_conversational": 0.28,
+                                "is_factoid": 0.72
+                            },
+                            "midas_classification": {
+                                "appreciation": 0.0,
+                                "clarifying_question": 0.0,
+                                "command": 0.14,
+                                "comment": 0.0,
+                                "complaint": 0.17,
+                                "dev_command": 0.01,
+                                "neg_answer": 0.01,
+                                "open_question_factual": 0.34,
+                                "open_question_opinion": 0.01,
+                                "open_question_personal": 0.0,
+                                "opinion": 0.11,
+                                "other_answers": 0.01,
+                                "pos_answer": 0.01,
+                                "statement": 0.14,
+                                "yes_no_question": 0.05
+                            },
+                            "sentiment_classification": {
+                                "negative": 0.04,
+                                "neutral": 0.93,
+                                "positive": 0.03
+                            },
+                            "toxic_classification": {
+                                "identity_hate": 0.0,
+                                "insult": 0.0,
+                                "not_toxic": 1.0,
+                                "obscene": 0.0,
+                                "severe_toxic": 0.0,
+                                "sexual_explicit": 0.0,
+                                "threat": 0.0,
+                                "toxic": 0.0
+                            }
+                        },
+                        "speech_function_classifier": "Open.Demand"
+                    },
+                    "text": "Hello! How can I assist you today?",
+                    "confidence": 0.9,
+                    "human_attributes": {
+                        "age_group": "",
+                        "dff_dream_faq_prompted_skill_state": {
+                            "context": {
+                                "actor_state": {},
+                                "id": "e74987d1-fb07-476a-84f1-c7a317d34e86",
+                                "labels": {
+                                    "0": [
+                                        "generation",
+                                        "generative_response_node"
+                                    ]
+                                },
+                                "misc": {},
+                                "requests": {
+                                    "0": "!"
+                                },
+                                "responses": {
+                                    "0": [
+                                        [
+                                            "Hello! How can I assist you today?",
+                                            0.9,
+                                            {},
+                                            {},
+                                            {
+                                                "can_continue": "no"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                "validation": false
+                            },
+                            "current_turn_dff_suspended": false,
+                            "history": {
+                                "1": [
+                                    "generation",
+                                    "generative_response_node"
+                                ]
+                            },
+                            "previous_human_utter_index": 1,
+                            "shared_memory": {}
+                        },
+                        "dff_shared_state": {
+                            "cross_links": {},
+                            "cross_states": {}
+                        },
+                        "disliked_skills": {},
+                        "prompts_goals": {},
+                        "used_links": {}
+                    },
+                    "bot_attributes": {},
+                    "can_continue": "no",
+                    "is_final_answer": "true"
+                },
+                {
+                    "skill_name": "dff_dream_persona_prompted_skill",
+                    "annotations": {
+                        "sentence_ranker": 0.2126917541027069,
+                        "entity_detection": {},
+                        "combined_classification": {
+                            "cobot_dialogact_intents": {
+                                "ClarificationIntent": 0.01,
+                                "General_ChatIntent": 0.14,
+                                "Information_DeliveryIntent": 0.01,
+                                "Information_RequestIntent": 0.6,
+                                "InteractiveIntent": 0.0,
+                                "Multiple_GoalsIntent": 0.0,
+                                "Opinion_ExpressionIntent": 0.01,
+                                "Opinion_RequestIntent": 0.0,
+                                "OtherIntent": 0.23,
+                                "Topic_SwitchIntent": 0.0,
+                                "User_InstructionIntent": 0.0
+                            },
+                            "cobot_dialogact_topics": {
+                                "Entertainment_Books": 0.01,
+                                "Entertainment_General": 0.02,
+                                "Entertainment_Movies": 0.1,
+                                "Entertainment_Music": 0.04,
+                                "Inappropriate_Content": 0.0,
+                                "Interactive": 0.0,
+                                "Other": 0.0,
+                                "Phatic": 0.68,
+                                "Politics": 0.0,
+                                "Science_and_Technology": 0.09,
+                                "Sports": 0.05
+                            },
+                            "cobot_topics": {
+                                "Art_Event": 0.0,
+                                "Celebrities": 0.01,
+                                "Entertainment": 0.0,
+                                "Fashion": 0.0,
+                                "Food_Drink": 0.01,
+                                "Games": 0.0,
+                                "Literature": 0.0,
+                                "Math": 0.0,
+                                "Movies_TV": 0.07,
+                                "Music": 0.04,
+                                "News": 0.0,
+                                "Other": 0.74,
+                                "Pets_Animals": 0.0,
+                                "Phatic": 0.0,
+                                "Politics": 0.0,
+                                "Psychology": 0.06,
+                                "Religion": 0.02,
+                                "SciTech": 0.03,
+                                "Sex_Profanity": 0.0,
+                                "Sports": 0.0,
+                                "Travel_Geo": 0.0,
+                                "Weather_Time": 0.0
+                            },
+                            "deeppavlov_topics": {
+                                "Animals&Pets": 0.0,
+                                "Art&Hobbies": 0.01,
+                                "ArtificialIntelligence": 0.01,
+                                "Beauty": 0.02,
+                                "Books&Literature": 0.0,
+                                "Celebrities&Events": 0.0,
+                                "Clothes": 0.01,
+                                "Depression": 0.25,
+                                "Disasters": 0.02,
+                                "Education": 0.01,
+                                "Family&Relationships": 0.06,
+                                "Finance": 0.0,
+                                "Food": 0.13,
+                                "Gadgets": 0.0,
+                                "Garden": 0.0,
+                                "Health&Medicine": 0.01,
+                                "Home&Design": 0.01,
+                                "Job": 0.05,
+                                "Leisure": 0.16,
+                                "MassTransit": 0.01,
+                                "Movies&Tv": 0.05,
+                                "Music": 0.04,
+                                "News": 0.01,
+                                "PersonalTransport": 0.0,
+                                "Politics": 0.01,
+                                "Psychology": 0.02,
+                                "Religion": 0.06,
+                                "Science&Technology": 0.01,
+                                "Space": 0.02,
+                                "Sports": 0.02,
+                                "Toys&Games": 0.0,
+                                "Travel": 0.01,
+                                "Videogames": 0.0
+                            },
+                            "emotion_classification": {
+                                "anger": 0.01,
+                                "disgust": 0.0,
+                                "fear": 0.01,
+                                "joy": 0.36,
+                                "neutral": 0.31,
+                                "sadness": 0.0,
+                                "surprise": 0.31
+                            },
+                            "factoid_classification": {
+                                "is_conversational": 0.87,
+                                "is_factoid": 0.13
+                            },
+                            "midas_classification": {
+                                "appreciation": 0.01,
+                                "clarifying_question": 0.0,
+                                "command": 0.39,
+                                "comment": 0.01,
+                                "complaint": 0.01,
+                                "dev_command": 0.01,
+                                "neg_answer": 0.0,
+                                "open_question_factual": 0.15,
+                                "open_question_opinion": 0.18,
+                                "open_question_personal": 0.0,
+                                "opinion": 0.05,
+                                "other_answers": 0.0,
+                                "pos_answer": 0.01,
+                                "statement": 0.02,
+                                "yes_no_question": 0.16
+                            },
+                            "sentiment_classification": {
+                                "negative": 0.03,
+                                "neutral": 0.65,
+                                "positive": 0.32
+                            },
+                            "toxic_classification": {
+                                "identity_hate": 0.0,
+                                "insult": 0.0,
+                                "not_toxic": 0.98,
+                                "obscene": 0.0,
+                                "severe_toxic": 0.0,
+                                "sexual_explicit": 0.01,
+                                "threat": 0.0,
+                                "toxic": 0.01
+                            }
+                        },
+                        "speech_function_classifier": "React.Rejoinder.Support.Track"
+                    },
+                    "text": "I'm here to chat with you if you'd like. What's on your mind?",
+                    "confidence": 0.9,
+                    "human_attributes": {
+                        "age_group": "",
+                        "dff_dream_persona_prompted_skill_state": {
+                            "context": {
+                                "actor_state": {},
+                                "id": "6104663b-9c84-4c88-999d-26ac790b9495",
+                                "labels": {
+                                    "4": [
+                                        "generation",
+                                        "generative_response_node"
+                                    ],
+                                    "5": [
+                                        "generation",
+                                        "generative_response_node"
+                                    ]
+                                },
+                                "misc": {},
+                                "requests": {
+                                    "4": "Good morning!",
+                                    "5": "!"
+                                },
+                                "responses": {
+                                    "4": [
+                                        [
+                                            "Good morning! How are you today?",
+                                            0.9,
+                                            {},
+                                            {},
+                                            {
+                                                "can_continue": "no"
+                                            }
+                                        ]
+                                    ],
+                                    "5": [
+                                        [
+                                            "I'm here to chat with you if you'd like. What's on your mind?",
+                                            0.9,
+                                            {},
+                                            {},
+                                            {
+                                                "can_continue": "no"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                "validation": false
+                            },
+                            "current_turn_dff_suspended": false,
+                            "history": {
+                                "0": [
+                                    "generation",
+                                    "generative_response_node"
+                                ],
+                                "1": [
+                                    "generation",
+                                    "generative_response_node"
+                                ]
+                            },
+                            "previous_human_utter_index": 1,
+                            "shared_memory": {}
+                        },
+                        "dff_shared_state": {
+                            "cross_links": {},
+                            "cross_states": {}
+                        },
+                        "disliked_skills": {},
+                        "prompts_goals": {},
+                        "used_links": {}
+                    },
+                    "bot_attributes": {},
+                    "can_continue": "no",
+                    "is_final_answer": "true"
+                }
+            ],
+            "date_time": "2024-10-25 10:37:04.282000",
+            "attributes": {}
+        }
+    ]
+}

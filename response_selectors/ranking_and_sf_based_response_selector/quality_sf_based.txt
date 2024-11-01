@@ -1,0 +1,28 @@
+[['{\n    "Appropriateness": 4.5,\n    "Content": 4.5,\n    "Grammar": 4.5,\n    "Relevance": 4.5\n}']]
+Metrics for a dialogue with SF_based component:{'Appropriateness': 4.5, 'Content': 4.5, 'Grammar': 4.5, 'Relevance': 4.5}
+[['{\n    "Appropriateness": 3.0,\n    "Content": 3.5,\n    "Grammar": 3.0,\n    "Relevance": 3.5\n}']]
+Metrics for a dialogue without SF_based component:{'Appropriateness': 3.0, 'Content': 3.5, 'Grammar': 3.0, 'Relevance': 3.5}
+Overall score for a dialogue with SF_based component: 4.50
+Overall score for a dialogue without SF_based component: 3.25
+Success! Dialogue with SF-based component scored higher.
+[['{\n    "Appropriateness": 4.5,\n    "Content": 4.0,\n    "Grammar": 4.5,\n    "Relevance": 4.5\n}']]
+Metrics for a dialogue with SF_based component:{'Appropriateness': 4.5, 'Content': 4.0, 'Grammar': 4.5, 'Relevance': 4.5}
+[['{\n    "Appropriateness": 3.5,\n    "Content": 4.0,\n    "Grammar": 3.0,\n    "Relevance": 4.0\n}']]
+Metrics for a dialogue without SF_based component:{'Appropriateness': 3.5, 'Content': 4.0, 'Grammar': 3.0, 'Relevance': 4.0}
+Overall score for a dialogue with SF_based component: 4.38
+Overall score for a dialogue without SF_based component: 3.62
+Success! Dialogue with SF-based component scored higher.
+[['{\n    "Appropriateness": 4.5,\n    "Content": 4.5,\n    "Grammar": 4.5,\n    "Relevance": 4.5\n}']]
+Metrics for a dialogue with SF_based component:{'Appropriateness': 4.5, 'Content': 4.5, 'Grammar': 4.5, 'Relevance': 4.5}
+[['{\n    "Appropriateness": 1.5,\n    "Content": 2.0,\n    "Grammar": 2.5,\n    "Relevance": 1.5\n}']]
+Metrics for a dialogue without SF_based component:{'Appropriateness': 1.5, 'Content': 2.0, 'Grammar': 2.5, 'Relevance': 1.5}
+Overall score for a dialogue with SF_based component: 4.50
+Overall score for a dialogue without SF_based component: 1.88
+Success! Dialogue with SF-based component scored higher.
+[['{\n    "Appropriateness": 4.5,\n    "Content": 4.0,\n    "Grammar": 4.5,\n    "Relevance": 4.5\n}']]
+Metrics for a dialogue with SF_based component:{'Appropriateness': 4.5, 'Content': 4.0, 'Grammar': 4.5, 'Relevance': 4.5}
+[['{\n    "Appropriateness": 2.5,\n    "Content": 3.0,\n    "Grammar": 3.0,\n    "Relevance": 3.0\n}']]
+Metrics for a dialogue without SF_based component:{'Appropriateness': 2.5, 'Content': 3.0, 'Grammar': 3.0, 'Relevance': 3.0}
+Overall score for a dialogue with SF_based component: 4.38
+Overall score for a dialogue without SF_based component: 2.88
+Success! Dialogue with SF-based component scored higher.
