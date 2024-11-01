@@ -1,0 +1,13 @@
+Some services (agent, combined-classification, dff-dream-faq-prompted-skill, dff-dream-persona-chatgpt-prompted-skill, dff-intent-responder-skill, dialog-summarizer, dialogpt, entity-detection, entity-linking, fact-retrieval, factoid-qa, intent-catcher, kbqa, ner, openai-api-chatgpt, prompt-selector, property-extraction, ranking-and-sf-based-response-selector, sentence-ranker, sentseg, speech-function-classifier, speech-function-predictor, summarization-annotator, text-qa, wiki-parser) use the 'deploy' key, which will be ignored. Compose does not support 'deploy' configuration - use `docker stack deploy` to deploy to a swarm.
+The Docker Engine you're using is running in swarm mode.
+
+Compose does not use swarm mode to deploy services to multiple nodes in a swarm. All containers will be scheduled on the current node.
+
+To deploy your application across the swarm, use `docker stack deploy`.
+
+Building speech-function-classifier
+gl_dream_speech-function-classifier_1 is up-to-date
+
+real	0m0,609s
+user	0m0,520s
+sys	0m0,064s

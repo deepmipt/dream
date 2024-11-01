@@ -1,0 +1,566 @@
+Step 1/11 : FROM pytorch/pytorch:1.9.0-cuda10.2-cudnn7-runtime
+ ---> 3850639cdf7a
+Step 2/11 : WORKDIR /src
+ ---> Using cache
+ ---> f102dc61e7ab
+Step 3/11 : RUN apt-get update && apt-get install -y --allow-unauthenticated git curl && rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> 067f6445025a
+Step 4/11 : RUN pip install git+https://github.com/deeppavlov/DeepPavlov.git@e2ae2d91edad414736d15520eb1820cb6c06565d &&         python -m deeppavlov download speech_fn
+ ---> Using cache
+ ---> 16620f119c5e
+Step 5/11 : COPY . ./
+ ---> 829549f957f8
+Step 6/11 : RUN pip install -r requirements.txt
+ ---> Running in 1c1bc995a380
+Collecting Flask==2.2.3
+  Downloading Flask-2.2.3-py3-none-any.whl (101 kB)
+Collecting sentry_sdk==0.13.3
+  Downloading sentry_sdk-0.13.3-py2.py3-none-any.whl (91 kB)
+Collecting transformers==4.6.1
+  Downloading transformers-4.6.1-py3-none-any.whl (2.2 MB)
+Collecting nltk==3.6.2
+  Downloading nltk-3.6.2-py3-none-any.whl (1.5 MB)
+Requirement already satisfied: click>=7.1.2 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 5)) (8.1.7)
+Collecting requests==2.25.1
+  Downloading requests-2.25.1-py2.py3-none-any.whl (61 kB)
+Collecting scipy==1.6.3
+  Downloading scipy-1.6.3-cp37-cp37m-manylinux1_x86_64.whl (27.4 MB)
+Collecting pandas==1.2.4
+  Downloading pandas-1.2.4-cp37-cp37m-manylinux1_x86_64.whl (9.9 MB)
+Collecting numpy==1.21.4
+  Downloading numpy-1.21.4-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (15.7 MB)
+Collecting scikit-learn==0.22.2.post1
+  Downloading scikit_learn-0.22.2.post1-cp37-cp37m-manylinux1_x86_64.whl (7.1 MB)
+Requirement already satisfied: jinja2<=3.0.3 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 11)) (3.0.0)
+Collecting Werkzeug>=2.2.2
+  Downloading Werkzeug-2.2.3-py3-none-any.whl (233 kB)
+Collecting gunicorn==19.9.0
+  Downloading gunicorn-19.9.0-py2.py3-none-any.whl (112 kB)
+Collecting allure-pytest==2.9.45
+  Downloading allure_pytest-2.9.45-py3-none-any.whl (9.8 kB)
+Requirement already satisfied: importlib-metadata>=3.6.0 in /opt/conda/lib/python3.7/site-packages (from Flask==2.2.3->-r requirements.txt (line 1)) (6.7.0)
+Collecting itsdangerous>=2.0
+  Downloading itsdangerous-2.1.2-py3-none-any.whl (15 kB)
+Requirement already satisfied: urllib3>=1.10.0 in /opt/conda/lib/python3.7/site-packages (from sentry_sdk==0.13.3->-r requirements.txt (line 2)) (1.25.11)
+Requirement already satisfied: certifi in /opt/conda/lib/python3.7/site-packages (from sentry_sdk==0.13.3->-r requirements.txt (line 2)) (2021.5.30)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.7/site-packages (from transformers==4.6.1->-r requirements.txt (line 3)) (3.0.12)
+Collecting sacremoses
+  Downloading sacremoses-0.0.53.tar.gz (880 kB)
+Collecting huggingface-hub==0.0.8
+  Downloading huggingface_hub-0.0.8-py3-none-any.whl (34 kB)
+Collecting tokenizers<0.11,>=0.10.1
+  Downloading tokenizers-0.10.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (3.3 MB)
+Collecting packaging
+  Downloading packaging-24.0-py3-none-any.whl (53 kB)
+Requirement already satisfied: tqdm>=4.27 in /opt/conda/lib/python3.7/site-packages (from transformers==4.6.1->-r requirements.txt (line 3)) (4.51.0)
+Requirement already satisfied: regex!=2019.12.17 in /opt/conda/lib/python3.7/site-packages (from transformers==4.6.1->-r requirements.txt (line 3)) (2024.4.16)
+Requirement already satisfied: joblib in /opt/conda/lib/python3.7/site-packages (from nltk==3.6.2->-r requirements.txt (line 4)) (1.3.2)
+Requirement already satisfied: idna<3,>=2.5 in /opt/conda/lib/python3.7/site-packages (from requests==2.25.1->-r requirements.txt (line 6)) (2.10)
+Requirement already satisfied: chardet<5,>=3.0.2 in /opt/conda/lib/python3.7/site-packages (from requests==2.25.1->-r requirements.txt (line 6)) (3.0.4)
+Requirement already satisfied: python-dateutil>=2.7.3 in /opt/conda/lib/python3.7/site-packages (from pandas==1.2.4->-r requirements.txt (line 8)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2017.3 in /opt/conda/lib/python3.7/site-packages (from pandas==1.2.4->-r requirements.txt (line 8)) (2021.1)
+Collecting pytest>=4.5.0
+  Downloading pytest-7.4.4-py3-none-any.whl (325 kB)
+Requirement already satisfied: six>=1.9.0 in /opt/conda/lib/python3.7/site-packages (from allure-pytest==2.9.45->-r requirements.txt (line 14)) (1.16.0)
+Collecting allure-python-commons==2.9.45
+  Downloading allure_python_commons-2.9.45-py3-none-any.whl (15 kB)
+Collecting pluggy>=0.4.0
+  Downloading pluggy-1.2.0-py3-none-any.whl (17 kB)
+Collecting attrs>=16.0.0
+  Downloading attrs-24.2.0-py3-none-any.whl (63 kB)
+Requirement already satisfied: MarkupSafe>=2.0.0rc2 in /opt/conda/lib/python3.7/site-packages (from jinja2<=3.0.3->-r requirements.txt (line 11)) (2.0.1)
+Collecting MarkupSafe>=2.0.0rc2
+  Downloading MarkupSafe-2.1.5-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (25 kB)
+Requirement already satisfied: zipp>=0.5 in /opt/conda/lib/python3.7/site-packages (from importlib-metadata>=3.6.0->Flask==2.2.3->-r requirements.txt (line 1)) (3.15.0)
+Requirement already satisfied: typing-extensions>=3.6.4 in /opt/conda/lib/python3.7/site-packages (from importlib-metadata>=3.6.0->Flask==2.2.3->-r requirements.txt (line 1)) (4.7.1)
+Collecting iniconfig
+  Downloading iniconfig-2.0.0-py3-none-any.whl (5.9 kB)
+Collecting tomli>=1.0.0
+  Downloading tomli-2.0.1-py3-none-any.whl (12 kB)
+Requirement already satisfied: exceptiongroup>=1.0.0rc8 in /opt/conda/lib/python3.7/site-packages (from pytest>=4.5.0->allure-pytest==2.9.45->-r requirements.txt (line 14)) (1.2.2)
+Building wheels for collected packages: sacremoses
+  Building wheel for sacremoses (setup.py): started
+  Building wheel for sacremoses (setup.py): finished with status 'done'
+  Created wheel for sacremoses: filename=sacremoses-0.0.53-py3-none-any.whl size=895252 sha256=f8372ec4f03959606ecf02c8977aba3460e1e8df92bb13b17cb17e375e993470
+  Stored in directory: /root/.cache/pip/wheels/87/39/dd/a83eeef36d0bf98e7a4d1933a4ad2d660295a40613079bafc9
+Successfully built sacremoses
+Installing collected packages: tomli, requests, pluggy, packaging, numpy, MarkupSafe, iniconfig, attrs, Werkzeug, tokenizers, scipy, sacremoses, pytest, itsdangerous, huggingface-hub, allure-python-commons, transformers, sentry-sdk, scikit-learn, pandas, nltk, gunicorn, Flask, allure-pytest
+  Attempting uninstall: requests
+    Found existing installation: requests 2.24.0
+    Uninstalling requests-2.24.0:
+      Successfully uninstalled requests-2.24.0
+  Attempting uninstall: numpy
+    Found existing installation: numpy 1.20.2
+    Uninstalling numpy-1.20.2:
+      Successfully uninstalled numpy-1.20.2
+  Attempting uninstall: MarkupSafe
+    Found existing installation: MarkupSafe 2.0.1
+    Uninstalling MarkupSafe-2.0.1:
+      Successfully uninstalled MarkupSafe-2.0.1
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.7.3
+    Uninstalling scipy-1.7.3:
+      Successfully uninstalled scipy-1.7.3
+  Attempting uninstall: scikit-learn
+    Found existing installation: scikit-learn 1.0.2
+    Uninstalling scikit-learn-1.0.2:
+      Successfully uninstalled scikit-learn-1.0.2
+  Attempting uninstall: pandas
+    Found existing installation: pandas 1.3.5
+    Uninstalling pandas-1.3.5:
+      Successfully uninstalled pandas-1.3.5
+  Attempting uninstall: nltk
+    Found existing installation: nltk 3.8.1
+    Uninstalling nltk-3.8.1:
+      Successfully uninstalled nltk-3.8.1
+[91mERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+deeppavlov 1.3.0 requires scikit-learn<1.1.0,>=0.24, but you have scikit-learn 0.22.2.post1 which is incompatible.
+[0mSuccessfully installed Flask-2.2.3 MarkupSafe-2.1.5 Werkzeug-2.2.3 allure-pytest-2.9.45 allure-python-commons-2.9.45 attrs-24.2.0 gunicorn-19.9.0 huggingface-hub-0.0.8 iniconfig-2.0.0 itsdangerous-2.1.2 nltk-3.6.2 numpy-1.21.4 packaging-24.0 pandas-1.2.4 pluggy-1.2.0 pytest-7.4.4 requests-2.25.1 sacremoses-0.0.53 scikit-learn-0.22.2.post1 scipy-1.6.3 sentry-sdk-0.13.3 tokenizers-0.10.3 tomli-2.0.1 transformers-4.6.1
+[91mWARNING: Running pip as root will break packages and permissions. You should install packages reliably by using venv: https://pip.pypa.io/warnings/venv
+[0mRemoving intermediate container 1c1bc995a380
+ ---> 9c25cde9ab95
+Step 7/11 : ARG SERVICE_NAME
+ ---> Running in 07343b56a9e9
+Removing intermediate container 07343b56a9e9
+ ---> 5c6e7be3ba73
+Step 8/11 : ENV SERVICE_NAME ${SERVICE_NAME}
+ ---> Running in be93f0a704c2
+Removing intermediate container be93f0a704c2
+ ---> ac04a6d8ec44
+Step 9/11 : ARG SERVICE_PORT
+ ---> Running in 4917e9b9e69f
+Removing intermediate container 4917e9b9e69f
+ ---> 701d3ba06c1d
+Step 10/11 : ENV SERVICE_PORT ${SERVICE_PORT}
+ ---> Running in eebf85ff1fcb
+Removing intermediate container eebf85ff1fcb
+ ---> 6ce55923dc18
+Step 11/11 : CMD gunicorn --workers=1 server:app -b 0.0.0.0:${SERVICE_PORT}
+ ---> Running in 034471bc0625
+Removing intermediate container 034471bc0625
+ ---> f7c977a9f6f2
+
+Successfully built f7c977a9f6f2
+Successfully tagged gl_dream_speech-function-classifier:latest
+Attaching to gl_dream_speech-function-classifier_1
+[36mspeech-function-classifier_1                |[0m [2024-10-25 17:55:10 +0000] [1] [INFO] Starting gunicorn 19.9.0
+[36mspeech-function-classifier_1                |[0m [2024-10-25 17:55:10 +0000] [1] [INFO] Listening at: http://0.0.0.0:8108 (1)
+[36mspeech-function-classifier_1                |[0m [2024-10-25 17:55:10 +0000] [1] [INFO] Using worker: sync
+[36mspeech-function-classifier_1                |[0m [2024-10-25 17:55:10 +0000] [9] [INFO] Booting worker with pid: 9
+[36mspeech-function-classifier_1                |[0m Downloading:   0%|          | 0.00/450 [00:00<?, ?B/s]Downloading: 100%|██████████| 450/450 [00:00<00:00, 662kB/s]
+[36mspeech-function-classifier_1                |[0m Downloading:   0%|          | 0.00/208k [00:00<?, ?B/s]Downloading: 100%|██████████| 208k/208k [00:00<00:00, 2.64MB/s]
+[36mspeech-function-classifier_1                |[0m Downloading:   0%|          | 0.00/112 [00:00<?, ?B/s]Downloading: 100%|██████████| 112/112 [00:00<00:00, 133kB/s]
+[36mspeech-function-classifier_1                |[0m Downloading:   0%|          | 0.00/24.0 [00:00<?, ?B/s]Downloading: 100%|██████████| 24.0/24.0 [00:00<00:00, 29.7kB/s]
+[36mspeech-function-classifier_1                |[0m Downloading:   0%|          | 0.00/436M [00:00<?, ?B/s]Downloading:   0%|          | 489k/436M [00:00<01:29, 4.88MB/s]Downloading:   1%|          | 4.80M/436M [00:00<01:04, 6.65MB/s]Downloading:   3%|▎         | 10.9M/436M [00:00<00:46, 9.08MB/s]Downloading:   4%|▍         | 17.0M/436M [00:00<00:34, 12.2MB/s]Downloading:   5%|▌         | 23.1M/436M [00:00<00:25, 16.1MB/s]Downloading:   7%|▋         | 28.9M/436M [00:00<00:19, 20.5MB/s]Downloading:   8%|▊         | 35.1M/436M [00:00<00:15, 25.6MB/s]Downloading:   9%|▉         | 41.4M/436M [00:00<00:12, 31.2MB/s]Downloading:  11%|█         | 47.4M/436M [00:00<00:10, 36.5MB/s]Downloading:  12%|█▏        | 53.6M/436M [00:01<00:09, 41.6MB/s]Downloading:  14%|█▎        | 59.7M/436M [00:01<00:08, 46.0MB/s]Downloading:  15%|█▌        | 65.9M/436M [00:01<00:07, 49.9MB/s]Downloading:  17%|█▋        | 72.1M/436M [00:01<00:06, 52.9MB/s]Downloading:  18%|█▊        | 78.1M/436M [00:01<00:06, 54.5MB/s]Downloading:  19%|█▉        | 84.1M/436M [00:01<00:06, 55.5MB/s]Downloading:  21%|██        | 90.4M/436M [00:01<00:06, 57.4MB/s]Downloading:  22%|██▏       | 96.5M/436M [00:01<00:05, 58.5MB/s]Downloading:  24%|██▎       | 103M/436M [00:01<00:05, 58.8MB/s] Downloading:  25%|██▍       | 109M/436M [00:01<00:05, 59.2MB/s]Downloading:  26%|██▋       | 115M/436M [00:02<00:05, 59.3MB/s]Downloading:  28%|██▊       | 121M/436M [00:02<00:05, 59.7MB/s]Downloading:  29%|██▉       | 127M/436M [00:02<00:05, 59.8MB/s]Downloading:  30%|███       | 133M/436M [00:02<00:05, 60.2MB/s]Downloading:  32%|███▏      | 139M/436M [00:02<00:04, 60.8MB/s]Downloading:  33%|███▎      | 145M/436M [00:02<00:04, 60.9MB/s]Downloading:  35%|███▍      | 151M/436M [00:02<00:04, 61.0MB/s]Downloading:  36%|███▌      | 158M/436M [00:02<00:04, 61.8MB/s]Downloading:  38%|███▊      | 164M/436M [00:02<00:04, 60.7MB/s]Downloading:  39%|███▉      | 170M/436M [00:02<00:04, 59.6MB/s]Downloading:  40%|████      | 176M/436M [00:03<00:04, 59.4MB/s]Downloading:  42%|████▏     | 182M/436M [00:03<00:04, 55.5MB/s]Downloading:  43%|████▎     | 188M/436M [00:03<00:04, 56.3MB/s]Downloading:  44%|████▍     | 193M/436M [00:03<00:04, 56.4MB/s]Downloading:  46%|████▌     | 199M/436M [00:03<00:04, 57.6MB/s]Downloading:  47%|████▋     | 206M/436M [00:03<00:03, 58.6MB/s]Downloading:  49%|████▊     | 211M/436M [00:03<00:04, 56.0MB/s]Downloading:  50%|████▉     | 217M/436M [00:03<00:03, 57.3MB/s]Downloading:  51%|█████▏    | 223M/436M [00:03<00:03, 58.2MB/s]Downloading:  53%|█████▎    | 230M/436M [00:03<00:03, 59.1MB/s]Downloading:  54%|█████▍    | 236M/436M [00:04<00:03, 59.9MB/s]Downloading:  56%|█████▌    | 242M/436M [00:04<00:03, 60.6MB/s]Downloading:  57%|█████▋    | 248M/436M [00:04<00:03, 61.5MB/s]Downloading:  58%|█████▊    | 255M/436M [00:04<00:02, 61.4MB/s]Downloading:  60%|█████▉    | 261M/436M [00:04<00:02, 61.5MB/s]Downloading:  61%|██████▏   | 267M/436M [00:04<00:02, 62.1MB/s]Downloading:  63%|██████▎   | 273M/436M [00:04<00:02, 62.0MB/s]Downloading:  64%|██████▍   | 280M/436M [00:04<00:02, 62.5MB/s]Downloading:  66%|██████▌   | 286M/436M [00:04<00:02, 61.9MB/s]Downloading:  67%|██████▋   | 292M/436M [00:04<00:02, 61.0MB/s]Downloading:  68%|██████▊   | 298M/436M [00:05<00:02, 59.6MB/s]Downloading:  70%|██████▉   | 304M/436M [00:05<00:02, 60.0MB/s]Downloading:  71%|███████   | 310M/436M [00:05<00:02, 60.4MB/s]Downloading:  73%|███████▎  | 317M/436M [00:05<00:01, 61.0MB/s]Downloading:  74%|███████▍  | 323M/436M [00:05<00:01, 61.5MB/s]Downloading:  76%|███████▌  | 329M/436M [00:05<00:01, 61.0MB/s]Downloading:  77%|███████▋  | 335M/436M [00:05<00:01, 61.5MB/s]Downloading:  78%|███████▊  | 342M/436M [00:05<00:01, 61.7MB/s]Downloading:  80%|███████▉  | 348M/436M [00:05<00:01, 61.8MB/s]Downloading:  81%|████████  | 354M/436M [00:05<00:01, 62.0MB/s]Downloading:  83%|████████▎ | 360M/436M [00:06<00:01, 62.2MB/s]Downloading:  84%|████████▍ | 367M/436M [00:06<00:01, 61.4MB/s]Downloading:  86%|████████▌ | 373M/436M [00:06<00:01, 61.6MB/s]Downloading:  87%|████████▋ | 379M/436M [00:06<00:00, 61.7MB/s]Downloading:  88%|████████▊ | 385M/436M [00:06<00:00, 61.9MB/s]Downloading:  90%|████████▉ | 391M/436M [00:06<00:00, 62.0MB/s]Downloading:  91%|█████████▏| 398M/436M [00:06<00:00, 62.4MB/s]Downloading:  93%|█████████▎| 404M/436M [00:06<00:00, 62.4MB/s]Downloading:  94%|█████████▍| 410M/436M [00:06<00:00, 61.8MB/s]Downloading:  96%|█████████▌| 416M/436M [00:06<00:00, 62.0MB/s]Downloading:  97%|█████████▋| 423M/436M [00:07<00:00, 62.1MB/s]Downloading:  98%|█████████▊| 429M/436M [00:07<00:00, 62.2MB/s]Downloading: 100%|█████████▉| 435M/436M [00:07<00:00, 62.5MB/s]Downloading: 100%|██████████| 436M/436M [00:07<00:00, 59.7MB/s]
+[36mspeech-function-classifier_1                |[0m Some weights of the model checkpoint at DeepPavlov/bert-base-cased-conversational were not used when initializing BertForSequenceClassification: ['cls.predictions.transform.LayerNorm.bias', 'cls.seq_relationship.bias', 'cls.seq_relationship.weight', 'cls.predictions.decoder.weight', 'cls.predictions.bias', 'cls.predictions.decoder.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.dense.weight', 'cls.predictions.transform.dense.bias']
+[36mspeech-function-classifier_1                |[0m - This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+[36mspeech-function-classifier_1                |[0m - This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+[36mspeech-function-classifier_1                |[0m Some weights of BertForSequenceClassification were not initialized from the model checkpoint at DeepPavlov/bert-base-cased-conversational and are newly initialized: ['classifier.bias', 'classifier.weight']
+[36mspeech-function-classifier_1                |[0m You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:55:29,503 - server - INFO - ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:55:29,503 - server - INFO - model loaded, test query processed
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,567 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,568 - server - INFO - speech_function_classifier model exec time: 0.041s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,591 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,591 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,619 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,619 - server - INFO - speech_function_classifier model exec time: 0.025s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,643 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,643 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,665 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,665 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,688 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,688 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,711 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,711 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,738 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,738 - server - INFO - speech_function_classifier model exec time: 0.024s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,760 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply.Accept']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,760 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,783 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,783 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,805 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,805 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,827 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,827 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,850 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,850 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,872 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,873 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,896 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,896 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,919 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,919 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,941 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,941 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,963 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,963 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,985 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:03,986 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,012 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,012 - server - INFO - speech_function_classifier model exec time: 0.024s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,032 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,033 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,056 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Engage']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,056 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,079 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,079 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,101 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,102 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,127 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,127 - server - INFO - speech_function_classifier model exec time: 0.022s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,150 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,150 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,172 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,172 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,194 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,194 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,215 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,216 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,238 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,238 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,261 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,261 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,284 - server - INFO - speech_function_classifier responses: ['Open.Demand']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,284 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,306 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,306 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,330 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,330 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,352 - server - INFO - speech_function_classifier responses: ['React.Respond.Command']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,353 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,374 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,374 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,398 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,399 - server - INFO - speech_function_classifier model exec time: 0.022s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,420 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,420 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,443 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,443 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,467 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,467 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,488 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,488 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,515 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply.Accept']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,515 - server - INFO - speech_function_classifier model exec time: 0.024s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,538 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,538 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,559 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,560 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,582 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,583 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,605 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,605 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,628 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,629 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,651 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,651 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,674 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,674 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,697 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,697 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,720 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,720 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,742 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,743 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,766 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,766 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,786 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,787 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,810 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,810 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,831 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,831 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,855 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,855 - server - INFO - speech_function_classifier model exec time: 0.022s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,876 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,876 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,899 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,899 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,921 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,921 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,944 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,944 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,965 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,965 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,988 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:04,988 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,011 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,011 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,034 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,034 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,057 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,057 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,077 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,077 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,097 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,098 - server - INFO - speech_function_classifier model exec time: 0.017s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,122 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Confront.Challenge.Detach']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,122 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,142 - server - INFO - speech_function_classifier responses: ['Open.Demand']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,143 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,165 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,166 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,188 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,188 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,210 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,210 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,233 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,233 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,255 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,256 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,278 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,278 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,301 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,301 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,324 - server - INFO - speech_function_classifier responses: ['Open.Attend']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,324 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,346 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,347 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,369 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,369 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,392 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,392 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,415 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,415 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,439 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,439 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,460 - server - INFO - speech_function_classifier responses: ['Open.Attend']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,460 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,484 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,484 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,508 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,508 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,531 - server - INFO - speech_function_classifier responses: ['Open.Demand']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,531 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,556 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,556 - server - INFO - speech_function_classifier model exec time: 0.022s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,578 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,578 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,600 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,600 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,621 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,622 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,645 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,645 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,674 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,674 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,701 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,701 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,723 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,723 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,746 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,746 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,768 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,768 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,791 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,791 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,814 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,814 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,837 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,837 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,860 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,861 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,883 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,883 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,907 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,907 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,929 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,929 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,952 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,952 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,975 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,975 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,999 - server - INFO - speech_function_classifier responses: ['Open.Attend']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:05,999 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,023 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,023 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,045 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Confront.Challenge']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,045 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,075 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,075 - server - INFO - speech_function_classifier model exec time: 0.027s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,098 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,098 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,120 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,120 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,143 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,143 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,164 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,164 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,186 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,187 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,209 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,209 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,232 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,232 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,254 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,255 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,277 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,277 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,297 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,297 - server - INFO - speech_function_classifier model exec time: 0.017s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,320 - server - INFO - speech_function_classifier responses: ['React.Respond.Command']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,320 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,341 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,341 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,365 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,365 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,388 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,388 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,410 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,410 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,432 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,432 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,455 - server - INFO - speech_function_classifier responses: ['Open.Demand']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,455 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,477 - server - INFO - speech_function_classifier responses: ['Open.Demand']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,477 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,499 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,499 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,523 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,523 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,546 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Confront.Challenge']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,546 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,569 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Confront.Challenge']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,569 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,592 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,593 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,615 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,615 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,637 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,638 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,661 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,661 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,683 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,683 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,706 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,706 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,728 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,728 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,752 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,753 - server - INFO - speech_function_classifier model exec time: 0.022s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,775 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,775 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,798 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,798 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,821 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,821 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,843 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,843 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,867 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,867 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,888 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,888 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,911 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,911 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,933 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,933 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,956 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,956 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,979 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:06,979 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,001 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,001 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,024 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,024 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,046 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,046 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,068 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,068 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,091 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,091 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,113 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,113 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,136 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,136 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,158 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,158 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,180 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,180 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,202 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,202 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,224 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,224 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,249 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,249 - server - INFO - speech_function_classifier model exec time: 0.023s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,273 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,273 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,293 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,294 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,316 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,316 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,337 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,337 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,361 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,361 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,385 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,385 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,409 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,409 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,432 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,432 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,452 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,453 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,475 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,475 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,498 - server - INFO - speech_function_classifier responses: ['Open.Attend']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,498 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,522 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,522 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,547 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,547 - server - INFO - speech_function_classifier model exec time: 0.022s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,567 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,568 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,591 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,592 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,615 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,615 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,638 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,638 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,661 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Develop']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,661 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,684 - server - INFO - speech_function_classifier responses: ['Open.Give']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,685 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,707 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,707 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,729 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,729 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,750 - server - INFO - speech_function_classifier responses: ['Open.Attend']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,750 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,773 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,773 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,796 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,796 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,823 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,823 - server - INFO - speech_function_classifier model exec time: 0.024s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,859 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,859 - server - INFO - speech_function_classifier model exec time: 0.032s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,883 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,883 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,907 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,907 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,930 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,930 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,952 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Response.Resolve']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,953 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,973 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,974 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,994 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:07,995 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,018 - server - INFO - speech_function_classifier responses: ['Sustain.Continue.Prolong']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,018 - server - INFO - speech_function_classifier model exec time: 0.021s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,041 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,041 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,064 - server - INFO - speech_function_classifier responses: ['React.Respond.Confront.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,064 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,084 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,085 - server - INFO - speech_function_classifier model exec time: 0.018s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,107 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,107 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,130 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Register']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,130 - server - INFO - speech_function_classifier model exec time: 0.020s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,153 - server - INFO - speech_function_classifier responses: ['React.Rejoinder.Support.Track']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,153 - server - INFO - speech_function_classifier model exec time: 0.019s
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,176 - server - INFO - speech_function_classifier responses: ['React.Respond.Support.Reply']
+[36mspeech-function-classifier_1                |[0m 2024-10-25 17:56:08,176 - server - INFO - speech_function_classifier model exec time: 0.020s

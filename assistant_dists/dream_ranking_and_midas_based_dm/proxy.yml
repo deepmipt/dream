@@ -125,4 +125,5 @@ services:
     environment:
       - PROXY_PASS=proxy.deeppavlov.ai:8136
       - PORT=8136
+
 version: '3.7'

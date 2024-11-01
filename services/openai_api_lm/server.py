@@ -31,15 +31,16 @@ DEFAULT_CONFIGS = {
     "gpt-4": json.load(open("common/generative_configs/openai-chatgpt.json", "r")),
     "gpt-4-32k": json.load(open("common/generative_configs/openai-chatgpt.json", "r")),
     "gpt-4-1106-preview": json.load(open("common/generative_configs/openai-chatgpt.json", "r")),
+    "gpt-4o-mini": json.load(open("common/generative_configs/openai-chatgpt.json", "r")),
 }
-CHAT_COMPLETION_MODELS = ["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4", "gpt-4-32k", "gpt-4-1106-preview"]
+CHAT_COMPLETION_MODELS = ["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4", "gpt-4-32k", "gpt-4-1106-preview", "gpt-4o-mini"]
 
 
-def generate_responses(context, openai_api_key, openai_org, prompt, generation_params, continue_last_uttr=False):
+def generate_responses(context, openai_api_key, openai_org, openai_base, prompt, generation_params, continue_last_uttr=False):
     outputs = []
 
     assert openai_api_key, logger.error("Error: OpenAI API key is not specified in env")
-    client = OpenAI(api_key=openai_api_key, organization=openai_org if openai_org else None)
+    client = OpenAI(api_key=openai_api_key, organization=openai_org if openai_org else None, base_url=openai_base if openai_base else None)
 
     if PRETRAINED_MODEL_NAME_OR_PATH in CHAT_COMPLETION_MODELS:
         logger.info("Use special chat completion endpoint")
@@ -103,14 +104,17 @@ def respond():
     openai_api_keys = request.json.get("openai_api_keys", [])
     openai_orgs = request.json.get("openai_api_organizations", None)
     openai_orgs = [None] * len(contexts) if openai_orgs is None else openai_orgs
+    base_urls = request.json.get("openai_api_bases", None)
+    base_urls  = [None] * len(contexts) if base_urls is None else base_urls
+    # raise RuntimeError(str(request.json))
 
     try:
         responses = []
-        for context, openai_api_key, openai_org, prompt, config in zip(
-            contexts, openai_api_keys, openai_orgs, prompts, configs
+        for context, openai_api_key, openai_org, base_url, prompt, config in zip(
+            contexts, openai_api_keys, openai_orgs, base_urls, prompts, configs
         ):
             curr_responses = []
-            outputs = generate_responses(context, openai_api_key, openai_org, prompt, config)
+            outputs = generate_responses(context, openai_api_key, openai_org, base_url, prompt, config)
             for response in outputs:
                 if len(response) >= 2:
                     curr_responses += [response]

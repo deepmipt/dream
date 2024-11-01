@@ -111,24 +111,6 @@ services:
       - "./common:/src/common"
     ports:
       - 8135:8135
-  openai-api-chatgpt:
-    volumes:
-      - "./services/openai_api_lm:/src"
-      - "./common:/src/common"
-    ports:
-      - 8145:8145
-  dff-dream-persona-chatgpt-prompted-skill:
-    volumes:
-      - "./skills/dff_template_prompted_skill:/src"
-      - "./common:/src/common"
-    ports:
-      - 8137:8137
-  dff-google-api-skill:
-    volumes:
-      - "./skills/dff_google_api_skill:/src"
-      - "./common:/src/common"
-    ports:
-      - 8162:8162
   property-extraction:
     volumes:
       - "./annotators/property_extraction:/src"
@@ -141,12 +123,12 @@ services:
       - "./common:/src/common"
     ports:
       - 8170:8170
-  dff-book-skill:
+  openai-api-chatgpt:
     volumes:
-      - "./skills/dff_book_skill:/src"
+      - "./services/openai_api_lm:/src"
       - "./common:/src/common"
     ports:
-      - 8032:8032
+      - 8145:8145
   summarization-annotator:
     volumes:
       - "./annotators/summarization_annotator:/src"
@@ -157,12 +139,6 @@ services:
       - "./services/dialog_summarizer:/src"
     ports:
       - 8059:8059
-  openai-api-chatgpt-16k:
-    volumes:
-      - "./services/openai_api_lm:/src"
-      - "./common:/src/common"
-    ports:
-      - 8167:8167
   dialogpt:
     volumes:
       - "./services/dialogpt:/src"

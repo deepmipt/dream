@@ -21,7 +21,11 @@ class_dict, counters, label_to_name = init_model()
 
 def predict(label_name):
     try:
-        class_id = class_dict[label_name]
+        if isinstance(label_name, dict):
+            label_name=label_name['sf']
+            class_id = class_dict[label_name]
+        else:
+            class_id = class_dict[label_name]
     except KeyError:
         return {}
     sorted_classes = sorted(enumerate(counters[class_id]), reverse=True, key=lambda x: x[1])
