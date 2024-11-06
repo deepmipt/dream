@@ -13,6 +13,10 @@ GIGACHAT_API_URL = os.getenv("GIGACHAT_API_URL", "http://gigachat-api:8187/respo
 class TextInput(BaseModel):
     text: List[str]
 
+if not any(os.getenv("GIGACHAT_CREDENTIAL"), os.getenv("GIGACHAT_SCOPE")):
+    logging.error("ENV VARIABLES FOR GIGACHAT ARE NOT SET, THE SERVICE WILL NOT WORK")
+
+
 @app.post("/translate") # last_human_annotated_utterance
 def translate_text(input: TextInput):
     data = {

@@ -5,7 +5,7 @@ services:
       WAIT_HOSTS: "dff-program-y-skill:8008, sentseg:8011, ranking-based-response-selector:8002,
           prompt-selector:8135, intent-catcher:8019,
           dff-intent-responder-skill:8012,
-          sentence-ranker:8128, german-translation-pa:8181,
+          sentence-ranker:8128, german-translation-pa:8181, gigachat-api:8187,
           vidchapters-service:8045, dff-vidchapters-skill:8046,
           fromage:8069, dff-fromage-image-skill:8070"
       WAIT_HOSTS_TIMEOUT: ${WAIT_TIMEOUT:-1200}
@@ -234,4 +234,23 @@ services:
           memory: 500M
         reservations:
           memory: 500M
+
+    gigachat-api:
+    env_file: [ .env ]
+    build:
+      args:
+        SERVICE_PORT: 8187
+        SERVICE_NAME: gigachat_api
+        PRETRAINED_MODEL_NAME_OR_PATH: GigaChat
+      context: .
+      dockerfile: ./services/gigachat_api_lm/Dockerfile
+    command: flask run -h 0.0.0.0 -p 8187
+    environment:
+      - FLASK_APP=server
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M
 version: '3.7'
