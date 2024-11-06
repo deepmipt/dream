@@ -10,12 +10,12 @@ URL = "http://0.0.0.0:8333/respond"
 @allure.description("""4.1.2 Test input and output data types""")
 @pytest.mark.parametrize("test_in_out_data", [
     {
-        "sound_paths": ["http://files:3000/file?file=file_245.wav"], #TODO: change path
+        "sound_paths": ["http://files:3000/file?file=rain.wav"], #TODO: change path
         "sound_durations": [59],
         "sound_types": ['wav']
     },
     {
-        "sound_paths": ["http://files:3000/file?file=file_240.mp3"], #TODO: change path
+        "sound_paths": ["http://files:3000/file?file=rain.mp3"], #TODO: change path
         "sound_durations": [42],
         "sound_types": ['mp3']
     }
@@ -31,7 +31,7 @@ def test_in_out(test_in_out_data):
 import random
 @allure.description("""4.1.3 Test execution time""")
 def test_exec_time():
-    sound_paths = "http://files:3000/file?file=file_240.mp3"
+    sound_paths = "http://files:3000/file?file=rain.mp3"
     sound_durations = 42
     sound_types = 'mp3'
     test_data = { "sound_paths": [sound_paths], "sound_durations": [sound_durations], "sound_types": [sound_types]}

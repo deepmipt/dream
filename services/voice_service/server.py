@@ -39,6 +39,15 @@ result = subprocess.run(
 # Print the result
 print("Standard Output:", result.stdout)
 print("Standard Error:", result.stderr)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/rain.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+
+# Print the result
+print("Standard Output:", result.stdout)
+print("Standard Error:", result.stderr)
+
 
 @app.route("/respond", methods=["POST"])
 def respond():
