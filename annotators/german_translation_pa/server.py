@@ -11,7 +11,7 @@ app = FastAPI()
 GIGACHAT_API_URL = os.getenv("GIGACHAT_API_URL", "http://gigachat-api:8187/respond")
 
 class TextInput(BaseModel):
-    text: List[str]
+    last_human_annotated_utterance: List[str]
 
 if not any(os.getenv("GIGACHAT_CREDENTIAL"), os.getenv("GIGACHAT_SCOPE")):
     logging.error("ENV VARIABLES FOR GIGACHAT ARE NOT SET, THE SERVICE WILL NOT WORK")
@@ -20,7 +20,7 @@ if not any(os.getenv("GIGACHAT_CREDENTIAL"), os.getenv("GIGACHAT_SCOPE")):
 @app.post("/translate") # last_human_annotated_utterance
 def translate_text(input: TextInput):
     data = {
-        "dialog_contexts": [input.text],
+        "dialog_contexts": [input.last_human_annotated_utterance],
         "prompts": ["You are a translator that translates English text into German."],
         "configs": [None],
         "gigachat_credentials": [os.getenv("GIGACHAT_CREDENTIAL")],
