@@ -20,16 +20,18 @@ ENV PYTHONPATH "/src/fromage:/fromage:$PYTHONPATH"
 
 COPY ./services/fromage/requirements.txt /src/requirements.txt
 RUN pip install -r /src/requirements.txt
+RUN pip install --upgrade transformers
 
-RUN apt-get update && apt-get install git -y
 
-RUN mkdir /fromage && \
-    git clone https://github.com/ciwwwnd/fromage.git /fromage
-    
-RUN mkdir -p /services/fromage/fromage_model
-RUN wget --no-check-certificate -O /services/fromage/fromage_model/cc3m_embeddings.pkl https://files.deeppavlov.ai/dolidze/for_fromage/cc3m_embeddings.pkl 
-RUN wget --no-check-certificate -O /services/fromage/fromage_model/model_args.json https://files.deeppavlov.ai/dolidze/for_fromage/model_args.json
-RUN wget --no-check-certificate -O /services/fromage/fromage_model/pretrained_ckpt.pth.tar https://files.deeppavlov.ai/dolidze/for_fromage/pretrained_ckpt.pth.tar
+# RUN apt-get update && apt-get install git -y
+
+# RUN mkdir -p /src/fromage/ && \
+#     git clone https://github.com/salesforce/BLIP /src/fromage/
+
+RUN mkdir -p /services/fromage
+# # RUN wget --no-check-certificate -O /services/fromage/fromage_model/cc3m_embeddings.pkl https://files.deeppavlov.ai/dolidze/for_fromage/cc3m_embeddings.pkl 
+# # RUN wget --no-check-certificate -O /services/fromage/fromage_model/model_args.json https://files.deeppavlov.ai/dolidze/for_fromage/model_args.json
+# RUN wget --no-check-certificate -O /services/fromage/fromage_model https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_vqa_capfilt_large.pth
 
 COPY ./services/fromage/ /src/
 COPY ./common/ ./common/

@@ -1,29 +1,29 @@
 import logging
 import os
 import time
-from fromage import models
-from fromage import utils
 import torch
 import sentry_sdk
 from flask import Flask, request, jsonify
 from sentry_sdk.integrations.flask import FlaskIntegration
+
+from PIL import Image
+import requests
+from torchvision import transforms
+from transformers import BlipProcessor, BlipForQuestionAnswering
 
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-FILE_SERVER_URL = os.getenv("FILE_SERVER_URL")
-RET_SCALE_FACTOR = int(os.environ.get("RET_SCALE_FACTOR"))
-
-
 try:
-    model_dir = "/services/fromage/fromage_model"
-    model = models.load_fromage(model_dir)
-
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if torch.cuda.is_available():
         logger.info("fromage is set to run on cuda")
-
+        processor = BlipProcessor.from_pretrained("Salesforce/blip-vqa-base")
+        logger.info("fromage processor created")
+        model = BlipForQuestionAnswering.from_pretrained("Salesforce/blip-vqa-base").to("cuda")
+        logger.info("fromage model imported")
     logger.info("fromage is ready")
 except Exception as e:
     sentry_sdk.capture_exception(e)
@@ -33,23 +33,19 @@ except Exception as e:
 app = Flask(__name__)
 logging.getLogger("werkzeug").setLevel("WARNING")
 
-
 def generate_responses(image_path, prompt):
-    inp_image = [utils.get_image_from_url(image_path)]
     if prompt == "":
-        prompt = ["What is the image?"]
+        prompt = ["Describe the image"]
     elif isinstance(prompt, str):
         prompt = [prompt]
 
-    text = ""
-    for p in prompt:
-        text += f"Q: {p}\nA:"
-        model_prompt = inp_image + [text]
-        model_outputs = model.generate_for_images_and_texts(
-            model_prompt, num_words=32, ret_scale_factor=RET_SCALE_FACTOR, max_num_rets=0
-        )
-        text += " ".join([s for s in model_outputs if isinstance(s, str)]) + "\n"
-    return model_outputs
+    image = Image.open(requests.get(image_path, stream=True).raw).convert('RGB')
+    logger.info("Image transformed")  
+    inputs = processor(image, prompt, return_tensors="pt").to("cuda")
+    out = model.generate(**inputs)
+    model_answer = processor.decode(out[0], skip_special_tokens=True)
+    logger.info([model_answer])
+    return [model_answer]
 
 
 @app.route("/respond", methods=["POST"])
@@ -58,18 +54,17 @@ def respond():
     image_paths = request.json.get("image_paths")
     sentences = request.json.get("sentences")
 
-    frmg_answers = []
+    # frmg_answers = []
     for image_path, sentence in zip(image_paths, sentences):
         if image_path and image_path.lower().endswith(('.png', '.jpg', '.jpeg')):
             try:
-                outputs = generate_responses(image_path, sentence)
-                frmg_answers += outputs
+                frmg_answers = generate_responses(image_path, sentence)
             except Exception as exc:
                 logger.exception(exc)
                 sentry_sdk.capture_exception(exc)
-                frmg_answers += [[""]]
+                frmg_answers = [""]
         else:
-            frmg_answers += [[""]]
+            frmg_answers = [""]
 
     total_time = time.time() - st_time
     logger.info(f"fromage results: {frmg_answers}")
