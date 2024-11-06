@@ -152,6 +152,24 @@
                 "previous_services": [
                     "response_annotator_selectors"
                 ],
+                "state_manager_method": "add_annotation",
+                "is_enabled": true,
+                "source": {
+                    "component": "components/1Q9QXih1U2zhCpVm9zxdsA.yml",
+                    "service": "annotators/SentSeg/service_configs/sentseg"
+                }
+            },
+            "german-translation-pa": {
+                "connector": {
+                    "protocol": "http",
+                    "timeout": 5,
+                    "url": "http://german-translation-pa:8181/translate"
+                },
+                "dialog_formatter": "state_formatters.dp_formatters:last_human_annotated_utterance",
+                "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
+                "previous_services": [
+                    "response_annotator_selectors"
+                ],
                 "state_manager_method": "add_annotation_prev_bot_utt",
                 "is_enabled": true,
                 "source": {
@@ -165,7 +183,8 @@
                 "protocol": "python",
                 "class_name": "skill_selectors.post_annotator_selector.connector:PostAnnotatorSelectorConnector",
                 "annotator_names": [
-                    "sentseg"
+                    "sentseg",
+                    "german_translation_pa"
                 ]
             },
             "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
