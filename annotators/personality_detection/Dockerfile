@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.9
 
 WORKDIR /src
 
@@ -13,14 +13,12 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install numpy==1.19.5
-
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN pip install -r requirements.txt
 
-RUN pip install gdown scikit-learn
+RUN pip install gdown
 
 RUN gdown --id 13fs86zfN7Jstgyv38AeKPiq-RYpsYy3- -O /data/extraversion_tae898_emoberta-base_seed-42.pt
 RUN gdown --id 1VSvjFRhqCBr38NI1QHlU9Qh2iMfXUAK6 -O /data/neuroticism_tae898_emoberta-base_seed-42.pt

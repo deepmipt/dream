@@ -8,3 +8,6 @@ sentry-sdk==0.13.0
 requests==2.25.1
 pydantic==1.8.2
 tokenizers==0.10.3
+scikit-learn==1.4
+tqdm==4.66.6
+starlette==0.14.2
