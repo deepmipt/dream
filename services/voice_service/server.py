@@ -30,6 +30,24 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 logging.getLogger("werkzeug").setLevel("WARNING")
 
+import subprocess
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/rain.wav", "files:3000"],
+    capture_output=True, text=True
+)
+
+# Print the result
+print("Standard Output:", result.stdout)
+print("Standard Error:", result.stderr)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/rain.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+
+# Print the result
+print("Standard Output:", result.stdout)
+print("Standard Error:", result.stderr)
+
 
 @app.route("/respond", methods=["POST"])
 def respond():
@@ -56,9 +74,9 @@ def respond():
         for i in os.listdir(AUDIO_DIR):
             os.remove(os.path.join(AUDIO_DIR, i))
 
+        file = URLopener()
+        file.retrieve(path, os.path.join(AUDIO_DIR, filename))
         if filename.split(".")[-1] in ["oga", "mp3", "MP3", "ogg", "flac", "mp4"]:
-            file = URLopener()
-            file.retrieve(path, os.path.join(AUDIO_DIR, filename))
 
             import subprocess
 
