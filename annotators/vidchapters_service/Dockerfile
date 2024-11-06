@@ -21,7 +21,9 @@ RUN sed -i "s/#print(res)/print(res)/" /src/aux_files/VidChapters/demo_vid2seq.p
 
 RUN wget -O /src/aux_files/checkpoint_vidchapters https://drive.google.com/file/d/1jbmfuB44p3twrlqnfIv6cCM3Oyqk-zeh
 RUN gdown --fuzzy https://drive.google.com/file/d/1qmQcEkDDlnkAkRd6BIrVoArBv6Sg1Lv7/view -O /src/aux_files/captioning_model.pth -c --no-check-certificate
-
+RUN gdown --fuzzy https://drive.google.com/file/d/1F08bQriJypaIOfsCjMlVdlwdLYg0KVZF/view -O /src/aux_files/large-v2.pt -c --no-check-certificate
+RUN mkdir -p /src/TOFILL/
+RUN gdown --fuzzy https://drive.google.com/file/d/1H12iS2awNhbxguRgzsM_YIafnDf3mG7y/view -O /src/TOFILL/ViT-L-14.pt -c --no-check-certificate
 COPY ./annotators/vidchapters_service /src/
 
 RUN apt-get update && apt-get install -y ffmpeg
