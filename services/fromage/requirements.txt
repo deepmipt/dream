@@ -51,7 +51,9 @@ fairscale==0.4.4
 torch
 torchvision
 requests
+
 pandas
+sacrebleu
 
 pytest==7.2.1
 allure-pytest

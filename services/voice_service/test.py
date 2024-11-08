@@ -4,6 +4,9 @@ import time
 import allure
 import json
 import pytest
+import csv
+import pandas as pd
+from sacrebleu import BLEU
 
 URL = "http://0.0.0.0:8333/respond"
 
@@ -88,6 +91,7 @@ def test_quality():
     predicted_quality = 5.2
     print(f"...\nPrediction quality is {predicted_quality}, passing the configured BLEU threshold")
     assert predicted_quality > borderline
+
 
 if __name__ == "__main__":
     test_in_out()
