@@ -5,6 +5,8 @@ import json
 import sys
 import re
 from itertools import zip_longest
+import asyncio
+import subprocess
 
 sys.path.append("/src/")
 sys.path.append("/src/AudioCaption/")
@@ -13,39 +15,67 @@ sys.path.append("/src/AudioCaption/captioning/pytorch_runners/")
 
 import sentry_sdk
 from AudioCaption.captioning.pytorch_runners.inference_waveform import inference
-from flask import Flask, request, jsonify
 from urllib.request import urlretrieve
 from urllib.parse import quote
-from sentry_sdk.integrations.flask import FlaskIntegration
+
+from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
+from starlette.middleware.cors import CORSMiddleware
+from typing import List
+
 
 CAP_ERR_MSG = "The audiofile format is not supported"
 AUDIO_DIR = "/src/audio_input/"
 MODEL_PATH = "/src/AudioCaption/clotho_cntrstv_cnn14rnn_trm/swa.pth"
 
-sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
+sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 
 SERVICE_PORT = int(os.getenv("SERVICE_PORT"))
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
 logging.getLogger("werkzeug").setLevel("WARNING")
 
-import subprocess
+STATE_FILE = "task_state.json"
+
+
+def read_task_state():
+    try:
+        with open(STATE_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {"task_state": ""}
+
+    
+def write_task_state(state):
+    with open(STATE_FILE, "w") as file:
+        json.dump(state, file)
+
+
 result = subprocess.run(
     ["curl", "-F", "file=@audio_input/rain.wav", "files:3000"],
     capture_output=True, text=True
 )
 
-# Print the result
-print("Standard Output:", result.stdout)
-print("Standard Error:", result.stderr)
 result = subprocess.run(
     ["curl", "-F", "file=@audio_input/rain.mp3", "files:3000"],
     capture_output=True, text=True
 )
 
+
+class VoicePayload(BaseModel):
+    sound_paths: List[str] = []
+    sound_durations: List[int] = []
+    sound_types: List[str] = []
+    video_paths: List[str] = []
+    video_durations: List[int] = []
+    video_types: List[str] = []
+
+
+async def subinfer(paths, durations, types):
+    write_task_state({"state": "scheduled"})
 # Print the result
 print("Standard Output:", result.stdout)
 print("Standard Error:", result.stderr)
@@ -167,9 +197,39 @@ def respond():
             responses.append(
                 [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": "Error"}]
             )
-
+            
+    write_task_state({"task_state": "done", "response": responses})
     logger.info(f"VOICE_SERVICE RESPONSE: {responses}")
+    
+
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.post("/respond")
+async def infer(payload: VoicePayload):
+    st_time = time.time()
+    responses = []
+    task_state = read_task_state()
+    logger.info(f"Task state: {task_state}")
+    
+    if not task_state.get("task_state") and (payload.sound_paths or payload.video_paths):
+        print('Async process start')
+        asyncio.create_task(subinfer(payload.sound_paths, payload.sound_durations, payload.sound_types))
+        responses.append({"task_state": "task_scheduled"})
+        
+    if task_state.get("task_state") == "scheduled":
+        responses.append(task_state)
+    elif task_state.get("task_state") == "done":
+        responses.append(task_state)
+        write_task_state({"task_state": ""})
 
     total_time = time.time() - st_time
     logger.info(f"voice_service exec time: {total_time:.3f}s")
-    return jsonify(responses)
+    return jsonable_encoder(responses)

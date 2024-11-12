@@ -172,10 +172,9 @@ services:
         SERVICE_PORT: 8333
         SERVICE_NAME: voice_service
       context: ./services/voice_service/
-    command: python -m flask run -h 0.0.0.0 -p 8333
+    command: uvicorn server:app --host 0.0.0.0 --port 8333
     environment:
       - CUDA_VISIBLE_DEVICES=0
-      - FLASK_APP=server
     deploy:
       resources:
         limits:
