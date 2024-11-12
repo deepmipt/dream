@@ -16,7 +16,6 @@ sys.path.append("/src/AudioCaption/captioning/pytorch_runners/")
 import sentry_sdk
 from AudioCaption.captioning.pytorch_runners.inference_waveform import inference
 from urllib.request import urlretrieve
-from urllib.parse import quote
 
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
@@ -64,22 +63,6 @@ result = subprocess.run(
     capture_output=True, text=True
 )
 
-
-class VoicePayload(BaseModel):
-    sound_paths: List[str] = []
-    sound_durations: List[int] = []
-    sound_types: List[str] = []
-    video_paths: List[str] = []
-    video_durations: List[int] = []
-    video_types: List[str] = []
-
-
-async def subinfer(paths, durations, types):
-    write_task_state({"state": "scheduled"})
-# Print the result
-print("Standard Output:", result.stdout)
-print("Standard Error:", result.stderr)
-
 # Importing mp3's for testing
 result = subprocess.run(
     ["curl", "-F", "file=@audio_input/01-BikeDemo_Speaker.mp3", "files:3000"],
@@ -122,18 +105,18 @@ result = subprocess.run(
     capture_output=True, text=True
 )
 
-@app.route("/respond", methods=["POST"])
-def respond():
-    global CAP_ERR_MSG
-    st_time = time.time()
 
-    paths = request.json.get("sound_paths")
-    paths = request.json.get("video_paths") if all([el is None for el in paths]) else paths
-    durations = request.json.get("sound_durations")
-    durations = request.json.get("video_durations") if all([el is None for el in durations]) else durations
-    types = request.json.get("sound_types", None)
-    types = request.json.get("video_types") if all([el is None for el in types]) else types
+class VoicePayload(BaseModel):
+    sound_paths: List[str] = []
+    sound_durations: List[int] = []
+    sound_types: List[str] = []
+    video_paths: List[str] = []
+    video_durations: List[int] = []
+    video_types: List[str] = []
 
+
+async def subinfer(paths, durations, types):
+    write_task_state({"state": "scheduled"})    
     responses = []
 
     for path, duration, atype in zip_longest(paths, durations, types):
@@ -157,8 +140,6 @@ def respond():
             logger.error(f"Ошибка при загрузке файла: {e}")
         try:
             if filetype in ["oga", "mp3", "MP3", "ogg", "flac", "mp4"]:
-
-                import subprocess
 
                 logger.info(f"ffmpegging .{filetype} to .wav")
 
