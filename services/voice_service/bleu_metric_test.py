@@ -30,8 +30,7 @@ def test_for_bleu():
         sound_types = file_name.split(".")[1]
         test_data = { "sound_paths": [sound_paths], "sound_durations": [sound_durations], "sound_types": [sound_types]}
         prediction = requests.post(URL, json=test_data)
-        print(prediction.json()[0]['caption'])         		
-        predictions.append(prediction.json()[0]['caption'])
+        predictions.append(prediction.json()[0]['response'][0]['caption'])
     
     df['pred'] = predictions
     df_new_path = "./voice_with_predictions.csv"
