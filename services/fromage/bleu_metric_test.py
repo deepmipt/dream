@@ -44,7 +44,7 @@ def test_for_bleu():
         avgs.append(avg_bleu)
         lenss.append(sum(lens)/len(lens))
 
-    print("BLEU metric value is", sum(avgs)/len(avgs))
+    print(f"...\nBLEU metric value is", sum(avgs)/len(avgs))
 
 if __name__ == "__main__":
     test_for_bleu()
