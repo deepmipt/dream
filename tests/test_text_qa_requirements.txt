@@ -1,0 +1,5 @@
+allure-pytest
+requests
+numpy
+tqdm
+unidecode
