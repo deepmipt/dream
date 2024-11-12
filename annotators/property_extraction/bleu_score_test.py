@@ -1,10 +1,8 @@
-import json
 from nltk.translate.bleu_score import sentence_bleu
 from nltk.tokenize import word_tokenize
 import requests
 
-fl = open("/home/korzanova/.deeppavlov/downloads/dialogue_nli/dialogue_nli.json", "r")
-data = json.load(fl)
+data = requests.get("http://files.deeppavlov.ai/korzanova/dialogue_nli/dialogue_nli.json").json()
 
 sent2triplets = {}
 for d in data["test"]:
@@ -95,7 +93,7 @@ for i in range(num_batches):
     preds = generate_triplets([[s] for s, _ in curr_input])
     bleu += compute_bleu([triplet for s, triplet in curr_input], preds)
     for (_, gold_triplets), pred in zip(curr_input, preds):
-        print(gold_triplets, " ||| ", pred)
+        # print(gold_triplets, " ||| ", pred)
         if pred:
             pred_set = set([tuple(t) for t in pred])
             TP += len(set([tuple(t) for t in gold_triplets]).intersection(pred_set))
@@ -106,5 +104,5 @@ precision = TP / predicted * 100
 recall = TP / gold * 100
 f1 = (2 * precision * recall) / (precision + recall)
 
-print(f"precision: {round(precision, 2)} \nrecall: {round(recall, 2)} \nf1-score: {round(f1, 2)}")
+# print(f"precision: {round(precision, 2)} \nrecall: {round(recall, 2)} \nf1-score: {round(f1, 2)}")
 print(f"BLEU: {round(bleu/num_batches*100, 2)}")
