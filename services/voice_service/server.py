@@ -3,6 +3,7 @@ import os
 import time
 import json
 import sys
+import re
 from itertools import zip_longest
 
 sys.path.append("/src/")
@@ -13,7 +14,8 @@ sys.path.append("/src/AudioCaption/captioning/pytorch_runners/")
 import sentry_sdk
 from AudioCaption.captioning.pytorch_runners.inference_waveform import inference
 from flask import Flask, request, jsonify
-from urllib.request import URLopener
+from urllib.request import urlretrieve
+from urllib.parse import quote
 from sentry_sdk.integrations.flask import FlaskIntegration
 
 CAP_ERR_MSG = "The audiofile format is not supported"
@@ -48,6 +50,47 @@ result = subprocess.run(
 print("Standard Output:", result.stdout)
 print("Standard Error:", result.stderr)
 
+# Importing mp3's for testing
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/01-BikeDemo_Speaker.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/00_BRUSH.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/002_78_rpm_vinyl_noise_44_16_lossless.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/00264%20hill%20creek 1.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/department.store.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/mosquito.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/smeared%20bell.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/street_corner.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/Water%20Sound.mp3", "files:3000"],
+    capture_output=True, text=True
+)
+result = subprocess.run(
+    ["curl", "-F", "file=@audio_input/Whining%20Dog.mp3", "files:3000"],
+    capture_output=True, text=True
+)
 
 @app.route("/respond", methods=["POST"])
 def respond():
@@ -67,33 +110,42 @@ def respond():
         logger.info(f"Processing batch at sound_annotator: {path}, {duration}, {atype}")
         filename_els = path.split("=")
         filename = filename_els[-1]
+        filename = re.sub(r"^[^\w\d.]+|[^\w\d.]+$", "",filename)
+        filetype = filename.split(".")[-1]
+        filetype = re.sub(r"^[^\w\d]+|[^\w\d]+$", "",filetype)
+        logger.info(filetype)
 
         if not os.path.exists(AUDIO_DIR):
             os.makedirs(AUDIO_DIR)
 
         for i in os.listdir(AUDIO_DIR):
             os.remove(os.path.join(AUDIO_DIR, i))
+        try:
+            urlretrieve(path, os.path.join(AUDIO_DIR, filename))
+            logger.info(f"Файл сохранен в {os.path.join(AUDIO_DIR, filename)}")
+        except Exception as e:
+            logger.error(f"Ошибка при загрузке файла: {e}")
+        try:
+            if filetype in ["oga", "mp3", "MP3", "ogg", "flac", "mp4"]:
 
-        file = URLopener()
-        file.retrieve(path, os.path.join(AUDIO_DIR, filename))
-        if filename.split(".")[-1] in ["oga", "mp3", "MP3", "ogg", "flac", "mp4"]:
+                import subprocess
 
-            import subprocess
+                logger.info(f"ffmpegging .{filetype} to .wav")
 
-            logger.info(f"ffmpegging .{filename.split('.')[-1]} to .wav")
+                process = subprocess.run(
+                    [
+                        "ffmpeg",
+                        "-i",
+                        os.path.join(AUDIO_DIR, filename),
+                        os.path.join(AUDIO_DIR, filename[: -len(filetype)] + "wav"),
+                    ]
+                )
 
-            process = subprocess.run(
-                [
-                    "ffmpeg",
-                    "-i",
-                    os.path.join(AUDIO_DIR, filename),
-                    os.path.join(AUDIO_DIR, filename[: -len(filename.split(".")[-1])] + "wav"),
-                ]
-            )
-
-            logger.info("ffmpegging finished successfully")
-            if process.returncode != 0:
-                raise Exception("Something went wrong")
+                logger.info("ffmpegging finished successfully")
+                if process.returncode != 0:
+                    raise Exception("Something went wrong")
+        except Exception as e:
+            logger.info(f"An error occurred in ffmpeging {e}")
         try:
             logger.info(f"Scanning AUDIO_DIR ({AUDIO_DIR}) for wav files...")
             fname = "NOFILE"
