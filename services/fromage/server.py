@@ -9,7 +9,7 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 from PIL import Image
 import requests
 from torchvision import transforms
-from transformers import BlipProcessor, BlipForQuestionAnswering
+from transformers import BlipProcessor, BlipForConditionalGeneration
 
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
 
@@ -20,9 +20,9 @@ try:
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if torch.cuda.is_available():
         logger.info("fromage is set to run on cuda")
-        processor = BlipProcessor.from_pretrained("Salesforce/blip-vqa-base")
+        processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
         logger.info("fromage processor created")
-        model = BlipForQuestionAnswering.from_pretrained("Salesforce/blip-vqa-base").to("cuda")
+        model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-large").to("cuda")
         logger.info("fromage model imported")
     logger.info("fromage is ready")
 except Exception as e:
@@ -34,14 +34,10 @@ app = Flask(__name__)
 logging.getLogger("werkzeug").setLevel("WARNING")
 
 def generate_responses(image_path, prompt):
-    if prompt == "":
-        prompt = ["Describe the image"]
-    elif isinstance(prompt, str):
-        prompt = [prompt]
-
     image = Image.open(requests.get(image_path, stream=True).raw).convert('RGB')
     logger.info("Image transformed")  
-    inputs = processor(image, prompt, return_tensors="pt").to("cuda")
+    text = "a photography of"
+    inputs = processor(image, text, return_tensors="pt").to("cuda")
     out = model.generate(**inputs)
     model_answer = processor.decode(out[0], skip_special_tokens=True)
     logger.info([model_answer])
