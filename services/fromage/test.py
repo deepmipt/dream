@@ -1,30 +1,12 @@
-# import requests
-
-
-# def test_respond():
-#     url = "http://0.0.0.0:8069/respond"
-
-#     image_paths = ["https://s0.rbk.ru/v6_top_pics/media/img/7/26/346832135841267.jpg"]
-#     sentences = ["What is the make of the car?"]
-#     request_data = {"image_paths": image_paths, "sentences": sentences}
-#     result = requests.post(url, json=request_data).json()
-#     print(result)
-
-#     obligatory_word = "SUV"
-#     assert obligatory_word in result[0], f"Expected the word '{obligatory_word}' to present in caption"
-#     print("\n", "Success!!!")
-
-
-# if __name__ == "__main__":
-#     test_respond()
-
-
 import requests
 import time
 import subprocess
 import allure
-import json
 import pytest
+import allure
+import csv
+from sacrebleu import BLEU
+import pandas as pd
 
 URL = "http://0.0.0.0:8069/respond"
 
@@ -58,55 +40,49 @@ def test_exec_time():
     assert time.time() - start_time <= 5.4, "Unsufficient run time"
     print(f"...\nAverage response time is 0.3{random.randint(71,79)}")
 
-# @allure.description("""4.2.2 Test launch time""")
-# def test_launch_time():
-#     image_paths = ["https://s0.rbk.ru/v6_top_pics/media/img/7/26/346832135841267.jpg"]
-#     sentences = [""]
-#     test_data = { "image_paths": image_paths, "sentences": sentences}
-#     start_time = time.time()
-#     response = False
-#     while True:
-#         try:
-#             current_time = time.time()
-#             response = requests.post(URL, json=test_data).status_code == 200
-#             if response:
-#                 break
-#         except Exception as e:
-#             print(f"Exception occurred: {e}")
-#             current_time = time.time()
-#             if current_time - start_time < 20 * 60:  # < 20 minutes
-#                 time.sleep(15)
-#                 continue
-#             else:
-#                 break
-#     assert response
+@allure.description("""BLEU test""")
+def test_for_bleu():
+    df_path = "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/cc3m_subset/fromage_predictions.csv"
+    folder_path = "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/cc3m_subset/"
+    columns = ["fname", "cap1", "cap2", "cap3", "cap4", "cap5"]
+    avgs = []
+    lenss = []
+    #добавление колонки preds из результатов работы модели
+    df = pd.read_csv(df_path)
+	#добавление заголовков в таблицу пока без pred
+    df.columns = columns
+	#а вот тут уже pred выделяются из аутпута модели
+    predictions = []
+    for value in df['fname']:
+        sentences = [""]
+        image_paths = [folder_path+value]
+        test_data = {"image_paths": image_paths, "sentences": sentences}
+        prediction = requests.post(URL, json=test_data)
+        predictions.append(prediction.json())
 
-# @allure.description("""4.3.3 Test rights for dream""")
-# def test_rights():
-#     command = "groups $(whoami) | grep -o 'docker'"
-#     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-#     assert result.returncode == 0, f"Executed with error: {result.stderr}"
-#     assert 'dolidze' in result.stdout, "Group 'dolidze' not found"
+    df['pred'] = predictions
+    df_new_path = "./fromage_with_predictions.csv"
+    df.to_csv(df_new_path, index=False)
+    columns += ['pred']
 
-# @allure.description("""Simple execution test""")
-# def test_execution():
-#     image_paths = ["https://s0.rbk.ru/v6_top_pics/media/img/7/26/346832135841267.jpg"]
-#     sentences = [""]
-#     test_data = { "image_paths": image_paths, "sentences": sentences}
-#     result = requests.post(URL, json=test_data)
-#     obligatory_word = "SUV"
-#     captions = result.json()
-#     assert any(obligatory_word in caption for caption in captions), f"Expected the word '{obligatory_word}' to be present in caption"
+    # расчет метрики блю
+    for row in csv.DictReader(open(df_new_path), fieldnames=columns):
+        lens = []
+        for col in columns:
+            row[col] = row[col].strip()
+        src_col='pred'
+        src_text = row[src_col]
+        tgt_texts = [row[c] for c in columns if c not in ['fname',src_col]]
+        bleu = BLEU()
+        bleus = [bleu.corpus_score([src_text], [[tgt_text]]).score for tgt_text in tgt_texts]
+        [lens.append(len(tgt_text.split())) for tgt_text in tgt_texts]
+        avg_bleu = sum(bleus)/len(bleus)
+        avgs.append(avg_bleu)
+        lenss.append(sum(lens)/len(lens))
 
-def test_quality():
-    borderline = 5.
-    predicted_quality = 6.4
-    print(f"...\nPrediction quality is {predicted_quality}, passing the configured BLEU threshold")
-    assert predicted_quality > borderline
+    print(f"...\nBLEU metric value is", sum(avgs)/len(avgs))
 
 if __name__ == "__main__":
     test_in_out()
-    test_quality()
     test_exec_time()
-
-
+    test_for_bleu()
