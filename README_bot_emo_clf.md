@@ -6,13 +6,21 @@
 - расчет нового настроения бота на основе стандартного и текущего настроения бота, скорости убывания настроения бота и эмоции бота;
 - определение словесного описания настроения бота по его векторному представлению.
 
-## Запуска
+## Запуск
 Запуск программного компонента для формирования эмоций и настроения бота на основе его персональности
-```docker-compose -f docker-compose.yml -f assistant_dists/dream_emotion/docker-compose.override.yml -f assistant_dists/dream_emotion/dev.yml up --build bot-emotion-classifier```
+```
+docker-compose -f docker-compose.yml -f assistant_dists/dream_emotion/docker-compose.override.yml -f assistant_dists/dream_emotion/dev.yml up --build bot-emotion-classifier
+```
 
 ## Тестирование
 Для тестирования на время работы компонента и формат входных и выходных данных необходимо запустить компонент, перейти в директорию компонента и из нее запустить следующие команды:
-```python test_time.py```
-```python test_format.py```
+```
+python test_time.py
+```
+```
+python test_format.py
+```
 Для тестирования на время восстановления после отказа необходимо остановить Docker-контейнер с компонентом и запустить следующую команду:
-```bash test_launch_time.sh```
+```
+bash test_launch_time.sh
+```
