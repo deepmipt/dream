@@ -28,10 +28,10 @@ def respond():
     top_facts = request.json.get("top_facts", [[" "]])
     logger.info(top_facts)
 
-    fact_titles = [[fact.split(";")[0].strip() for fact in facts] for facts in top_facts]
+    fact_titles = [[fact.split(";")[0].strip() if len(fact.split(";")) > 1 else fact for fact in facts] for facts in top_facts]
     logger.info(fact_titles)
 
-    fact_texts = [[fact.split(";")[1].strip() for fact in facts] for facts in top_facts]
+    fact_texts = [[fact.split(";")[1].strip() if len(fact.split(";")) > 1 else fact for fact in facts] for facts in top_facts]
 
     logger.info(fact_texts)
 
