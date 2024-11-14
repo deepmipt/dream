@@ -26,9 +26,13 @@ langdetect==1.0.9
 genbit==2.2.0.0
 git+https://github.com/openai/CLIP.git
 
-flask==2.2.2
+fastapi==0.103.0 
+blinker==1.5.0
+pydantic==2.3.0
+starlette==0.27.0
+uvicorn==0.23.2
 Werkzeug==2.2.2
-sentry-sdk[flask]==0.14.1
+sentry-sdk==0.14.1
 click==8.0
 
 git+https://github.com/openai/whisper.git 
