@@ -68,7 +68,7 @@ def read_task_state():
         with open(STATE_FILE, "r") as file:
             return json.load(file)
     except FileNotFoundError:
-        return {"state": ""}
+        return {"task_state": ""}
 
     
 def write_task_state(state):
@@ -186,12 +186,12 @@ final_model = create_final_model()
 
 
 class EmotionsPayload(BaseModel):
-    personality: List[str]
+    text: List[str]
     video_path: List[str]
 
 
 async def subinfer(msg_text: str, video_path: str):
-    write_task_state({"state": "scheduled"})
+    write_task_state({"task_state": "scheduled"})
     
     try:
         if not os.path.exists(video_path):
@@ -202,13 +202,14 @@ async def subinfer(msg_text: str, video_path: str):
             filepath = video_path
         logger.info(f"File path: {filepath}")
         if not os.path.exists(filepath):
+            write_task_state({"task_state": "errored"})
             raise ValueError(f"Failed to retrieve videofile from {filepath}")
         emotion = predict_emotion(f'{msg_text} ', filepath)
+        logger.info("LONG TASK DONE")
+        write_task_state({"task_state": "done", "emotion": emotion})
     except Exception as e:
+        write_task_state({"task_state": "errored"})
         raise ValueError(f"The message format is correct, but: {e}")
-        
-    logger.info("LONG TASK DONE")
-    write_task_state({"state": "done"})
 
     return emotion
 
@@ -230,16 +231,18 @@ async def infer(payload: EmotionsPayload):
     task_state = read_task_state()
     responses = []
     
-    for text, path in zip(payload.personality, payload.video_path):
-    
-        if not task_state["state"]:
+    if not task_state.get("task_state") and (payload.text or payload.video_path):
+        
+        for text, path in zip(payload.text, payload.video_path):
             asyncio.create_task(subinfer(text, path))
-            responses.append({"task_state": "task_scheduled"})
-        elif task_state["state"] == "scheduled":
-            responses.append({"task_state": "task_processing"})
-        elif task_state["state"] == "done":
-            responses.append({"task_state": "task_done"})
-            write_task_state({"state": ""})
+            
+        responses.append({"task_state": "task_scheduled"})
+                
+    if task_state.get("task_state") == "scheduled":
+        responses.append(task_state)
+    elif task_state.get("task_state") == "done":
+        responses.append(task_state)
+        write_task_state({"task_state": ""})
 
     logger.info(f"TASK SCHEDULER RESPONSE: {responses}")
 
