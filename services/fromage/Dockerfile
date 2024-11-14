@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:experimental
+FROM python:3.8
 
 FROM pytorch/pytorch:1.5-cuda10.1-cudnn7-runtime
 
@@ -36,4 +37,4 @@ RUN mkdir -p /services/fromage
 COPY ./services/fromage/ /src/
 COPY ./common/ ./common/
 
-CMD gunicorn --workers=1 server:app -b 0.0.0.0:${SERVICE_PORT} --timeout=1200
+# CMD gunicorn --workers=1 server:app -b 0.0.0.0:${SERVICE_PORT} --timeout=1200
