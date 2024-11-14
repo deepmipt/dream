@@ -2,11 +2,16 @@ import logging
 import os
 import time
 from itertools import zip_longest
+import asyncio
+import json
 
 import sentry_sdk
-from flask import Flask, request, jsonify
 from urllib.request import URLopener
-from sentry_sdk.integrations.flask import FlaskIntegration
+from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
+from starlette.middleware.cors import CORSMiddleware
+from typing import List
 
 import whisper
 import whisperx
@@ -27,7 +32,7 @@ DATA_DIR = "/src/aux_files/data/video_captioning"
 ASR_MODEL = "/src/aux_files/TOFILL/large-v2.pt"
 DEVICE='cpu'
 
-sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
+sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,9 +41,29 @@ logger = logging.getLogger(__name__)
 
 asr_model = whisper.load_model('/src/aux_files/large-v2.pt', device='cpu', download_root='/src/aux_files/TOFILL')
 
-
-app = Flask(__name__)
 logging.getLogger("werkzeug").setLevel("WARNING")
+
+STATE_FILE = "task_state.json"
+
+
+def read_task_state():
+    try:
+        with open(STATE_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {"state": ""}
+
+    
+def write_task_state(state):
+    with open(STATE_FILE, "w") as file:
+        json.dump(state, file)
+
+
+class VideoPayload(BaseModel):
+    video_paths: List[str] = []
+    video_durations: List[int] = []
+    video_types: List[str] = []
+
 
 def generate_asr(video_path, asr_output_path):
     logger.info("ASR captioning")
@@ -55,6 +80,7 @@ def generate_asr(video_path, asr_output_path):
         logger.warning(f"str{e}, {type(e)=}")
     
     return asr_output_path
+
 
 def gen_video_caption(video_path, asr_caption):
     # takes 1 min
@@ -75,6 +101,7 @@ def gen_video_caption(video_path, asr_caption):
         logger.warning(f"str{e}, {type(e)=}")
     return result.stdout
 
+
 def get_answer(video_path, asr_output_path):
     asr_caption = generate_asr(video_path, asr_output_path)
     logger.info("ASR caption is ready. Video chapters in processing.")
@@ -82,18 +109,11 @@ def get_answer(video_path, asr_output_path):
     logger.info("Inference finished successfully")
     return video_caption
 
-@app.route("/respond", methods=["POST"])
-def respond():
-    global CAP_ERR_MSG
-    st_time = time.time()
 
-    paths = request.json.get("video_paths")
-    durations = request.json.get("video_durations")
-    types = request.json.get("video_types")
-    logger.info(paths)
-
+async def subinfer(paths, durations, types):
+    write_task_state({"state": "scheduled"})
     responses = []
-
+    
     for path, duration, atype in zip_longest(paths, durations, types):
         logger.info(f"Processing batch at vidchapters annotator: {path}")
         if '=' in path:
@@ -124,7 +144,7 @@ def respond():
             asr_output_path = os.path.join(DATA_DIR, i.split(".")[0]+'_asr')
             video_path = os.path.join(DATA_DIR, i)
             video_caption = get_answer(video_path, asr_output_path)
-            responses += [{"video_captioning_chapters": video_caption}]
+            responses.append({"video_captioning_chapters": video_caption})
         except Exception:
             logger.info(f"An error occurred in vidchapters-service: {CAP_ERR_MSG}")
             responses.append(
@@ -132,7 +152,38 @@ def respond():
             )
 
     logger.info(f"VIDCHAPTERS_SERVICE RESPONSE: {responses}")
+    write_task_state({"state": "done", "response": responses})
+        
+
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.post("/respond")
+async def respond(payload: VideoPayload):
+    st_time = time.time()
+    task_state = read_task_state()
+    logger.info(f"Task state: {task_state}")
+    logger.info(f'Paths: {payload.video_paths}')
+
+    responses = []
+    
+    if not task_state.get("state") and payload.video_paths:
+        asyncio.create_task(subinfer(payload.video_paths, payload.video_durations, payload.video_types))
+        responses.append({"state": "scheduled"})
+                
+    if task_state.get("state") == "scheduled":
+        responses.append(task_state)
+    elif task_state.get("state") == "done":
+        responses.append(task_state)
+        write_task_state({"state": ""})
 
     total_time = time.time() - st_time
     logger.info(f"service exec time: {total_time:.3f}s")
-    return jsonify(responses)
+    return jsonable_encoder(responses)
