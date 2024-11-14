@@ -160,10 +160,9 @@ services:
         RET_SCALE_FACTOR: 0
       context: .
       dockerfile: ./annotators/vidchapters_service/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8045
+    command: uvicorn server:app --host 0.0.0.0 --port 8045
     environment:
       - CUDA_VISIBLE_DEVICES=0,1,2
-      - FLASK_APP=server
     deploy:
       resources:
         limits:
@@ -196,10 +195,9 @@ services:
         RET_SCALE_FACTOR: 0
       context: .
       dockerfile: ./services/fromage/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8069
+    command: uvicorn server:app --host 0.0.0.0 --port 8069
     environment:
       - CUDA_VISIBLE_DEVICES=0
-      - FLASK_APP=server
     deploy:
       resources:
         limits:
