@@ -5,7 +5,7 @@ import json
 import sys
 import re
 from itertools import zip_longest
-import asyncio
+import uuid
 import subprocess
 
 sys.path.append("/src/")
@@ -17,11 +17,11 @@ import sentry_sdk
 from AudioCaption.captioning.pytorch_runners.inference_waveform import inference
 from urllib.request import urlretrieve
 
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
-from typing import List
+from typing import List, Optional
 
 
 CAP_ERR_MSG = "The audiofile format is not supported"
@@ -37,20 +37,9 @@ logger = logging.getLogger(__name__)
 
 logging.getLogger("werkzeug").setLevel("WARNING")
 
-STATE_FILE = "task_state.json"
+TASKS_DIR = "tasks"
 
-
-def read_task_state():
-    try:
-        with open(STATE_FILE, "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {"task_state": ""}
-
-    
-def write_task_state(state):
-    with open(STATE_FILE, "w") as file:
-        json.dump(state, file)
+os.makedirs(TASKS_DIR, exist_ok=True)
 
 
 result = subprocess.run(
@@ -114,9 +103,25 @@ class VoicePayload(BaseModel):
     video_durations: List[int] = []
     video_types: List[str] = []
 
+class VoiceResponse(BaseModel):
+    task_id: str
+    message: str
+        
 
-async def subinfer(paths, durations, types):
-    write_task_state({"state": "scheduled"})    
+class TaskStatus(BaseModel):
+    task_id: str
+    status: str
+    result: Optional[str] = None
+        
+        
+class TaskStatusRequest(BaseModel):
+    task_id: str
+
+
+def subinfer(task_id: str, 
+             paths: list, 
+             durations: list, 
+             types: list):
     responses = []
 
     for path, duration, atype in zip_longest(paths, durations, types):
@@ -179,8 +184,16 @@ async def subinfer(paths, durations, types):
                 [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": "Error"}]
             )
 
-    write_task_state({"task_state": "done", "response": responses})
     logger.info(f"VOICE_SERVICE RESPONSE: {responses}")
+    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+    with open(task_file, "w", encoding="utf-8") as f:
+        status = "failed" if responses[0]["caption"] == "Error" else "completed"
+        task_status = {
+                "task_id": task_id,
+                "status": status,
+                "result": responses
+            }
+        json.dump(task_status, f)
     
 
 app = FastAPI()
@@ -193,24 +206,39 @@ app.add_middleware(
 )
 
 
-@app.post("/respond")
-async def infer(payload: VoicePayload):
+@app.post("/respond", response_model=VoiceResponse)
+def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
     st_time = time.time()
-    responses = []
-    task_state = read_task_state()
-    logger.info(f"Task state: {task_state}")
-    
-    if not task_state.get("task_state") and (payload.sound_paths or payload.video_paths):
-        print('Async process start')
-        asyncio.create_task(subinfer(payload.sound_paths, payload.sound_durations, payload.sound_types))
-        responses.append({"task_state": "task_scheduled"})
-        
-    if task_state.get("task_state") == "scheduled":
-        responses.append(task_state)
-    elif task_state.get("task_state") == "done":
-        responses.append(task_state)
-        write_task_state({"task_state": ""})
+    task_id = str(uuid.uuid4())
+    task_initial = {
+        "task_id": task_id,
+        "status": "pending",
+        "result": None
+    }
+    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+    with open(task_file, "w", encoding="utf-8") as f:
+        json.dump(task_initial, f)
+    background_tasks.add_task(subinfer, 
+                              task_id, 
+                              payload.sound_paths, 
+                              payload.sound_durations, 
+                              payload.sound_types)
 
     total_time = time.time() - st_time
     logger.info(f"voice_service exec time: {total_time:.3f}s")
-    return jsonable_encoder(responses)
+    return VoiceResponse(task_id=task_id, message="Task is pending")
+
+
+@app.get("/task-status", response_model=TaskStatus)
+def get_task_status(task_id: TaskStatusRequest):
+    task_file = os.path.join(TASKS_DIR, f"{task_id.task_id}.json")
+    
+    with open(task_file, "r") as file:
+        task_data = json.load(file)
+        task_status = TaskStatus(
+            task_id=task_data.get("task_id"),
+            status=task_data.get("status"),
+            result=str(task_data.get("result")) if task_data.get("result") is not None else None
+        )
+        
+    return task_status
