@@ -16,7 +16,7 @@ def test_in_out():
     valid_extensions = ['.mp4']
     assert any(test_data["video_paths"][0].lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
     assert isinstance(result.json(), (dict, list)), "Expected result to be a JSON object or array"
-    print(f"...\nSent file {video_path},\ngot response {result.json()}")
+    print(f"...\nSent file {video_path},\ngot response {result.json()[0].get("response")}")
 
 
 @allure.description("""4.1.3 Test execution time""")

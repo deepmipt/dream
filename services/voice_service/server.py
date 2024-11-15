@@ -178,7 +178,7 @@ async def subinfer(paths, durations, types):
             responses.append(
                 [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": "Error"}]
             )
-            
+
     write_task_state({"task_state": "done", "response": responses})
     logger.info(f"VOICE_SERVICE RESPONSE: {responses}")
     

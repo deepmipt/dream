@@ -116,4 +116,3 @@ async def respond(payload: FromagePayload):
     total_time = time.time() - st_time
     logger.info(f"fromage exec time: {total_time:.3f}s")
     return jsonable_encoder(responses)
-
