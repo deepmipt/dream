@@ -24,7 +24,7 @@ URL = "http://0.0.0.0:8069/respond"
 def test_in_out(test_in_out_data):
     result = requests.post(URL, json=test_in_out_data)
     while result.json() and not result.json()[0].get("response"):
-	result = requests.post(URL, json={})
+        result = requests.post(URL, json={})
     valid_extensions = ['.jpeg', '.jpg', '.png']
     for path in test_in_out_data['image_paths']:
         assert any(path.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
@@ -63,6 +63,8 @@ def test_for_bleu():
         image_paths = [folder_path+value]
         test_data = {"image_paths": image_paths, "sentences": sentences}
         prediction = requests.post(URL, json=test_data)
+        while prediction.json() and not prediction.json()[0].get("response"):
+            prediction = requests.post(URL, json={})
         predictions.append(prediction.json())
 
     df['pred'] = predictions

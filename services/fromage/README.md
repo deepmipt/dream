@@ -1,16 +1,21 @@
-# FROMAGe Service
-**FROMAGe** is a service that is used to process an input image and respond to the user's questions accordingly. It is based on the [FROMAGe](https://github.com/kohjingyu/fromage/tree/main) model from [Grounding Language Models to Images for Multimodal Inputs and Outputs](https://arxiv.org/abs/2301.13823).
+# Fromage Service
+**Fromage Service** -- это программный модуль мультимодальной диалогой системы, входящий в состав дистрибутива dream_multimodal, используемый для генерации подписей (аннотаций) к изображениям в поддерживаемых форматах (jpg и png) и формирования ответов на вопросы, связанные в полученным изображение.
 
-GPU RAM 20 GB, RAM 45 GB. 
+В состав программного модуля также входит программный модуль **Video_service**, используемый для генерации подписей (аннотаций) к видеофайлам в форматах mp4.
 
-## Running server
+<!-- Список и функкциональность основных файлов -->
 
+## Запуск 
+Для запуска программного моделя fromage_service необходимо в корневой директории выполнить следующие команды:
 ```sh
-sudo AGENT_PORT=4242 docker-compose -f docker-compose.yml -f assistant_dists/dream_multimodal/docker-compose.override.yml -f assistant_dists/dream_multimodal/dev.yml -f assistant_dists/dream_multimodal/test.yml up --build fromage
+docker-compose -f docker-compose.yml -f assistant_dists/dream_multimodal/docker-compose.override.yml -f assistant_dists/dream_multimodal/dev.yml -f assistant_dists/dream_multimodal/proxy.yml up --build fromage
 ```
 
-## Testing
+## Тестирование
+
+Для запуска тестирования программного моделя fromage_service необходимо в корневой директории выполнить следующие команды:
 
 ```sh
-./test.sh
+bash tests/test_launch_vision.sh
+bash tests/test_fromage.sh
 ```
