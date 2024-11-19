@@ -96,26 +96,18 @@ result = subprocess.run(
 
 
 class VoicePayload(BaseModel):
-    sound_paths: List[str] = []
-    sound_durations: List[int] = []
-    sound_types: List[str] = []
-    video_paths: List[str] = []
-    video_durations: List[int] = []
-    video_types: List[str] = []
-
-class VoiceResponse(BaseModel):
-    task_id: str
-    message: str
+    sound_paths: List[Optional[str]] = []
+    sound_durations: List[Optional[int]] = []
+    sound_types: List[Optional[str]] = []
+    video_paths: List[Optional[str]] = []
+    video_durations: List[Optional[int]] = []
+    video_types: List[Optional[str]] = []
         
 
 class TaskStatus(BaseModel):
     task_id: str
     status: str
     result: Optional[str] = None
-        
-        
-class TaskStatusRequest(BaseModel):
-    task_id: str
 
 
 def subinfer(task_id: str, 
@@ -177,7 +169,7 @@ def subinfer(task_id: str,
             logger.info("Inference finished successfully")
             with open('/src/output.json', 'r') as file:
                 caption = json.load(file)[fname]
-            responses += [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": caption}]
+            responses += [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": caption}] # FIXME
         except Exception as e:
             logger.info(f"An error occurred in voice-service: {CAP_ERR_MSG}, {e}")
             responses.append(
@@ -206,7 +198,7 @@ app.add_middleware(
 )
 
 
-@app.post("/respond", response_model=VoiceResponse)
+@app.post("/respond")
 def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
     st_time = time.time()
     task_id = str(uuid.uuid4())
@@ -225,20 +217,39 @@ def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
                               payload.sound_types)
 
     total_time = time.time() - st_time
-    logger.info(f"voice_service exec time: {total_time:.3f}s")
-    return VoiceResponse(task_id=task_id, message="Task is pending")
 
+    all_tasks = []
 
-@app.get("/task-status", response_model=TaskStatus)
-def get_task_status(task_id: TaskStatusRequest):
-    task_file = os.path.join(TASKS_DIR, f"{task_id.task_id}.json")
+    for filename in os.listdir(TASKS_DIR):
+        if filename.endswith(".json"):
+            task_file_path = os.path.join(TASKS_DIR, filename)
+            
+            try:
+                with open(task_file_path, "r") as file:
+                    task_data = json.load(file)
+                    
+                    task_id = task_data.get("task_id")
+                    status = task_data.get("status")
+                    result = str(task_data.get("result")) if task_data.get("result") is not None else None
+                    
+                    task_info = {
+                        "task_id": task_id,
+                        "status": status,
+                        "result": result
+                    }
+                    
+                    all_tasks.append(task_info)
+            
+            except json.JSONDecodeError:
+                print(f"Error decoding JSON in file: {task_file_path}")
+            except Exception as e:
+                print(f"An error occurred while processing file {task_file_path}: {e}")
+
+    cur_status_str = "".join(
+        f"id: {task['task_id']}: {task['status']}, "
+        f"caption: {task['result'] or 'N/A'} \n"
+        for task in all_tasks
+    )
     
-    with open(task_file, "r") as file:
-        task_data = json.load(file)
-        task_status = TaskStatus(
-            task_id=task_data.get("task_id"),
-            status=task_data.get("status"),
-            result=str(task_data.get("result")) if task_data.get("result") is not None else None
-        )
-        
-    return task_status
+    logger.info(f"voice_service exec time: {total_time:.3f}s")
+    return [{"task_id": task_id, "status": "pending", "all_status": cur_status_str}] 
