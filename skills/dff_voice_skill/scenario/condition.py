@@ -9,6 +9,14 @@ logger = logging.getLogger(__name__)
 def voice_message_detected(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
     voice = int_ctx.get_last_human_utterance(ctx, actor).get("annotations", {}).get("voice_service", {})
     logger.debug(f"CONDITION.PY VOICE: {voice}")
-    if voice.get("caption", "Error") != "Error":
+    if voice.get("task_id", "") != "Error":
+        return True
+    return False
+
+
+def can_report(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
+    voice = int_ctx.get_last_human_utterance(ctx, actor).get("annotations", {}).get("voice_service", {})
+    logger.debug(f"CONDITION.PY VOICE: {voice}")
+    if voice.get("all_status", ""):
         return True
     return False

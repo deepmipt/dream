@@ -16,7 +16,7 @@ COPY ./requirements.txt /src/requirements.txt
 COPY ./server.py /src/server.py
 COPY ./tests /src/tests
 COPY ./test.py /src/test.py
-COPY ./bleu_metric_test.py /src/bleu_metric_test.py
+# COPY ./bleu_metric_test.py /src/bleu_metric_test.py
 
 RUN mkdir -p /src/aux_files/AudioCaption/
 RUN wget --no-check-certificate -O /src/aux_files/AudioCaption/experiments.zip https://files.deeppavlov.ai/dolidze/for_voice_service/AudioCaption.zip
