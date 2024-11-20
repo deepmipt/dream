@@ -65,7 +65,8 @@ def test_for_bleu():
         prediction = requests.post(URL, json=test_data)
         while prediction.json() and not prediction.json()[0].get("response"):
             prediction = requests.post(URL, json={})
-        predictions.append(prediction.json())
+        
+        predictions.append(prediction.json()[0].get("response"))
 
     df['pred'] = predictions
     df_new_path = "./fromage_with_predictions.csv"
