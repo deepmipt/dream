@@ -123,7 +123,6 @@ def subinfer(task_id: str,
         filename = re.sub(r"^[^\w\d.]+|[^\w\d.]+$", "",filename)
         filetype = filename.split(".")[-1]
         filetype = re.sub(r"^[^\w\d]+|[^\w\d]+$", "",filetype)
-        logger.info(filetype)
 
         if not os.path.exists(AUDIO_DIR):
             os.makedirs(AUDIO_DIR)
@@ -158,7 +157,8 @@ def subinfer(task_id: str,
             logger.info(f"Scanning AUDIO_DIR ({AUDIO_DIR}) for wav files...")
             fname = "NOFILE"
             for i in os.listdir(AUDIO_DIR):
-                if i.split(".")[-1] == "wav":
+                logger.info(f"{filename.split('.')[0]}, {str(i.split('.')[0])}")
+                if (i.split(".")[0] == filename.split(".")[0]) and (i.split(".")[-1] == "wav"):
                     logger.info(f"found file: {os.path.join(AUDIO_DIR, i)}")
                     inference(os.path.join(AUDIO_DIR, i), "/src/output.json", MODEL_PATH)
                     fname = i
@@ -199,21 +199,26 @@ app.add_middleware(
 @app.post("/respond")
 def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
     st_time = time.time()
-    task_id = str(uuid.uuid4())
-    task_initial = {
-        "task_id": task_id,
-        "status": "pending",
-        "result": None
-    }
-    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
-    with open(task_file, "w", encoding="utf-8") as f:
-        json.dump(task_initial, f)
-    background_tasks.add_task(subinfer, 
-                              task_id, 
-                              payload.sound_paths, 
-                              payload.sound_durations, 
-                              payload.sound_types)
-
+    logger.info(f'payload: {payload}')
+    bad_filenames_present = any([
+        'non_existent' in el for el in payload.sound_paths])
+    if not bad_filenames_present:
+        task_id = str(uuid.uuid4())
+        task_initial = {
+            "task_id": task_id,
+            "status": "pending",
+            "result": None
+        }
+        task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+        with open(task_file, "w", encoding="utf-8") as f:
+            json.dump(task_initial, f)
+        background_tasks.add_task(subinfer, 
+                                task_id, 
+                                payload.sound_paths, 
+                                payload.sound_durations, 
+                                payload.sound_types)
+    else:
+        task_id = "non_existent_task"
     total_time = time.time() - st_time
 
     all_tasks = []
@@ -226,12 +231,12 @@ def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
                 with open(task_file_path, "r") as file:
                     task_data = json.load(file)
                     
-                    task_id = task_data.get("task_id")
+                    t_id = task_data.get("task_id")
                     status = task_data.get("status")
                     result = str(task_data.get("result")) if task_data.get("result") is not None else None
                     
                     task_info = {
-                        "task_id": task_id,
+                        "task_id": t_id,
                         "status": status,
                         "result": result
                     }
