@@ -254,7 +254,7 @@ def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
             "status": task["status"],
             "caption": task["result"] or "N/A"
         }
-        for task in all_tasks]   #TODO: почему считает строкой? Переделать в список: явное объявление?
+        for task in all_tasks] 
     result = {
         "task_id": task_id,
         "status": "pending",
