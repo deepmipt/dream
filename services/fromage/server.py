@@ -3,24 +3,25 @@ import os
 import time
 import torch
 import sentry_sdk
-import asyncio
 import json
+import uuid
 
 from PIL import Image
 import requests
-from torchvision import transforms
 from transformers import BlipProcessor, BlipForConditionalGeneration
+from itertools import zip_longest
 
-from fastapi import FastAPI
-from fastapi.encoders import jsonable_encoder
+from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from typing import List
+
 
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 try:
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -38,20 +39,18 @@ except Exception as e:
 
 logging.getLogger("werkzeug").setLevel("WARNING")
 
-STATE_FILE = "task_state.json"
+TASKS_DIR = "tasks"
+os.makedirs(TASKS_DIR, exist_ok=True)
 
 
-def read_task_state():
-    try:
-        with open(STATE_FILE, "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {"task_state": ""}
-
-    
-def write_task_state(state):
-    with open(STATE_FILE, "w") as file:
-        json.dump(state, file)
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)   
 
 
 class FromagePayload(BaseModel):
@@ -69,50 +68,73 @@ def generate_responses(image_path, prompt):
     logger.info([model_answer])
     return [model_answer]
 
+def read_task_status(task_id):
+    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+    if os.path.exists(task_file):
+        with open(task_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        return None
 
-async def subinfer(image_paths, sentences):
-    write_task_state({"task_state": "scheduled"})
-    for image_path, sentence in zip(image_paths, sentences):
+def write_task_status(task_id, status, result=None):
+    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+    task_status = {
+        "task_id": task_id,
+        "status": status,
+        "result": result
+    }
+    with open(task_file, "w", encoding="utf-8") as f:
+        json.dump(task_status, f)
+
+def subinfer(task_id: str, image_paths: list, sentences: list):
+    write_task_status(task_id, "pending")
+    responses = []
+    for image_path, sentence in zip_longest(image_paths, sentences):
         if image_path and image_path.lower().endswith(('.png', '.jpg', '.jpeg')):
             try:
                 frmg_answers = generate_responses(image_path, sentence)
+                responses.append({"image_path": image_path, "caption": frmg_answers[0]})
             except Exception as exc:
                 logger.exception(exc)
                 sentry_sdk.capture_exception(exc)
-                frmg_answers = [""]
+                responses.append({"image_path": image_path, "caption": "Error"})
         else:
-            frmg_answers = [""]
-    write_task_state({"task_state": "done", "response": frmg_answers})
-    logger.info(f"VOICE_SERVICE RESPONSE: {frmg_answers}")
+            responses.append({"image_path": image_path, "caption": "Invalid image"})
+    write_task_status(task_id, "completed", responses)
+    logger.info(f"fromage RESPONSE: {responses}")         
 
-            
-app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)            
-            
 
 @app.post("/respond")
-async def respond(payload: FromagePayload):
+def respond(payload: FromagePayload, background_tasks: BackgroundTasks):
     st_time = time.time()
-    responses = []
-    task_state = read_task_state()
-    logger.info(f"Task state: {task_state}")
-    
-    if not task_state.get("task_state") and payload.image_paths:
-        asyncio.create_task(subinfer(payload.image_paths, payload.sentences))
-        responses.append({"task_state": "scheduled"})
-        
-    if task_state.get("task_state") == "scheduled":
-        responses.append(task_state)
-    elif task_state.get("task_state") == "done":
-        responses.append(task_state)
-        write_task_state({"task_state": ""})
+    task_id = str(uuid.uuid4())
+    write_task_status(task_id, "pending")
+    background_tasks.add_task(subinfer, task_id, payload.image_paths, payload.sentences)
+
+    all_tasks = []
+    for filename in os.listdir(TASKS_DIR):
+        if filename.endswith(".json"):
+            task_file_path = os.path.join(TASKS_DIR, filename)
+            try:
+                with open(task_file_path, "r") as file:
+                    task_data = json.load(file)
+                    task_info = {
+                        "task_id": task_data.get("task_id"),
+                        "status": task_data.get("status"),
+                        "result": task_data.get("result")
+                    }
+                    all_tasks.append(task_info)
+            except json.JSONDecodeError:
+                logger.error(f"Error decoding JSON in file: {task_file_path}")
+            except Exception as e:
+                logger.error(f"An error occurred while processing file {task_file_path}: {e}")
 
     total_time = time.time() - st_time
+    cur_status_str = "".join(
+        f"id: {task['task_id']}: {task['status']}, "
+        f"caption: {task['result'] or 'N/A'} \n"
+        for task in all_tasks
+    )
+
     logger.info(f"fromage exec time: {total_time:.3f}s")
-    return jsonable_encoder(responses)
+    return [{"task_id": task_id, "status": "pending", "all_status": cur_status_str}]
