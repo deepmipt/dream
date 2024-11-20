@@ -130,11 +130,17 @@ def respond(payload: FromagePayload, background_tasks: BackgroundTasks):
                 logger.error(f"An error occurred while processing file {task_file_path}: {e}")
 
     total_time = time.time() - st_time
-    cur_status_str = "".join(
-        f"id: {task['task_id']}: {task['status']}, "
-        f"caption: {task['result'] or 'N/A'} \n"
-        for task in all_tasks
-    )
-
+    cur_status_json = [
+        {
+            "id": task["task_id"],
+            "status": task["status"],
+            "caption": task["result"] or "N/A"
+        }
+        for task in all_tasks] 
+    result = {
+        "task_id": task_id,
+        "status": "pending",
+        "all_status": cur_status_json
+    }
     logger.info(f"fromage exec time: {total_time:.3f}s")
-    return [{"task_id": task_id, "status": "pending", "all_status": cur_status_str}]
+    return result
