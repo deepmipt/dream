@@ -24,8 +24,7 @@ RUN gdown --fuzzy https://drive.google.com/file/d/1qmQcEkDDlnkAkRd6BIrVoArBv6Sg1
 RUN gdown --fuzzy https://drive.google.com/file/d/1F08bQriJypaIOfsCjMlVdlwdLYg0KVZF/view -O /src/aux_files/large-v2.pt -c --no-check-certificate
 RUN mkdir -p /src/TOFILL/
 RUN gdown --fuzzy https://drive.google.com/file/d/1H12iS2awNhbxguRgzsM_YIafnDf3mG7y/view -O /src/TOFILL/ViT-L-14.pt -c --no-check-certificate
-COPY ./annotators/vidchapters_service /src/
 
 RUN apt-get update && apt-get install -y ffmpeg
 
-# RUN python -c "import whisper; whisper.load_model('large-v2', device='cpu', download_root='/src/aux_files/TOFILL')"
+COPY ./annotators/vidchapters_service /src/
