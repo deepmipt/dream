@@ -18,11 +18,9 @@ health = HealthCheck(app, "/healthcheck")
 logging.getLogger("werkzeug").setLevel("WARNING")
 
 
-# stanza.download('en')  # -> moved to Dockerfile
 nlp = stanza.Pipeline("en")
 
 
-# D-scripts dictionaries
 pos_type_expl = {
     "i - someone": 1,
     "you - someone": 2,
@@ -50,7 +48,6 @@ second_prons = ["you"]
 inclusive_prons = ["we"]
 
 
-# SRL - semantic role labelling
 def find_root(sent):
     for token in sent:
         if token["deprel"] == "root":
@@ -159,7 +156,6 @@ def get_dsript_type(orig_sent, type_expl):
     return type_num
 
 
-# emotion and mood dictionaries
 positive_emotions = [
     "admiration",
     "joy",
@@ -266,7 +262,6 @@ def get_bot_default_mood(bot_personality):
     return default_mood
 
 
-# get bot emotion using user emotion and user utterance
 def get_bot_emotion(sent, emotion, sentiment):
     if emotion == "neutral":
         bot_emotion = "neutral"
@@ -282,7 +277,7 @@ def get_bot_emotion(sent, emotion, sentiment):
     elif emotion in negative_emotions:
         type_num = get_dsript_type(sent, neg_type_expl)
         bot_emotion = neg_reactions[type_num][emotion]
-    else:
+    elif emotion in positive_emotions:
         type_num = get_dsript_type(sent, pos_type_expl)
         bot_emotion = pos_reactions[type_num][emotion]
     return bot_emotion
@@ -312,7 +307,7 @@ def get_bot_emotion_proba(bot_emotion):
     emotion_proba[bot_emotion] = 1
     return emotion_proba
 
-# the rate of mood decrease
+
 def get_dim_decay(default_dim, curr_dim):
     p_dif = abs(default_dim - curr_dim)
     if p_dif == 0:
@@ -332,7 +327,6 @@ def get_decay(default_mood, curr_mood):
     return decay
 
 
-# comparison of old and new mood
 def check_same_mood(curr_mood, new_mood):
     print(curr_mood, new_mood)
     for i in range(len(curr_mood)):
@@ -341,7 +335,6 @@ def check_same_mood(curr_mood, new_mood):
     return True
 
 
-# new mood calculation using difference btw current mood and current emotion
 def get_new_mood(default_mood, curr_mood, bot_emotion):
     if check_same_mood(pad_emotions[bot_emotion], curr_mood):
         decay = [0, 0, 0]
@@ -352,9 +345,6 @@ def get_new_mood(default_mood, curr_mood, bot_emotion):
     new_mood_reg = [1 if dim > 1 else dim for dim in new_mood]
     new_mood_reg = [-1 if dim < -1 else dim for dim in new_mood_reg]
 
-    # dim_symbols = [str(int(dim / abs(dim))) if dim != 0 else '-1' for dim in new_mood_reg]
-    # octant = ''.join(dim_symbols)
-    # print('New mood:', pad_moods[octant])
     return new_mood_reg
 
 
