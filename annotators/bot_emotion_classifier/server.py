@@ -344,7 +344,6 @@ def get_new_mood(default_mood, curr_mood, bot_emotion):
     new_mood = [0.5 * curr_mood[i] + 0.5 * vec[i] + decay[i] for i in range(len(curr_mood))]
     new_mood_reg = [1 if dim > 1 else dim for dim in new_mood]
     new_mood_reg = [-1 if dim < -1 else dim for dim in new_mood_reg]
-
     return new_mood_reg
 
 
@@ -357,7 +356,6 @@ def get_mood_label(bot_mood):
             octant += "1"
         else:
             octant += "-1"
-
     return pad_moods[octant]
 
 
@@ -425,9 +423,7 @@ def respond():
                 
         current_result = {"bot_mood": new_bot_mood, "bot_mood_label": new_bot_mood_label, "bot_emotion": bot_emotion,
                           "bot_emotion_proba": bot_emotion_proba}
-
         results.append(current_result)
-
     return jsonify(results)
 
 
