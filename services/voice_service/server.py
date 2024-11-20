@@ -172,9 +172,7 @@ def subinfer(task_id: str,
             responses += [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": caption}] # FIXME
         except Exception as e:
             logger.info(f"An error occurred in voice-service: {CAP_ERR_MSG}, {e}")
-            responses.append(
-                [{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": "Error"}]
-            )
+            responses +=[{"sound_type": atype, "sound_duration": duration, "sound_path": path, "caption": "Error"}]
 
     logger.info(f"VOICE_SERVICE RESPONSE: {responses}")
     task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
@@ -245,11 +243,21 @@ def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
             except Exception as e:
                 print(f"An error occurred while processing file {task_file_path}: {e}")
 
-    cur_status_str = "".join(
-        f"id: {task['task_id']}: {task['status']}, "
-        f"caption: {task['result'] or 'N/A'} \n"
-        for task in all_tasks
-    )
-    
+    cur_status_json = [
+        {
+            "id": task["task_id"],
+            "status": task["status"],
+            "caption": task["result"] or "N/A"
+        }
+        for task in all_tasks]   #TODO: почему считает строкой? Переделать в список: явное объявление?
+    result = {
+        "task_id": task_id,
+        "status": "pending",
+        "all_status": cur_status_json
+    }
+    # result_json = json.dumps(result)
+    # logger.info(result_json)
+
     logger.info(f"voice_service exec time: {total_time:.3f}s")
-    return [{"task_id": task_id, "status": "pending", "all_status": cur_status_str}] 
+
+    return result
