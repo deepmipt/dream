@@ -463,12 +463,12 @@ services:
       replicas: 1
       resources:
         limits:
-          memory: 312M
+          memory: 8G
         reservations:
-          memory: 312M
+          memory: 8G
     environment:
           - NVIDIA_VISIBLE_DEVICES=all
-          - CUDA_VISIBLE_DEVICES=0
+          - CUDA_VISIBLE_DEVICES=4
 
   emotion-detection:
     env_file: [ .env ]
