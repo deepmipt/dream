@@ -16,9 +16,9 @@ compose:
   deploy:
     resources:
       limits:
-        memory: 312M
+        memory: 8G
       reservations:
-        memory: 312M
+        memory: 8G
   volumes:
   - ./annotators/personality_detection:/src
   ports:
