@@ -31,15 +31,12 @@ def _call_service(payload):
         if current_task_info['status'] == "completed": 
             caption = current_task_info.get('caption')
             caption = caption[0]['caption']
-
-            assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
-
             break
         else:
             time.sleep(10)
     
     avg_response_time = sum(time_deltas) / len(time_deltas)
-    return caption, avg_response_time
+    return result, caption, avg_response_time
 
 @allure.description("""4.1.2 Test input and output data types""")
 def test_in_out():
@@ -53,9 +50,11 @@ def test_in_out():
     for path in test_data.get("video_paths"):
         if path:
             assert any(path.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
-            print(f"...\nSent file {test_data.get('video_paths')},\ngot correct input type") #TODO which format get
-    caption, _  = _call_service(test_data)
-    print(f"...\nSent file {test_data.get('video_paths')},\ngot response {caption}")  
+            print(f"\nSent file {test_data.get('video_paths')},\ngot correct input type") #TODO which format get
+    result, caption, _  = _call_service(test_data)
+    assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
+    print(f"\ngot correct output type")
+    print(f"\ngot response {caption}")  
     # assert any(test_data["video_paths"][0].lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
     # assert isinstance(result.json(), (dict, list)), "Expected result to be a JSON object or array"
     # print(f"...\nSent file {video_path},\ngot response {result.json()[0].get("response")}")
@@ -68,7 +67,7 @@ def test_exec_time():
         "video_durations": [59], 
         "video_types": ['.mp4']
     }    
-    _, avg_time = _call_service(test_data)
+    _, _, avg_time = _call_service(test_data)
     assert avg_time <= 0.4, "Unsufficient run time"
     print(f"...\nAverage response time is {avg_time}")
     

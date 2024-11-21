@@ -1,40 +1,24 @@
 # syntax=docker/dockerfile:experimental
-FROM python:3.8
-
 FROM pytorch/pytorch:1.5-cuda10.1-cudnn7-runtime
 
 WORKDIR /src
 
-ARG PRETRAINED_MODEL_FNAME
-ENV PRETRAINED_MODEL_FNAME ${PRETRAINED_MODEL_FNAME}
-ARG CONFIG_NAME
-ENV CONFIG_NAME ${CONFIG_NAME}
 ARG SERVICE_PORT
 ENV SERVICE_PORT ${SERVICE_PORT}
-ARG RET_SCALE_FACTOR
-ENV RET_SCALE_FACTOR ${RET_SCALE_FACTOR}
+
+ARG SERVICE_NAME
+ENV SERVICE_NAME ${SERVICE_NAME}
 
 RUN python -m pip install --upgrade pip
 RUN apt-get update && apt-get install -y wget
 
-ENV PYTHONPATH "/src/fromage:/fromage:$PYTHONPATH"
+# ENV PYTHONPATH "/src/fromage:/fromage:$PYTHONPATH"
 
 COPY ./services/fromage/requirements.txt /src/requirements.txt
 RUN pip install -r /src/requirements.txt
 RUN pip install --upgrade transformers
-
-
-# RUN apt-get update && apt-get install git -y
-
-# RUN mkdir -p /src/fromage/ && \
-#     git clone https://github.com/salesforce/BLIP /src/fromage/
-
-RUN mkdir -p /services/fromage
-# # RUN wget --no-check-certificate -O /services/fromage/fromage_model/cc3m_embeddings.pkl https://files.deeppavlov.ai/dolidze/for_fromage/cc3m_embeddings.pkl 
-# # RUN wget --no-check-certificate -O /services/fromage/fromage_model/model_args.json https://files.deeppavlov.ai/dolidze/for_fromage/model_args.json
-# RUN wget --no-check-certificate -O /services/fromage/fromage_model https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_vqa_capfilt_large.pth
+# RUN mkdir -p /services/fromage
 
 COPY ./services/fromage/ /src/
-COPY ./common/ ./common/
-
-# CMD gunicorn --workers=1 server:app -b 0.0.0.0:${SERVICE_PORT} --timeout=1200
+# COPY ./common/ ./common/
+ENV PYTHONPATH="/src:$PYTHONPATH"

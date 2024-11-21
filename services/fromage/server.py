@@ -5,6 +5,7 @@ import torch
 import sentry_sdk
 import json
 import uuid
+import sys
 
 from PIL import Image
 import requests
@@ -15,7 +16,6 @@ from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from typing import List
-
 
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 
@@ -39,7 +39,7 @@ except Exception as e:
 
 logging.getLogger("werkzeug").setLevel("WARNING")
 
-TASKS_DIR = "tasks"
+TASKS_DIR = "/src/aux_files/tasks"
 os.makedirs(TASKS_DIR, exist_ok=True)
 
 

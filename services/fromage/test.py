@@ -34,20 +34,14 @@ def _call_service(payload):
             if t['id'] == my_task_id:
                     current_task_info = t 
         if current_task_info['status'] == "completed": 
-            caption = current_task_info.get('caption') # список из 1 словаря
+            caption = current_task_info.get('caption')
             caption = caption[0]['caption']
-            # caption = caption['caption']
-            # caption = ast.literal_eval(caption)
-            # caption = caption[0]['caption']
-
-            assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
-
             break
         else:
             time.sleep(5)
     
     avg_response_time = sum(time_deltas) / len(time_deltas)
-    return caption, avg_response_time
+    return result, caption, avg_response_time
 
 
 @allure.description("""4.1.2 Test input and output data types""")
@@ -72,8 +66,10 @@ def test_in_out(test_in_out_data):
         if path:
             assert any(path.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
             print(f"...\nSent file {payload.get('image_paths')},\ngot correct input type") #TODO which format get
-    caption, _  = _call_service(payload)
-    print(f"...\nSent file {payload.get('image_paths')},\ngot response {caption}")
+    result, caption, _  = _call_service(payload)
+    assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
+    print(f"\ngot correct output type")
+    print(f"\ngot response {caption}")
 
 @allure.description("""4.1.3 Test execution time""")
 def test_exec_time():
@@ -81,7 +77,7 @@ def test_exec_time():
         "image_paths": ["https://raw.githubusercontent.com/deeppavlov/mmodal_files_bkp/refs/heads/main/car.jpg"], 
         "sentences": [""]
         }
-    _, avg_time = _call_service(test_data)
+    _, _, avg_time = _call_service(test_data)
     assert avg_time <= 0.4, "Unsufficient run time"
     print(f"...\nAverage response time is {avg_time}")
 
@@ -102,7 +98,7 @@ def test_for_bleu():
         image_paths = [folder_path+value]
         sentences = [""]
         test_data = {"image_paths": image_paths, "sentences": sentences}
-        prediction, _ = _call_service(test_data)
+        _, prediction, _ = _call_service(test_data)
         predictions.append(prediction)
 
     df['pred'] = predictions

@@ -38,15 +38,12 @@ def _call_service(payload):
             caption = caption.replace("'", '"')
             caption = json.loads(caption)
             caption = caption[0]['caption']
-
-            assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
-
             break
         else:
             time.sleep(5)
     
     avg_response_time = sum(time_deltas) / len(time_deltas)
-    return caption, avg_response_time
+    return result, caption, avg_response_time
 
 
 @allure.description("""4.1.2 Test input and output data types""")
@@ -74,8 +71,10 @@ def test_in_out(test_in_out_data):
         if path:
             assert any(path.lower().endswith(ext) for ext in valid_extensions), "Invalid input type"
             print(f"...\nSent file {payload.get('sound_paths')},\ngot correct input type") #TODO which format get
-    caption, _  = _call_service(payload)
-    print(f"...\nSent file {payload.get('sound_paths')},\ngot response {caption}")
+    result, caption, _  = _call_service(payload)
+    assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
+    print(f"\ngot correct output type")
+    print(f"\ngot response {caption}")
 
     
 @allure.description("""4.1.3 Test execution time""")
@@ -85,7 +84,7 @@ def test_exec_time():
             "sound_durations": [42],
             "sound_types": ["mp3"]
         }
-    _, avg_time = _call_service(test_data)
+    _, _, avg_time = _call_service(test_data)
     assert avg_time <= 0.4, "Unsufficient run time"
     print(f"...\nAverage response time is {avg_time}")
 
@@ -103,7 +102,7 @@ def test_for_bleu():
     df.columns = columns
 	#а вот тут уже pred выделяются из аутпута модели
     predictions = []
-    for value in df['fname']: #TODO: rewrite with 1 extra request
+    for value in df['fname']:
         file_name = re.sub(r"^[^\w\d.]+|[^\w\d.]+$", "",value)
         file_name = file_name.replace(" ", "%20")
         sound_paths = folder_path+file_name
@@ -111,7 +110,7 @@ def test_for_bleu():
         sound_types = file_name.split(".")[1]
         test_data = { "sound_paths": [sound_paths], "sound_durations": [sound_durations], "sound_types": [sound_types]}
 
-        prediction, _ = _call_service(test_data)
+        _, prediction, _ = _call_service(test_data)
         predictions.append(prediction)
         
     
