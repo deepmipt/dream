@@ -260,8 +260,6 @@ def infer(payload: VoicePayload, background_tasks: BackgroundTasks):
         "status": "pending",
         "all_status": cur_status_json
     }
-    # result_json = json.dumps(result)
-    # logger.info(result_json)
 
     logger.info(f"voice_service exec time: {total_time:.3f}s")
 

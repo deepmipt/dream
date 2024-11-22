@@ -45,7 +45,6 @@ def _call_service(payload):
     avg_response_time = sum(time_deltas) / len(time_deltas)
     return result, caption, avg_response_time
 
-
 @allure.description("""4.1.2 Test input and output data types""")
 @pytest.mark.parametrize("test_in_out_data", [
     {
@@ -75,7 +74,6 @@ def test_in_out(test_in_out_data):
     assert isinstance(result, (dict, list)), "Expected result to be a JSON object or array"
     print(f"\ngot correct output type")
     print(f"\ngot response {caption}")
-
     
 @allure.description("""4.1.3 Test execution time""")
 def test_exec_time():
