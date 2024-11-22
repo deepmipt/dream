@@ -3,7 +3,7 @@
         "sentseg": {
             "protocol": "http",
             "timeout": 1.5,
-            "url": "http://sentseg:8011/sentseg"
+            "url": "http://sentseg:8039/sentseg"
         }
     },
     "services": {
@@ -62,7 +62,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.5,
-                    "url": "http://sentseg:8011/sentseg"
+                    "url": "http://sentseg:8039/sentseg"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:preproc_last_human_utt_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -108,7 +108,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.5,
-                    "url": "http://sentseg:8011/sentseg"
+                    "url": "http://sentseg:8039/sentseg"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_bot_utt_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -146,7 +146,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.0,
-                    "url": "http://sentence-ranker:8128/respond"
+                    "url": "http://sentence-ranker:8056/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:sentence_ranker_formatter",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -164,7 +164,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 5,
-                    "url": "http://german-translation-pa:8181/translate"
+                    "url": "http://german-translation-pa:8076/translate"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_bot_utt_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -205,7 +205,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 2.0,
-                    "url": "http://dff-program-y-skill:8008/respond"
+                    "url": "http://dff-program-y-skill:8019/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:dff_program_y_skill_formatter",
                 "response_formatter": "state_formatters.dp_formatters:skill_with_attributes_formatter_service",
@@ -223,7 +223,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 2.0,
-                    "url": "http://dff-intent-responder-skill:8012/respond"
+                    "url": "http://dff-intent-responder-skill:8043/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:dff_intent_responder_skill_formatter",
                 "response_formatter": "state_formatters.dp_formatters:skill_with_attributes_formatter_service",
@@ -273,7 +273,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.0,
-                    "url": "http://ranking-based-response-selector:8002/respond"
+                    "url": "http://ranking-based-response-selector:8055/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:cropped_dialog",
                 "response_formatter": "state_formatters.dp_formatters:base_response_selector_formatter_service",

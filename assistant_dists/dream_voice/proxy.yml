@@ -6,8 +6,8 @@ services:
       context: dp/proxy/
       dockerfile: Dockerfile
     environment:
-      - PROXY_PASS=proxy.deeppavlov.ai:8011
-      - PORT=8011
+      - PROXY_PASS=proxy.deeppavlov.ai:8039
+      - PORT=8039
 
   dff-intent-responder-skill:
     command: ["nginx", "-g", "daemon off;"]
@@ -15,8 +15,8 @@ services:
       context: dp/proxy/
       dockerfile: Dockerfile
     environment:
-      - PROXY_PASS=proxy.deeppavlov.ai:8012
-      - PORT=8012
+      - PROXY_PASS=proxy.deeppavlov.ai:8043
+      - PORT=8043
 
   intent-catcher:
     command: ["nginx", "-g", "daemon off;"]
@@ -33,7 +33,7 @@ services:
       context: dp/proxy/
       dockerfile: Dockerfile
     environment:
-      - PROXY_PASS=proxy.deeppavlov.ai:8128
-      - PORT=8128
+      - PROXY_PASS=proxy.deeppavlov.ai:8056
+      - PORT=8056
 
 version: '3.7'
