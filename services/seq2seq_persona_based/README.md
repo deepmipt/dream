@@ -1,8 +1,24 @@
-# Sequence-to-sequence Persona-based Skill
+# Программный компонент для системы формирования персональности бота: для генерации реплик в диалоге на основе описания персоны бота
 
-## Description
+## Описание
 
-Sequence-to-sequence Persona-based Skill is aimed to provide generted responses taking into account 
-system's persona description extracted by Relative Persona Extractor Annotator.
+Программный компонент для системы формирования персональности бота: для генерации реплик в диалоге на основе описания персоны бота создан для обработки последовательных реплик диалога с целью генерации ответов бота, которые могут обуславливаться на заранее заданную персону.
 
-This skill allows to adapt the dialog system to particular system's persona.
+## Запуск системы
+Для запуска системы необходимо выполнить следующую команду из корневой директории:
+```bash
+docker-compose -f docker-compose.yml -f assistant_dists/dream_mini_persona_based/docker-compose.override.yml -f assistant_dists/dream_mini_persona_based/dev.yml up --build
+```
+
+Данная команда поднимет все необходимые серсисы для дальнейшего взаимодействия с ботом.
+
+## Тестирование
+Для проверки на работоспособность и проверки на корректность возвращаемых данных, необходимо запустить следующую команду:
+```bash
+python test.py
+```
+
+Для запуска теста для оценки времени восстановления программного компонента после непредвиденных сбоев в питании или операционной системе нужно запустить следующий скрипт:
+```bash
+bash test_availability.sh
+```
