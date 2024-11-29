@@ -68,7 +68,6 @@ def jsonify_data(data: Any) -> Any:
 
 def predict_personality(text):
     try:
-        # results = {}
         results = {
             'traits': {},
             'traits_proba': {}
