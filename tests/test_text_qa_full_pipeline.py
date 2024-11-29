@@ -35,7 +35,7 @@ def answer_question(question, check_factoid=True):
     if check_factoid:
         url = "http://0.0.0.0:{}/model".format(FACT_CLS_PORT)
         response_factoid = requests.post("http://0.0.0.0:{}/model".format(FACT_CLS_PORT), json={"sentences": questions}).json()
-        if response_factoid[0]['factoid_classification']['is_factoid'] < 0.5:
+        if response_factoid[0]['factoid_classification']['is_factoid'] < 0.8:
             questions = []
 
     facts = requests.post("http://0.0.0.0:{}/model".format(FACT_RETRIEVAL_PORT), json = {"human_sentences": questions}).json()
@@ -179,11 +179,7 @@ def test_text_qa_json(question, gold_result):
     start_time = time.time()
     result = answer_question(question)
     try:
-        response_cls = requests.post("http://0.0.0.0:{}/model".format(FACT_CLS_PORT), json={"sentences": [question]})
-        response_fact_retrieval = requests.post("http://0.0.0.0:{}/model".format(FACT_RETRIEVAL_PORT), json={"human_sentences": [question]})
-        response_text_qa = requests.post("http://0.0.0.0:{}/model".format(TEXT_QA_PORT), json={"question_raw": [question], "top_facts": response_fact_retrieval.json()})
-        response_cls.json()
-        response_fact_retrieval.json()
+        response_text_qa = requests.post("http://0.0.0.0:{}/answer_question".format(TEXT_QA_PORT), json={"question_raw": [question]})
         response_text_qa.json()
         logger.info("Success!")
         logger.info("The output data is in json format: {}".format(json.dumps(response_text_qa.json())))
@@ -201,17 +197,17 @@ def test_text_qa_json(question, gold_result):
     [
         (
             "The weather's so nice today.",
-            [],
+            "",
         ),
     ]
 )
 def test_text_qa_not_a_question(question, gold_result):
-    result = answer_question(question)
+    result = requests.post("http://0.0.0.0:{}/answer_question".format(TEXT_QA_PORT), json={"question_raw": [question]}).json()[0]
     logger.info("Output for a non-question: {}".format(result))
-    if result == gold_result:
+    if result["answer"] == gold_result:
         logger.info("Success!")
         logger.info("Response to a non-question is empty.")
-    assert result == gold_result
+    assert result["answer"] == gold_result
 
 
 @allure.description("""Test text-qa execution time""")
@@ -259,15 +255,15 @@ def test_text_qa_exec_time(question, gold_result):
 )
 def test_text_qa_deterministic(question, gold_result):
 
-    result_1 = answer_question(question)[0][0]
+    result_1 = requests.post("http://0.0.0.0:{}/answer_question".format(TEXT_QA_PORT), json={"question_raw": [question]}).json()[0]
     logger.info("Input question: {}".format(question))
     logger.info("Answer: {}".format(result_1))
 
-    result_2 = answer_question(question)[0][0]
+    result_2 = requests.post("http://0.0.0.0:{}/answer_question".format(TEXT_QA_PORT), json={"question_raw": [question]}).json()[0]
     logger.info("Input question: {}".format(question))
     logger.info("Answer: {}".format(result_2))
 
-    if result_1 == result_2:
+    if result_1["answer"] == result_2["answer"]:
         logger.info("Success!")
         logger.info("The question answering system is deterministic.")
 
@@ -286,7 +282,6 @@ def test_text_qa_quality():
     for i in tqdm(range(len(data)), total=len(data), file=sys.stderr):
         
         sample = data[i]
-        
         ans = answer_question(question=sample['question'], check_factoid=False)[0][0]
         answers.append(ans)
         if i > 0 and i % 300 == 0:

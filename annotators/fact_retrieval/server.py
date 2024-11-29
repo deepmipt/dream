@@ -32,8 +32,10 @@ app = Flask(__name__)
 def respond():
     st_time = time.time()
     cur_utt = request.json.get("human_sentences", [" "])
-    dialog_history = request.json.get("dialog_history", [" "])
+    dialog_history = request.json.get("dialog_history", [" " for _ in cur_utt])
     cur_utt = [utt.lstrip("alexa") for utt in cur_utt]
+
+    logger.info(f"cur_utt {cur_utt}")
 
 
     nf_numbers, f_utt, f_dh = [], [], []

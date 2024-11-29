@@ -40,7 +40,7 @@ class Reader:
         _, start_token, end_token = answer_spans[0]
         answer = self.tokenizer.decode(encoded_inputs.input_ids[passage_idx][start_token:end_token+1])
         reference_passage  = texts[passage_idx]
-        return [answer, float(relevance_score), int(passage_idx), reference_passage]
+        return answer, reference_passage
 
 
     def compute_best_answer_spans(
