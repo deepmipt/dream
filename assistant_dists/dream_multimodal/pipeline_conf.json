@@ -201,7 +201,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 5,
-                    "url": "http://german-translation-pa:8181/translate"
+                    "url": "http://german-translation-pa:8182/translate"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_bot_utt_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",

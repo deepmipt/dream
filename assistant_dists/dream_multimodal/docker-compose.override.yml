@@ -5,7 +5,7 @@ services:
       WAIT_HOSTS: "dff-program-y-skill:8008, sentseg:8011, ranking-based-response-selector:8002,
           prompt-selector:8135, intent-catcher:8019,
           dff-intent-responder-skill:8012,
-          sentence-ranker:8128, german-translation-pa:8181,
+          sentence-ranker:8128, german-translation-pa:8182,
           vidchapters-service:8045, dff-vidchapters-skill:8046,
           fromage:8069, dff-fromage-image-skill:8070"
       WAIT_HOSTS_TIMEOUT: ${WAIT_TIMEOUT:-1200}
@@ -223,7 +223,7 @@ services:
     env_file: [ .env, .env_secret ]
     build:
       context: ./annotators/german_translation_pa/
-    command: uvicorn server:app --host 0.0.0.0 --port 8181
+    command: uvicorn server:app --host 0.0.0.0 --port 8182
     deploy:
       resources:
         limits:
