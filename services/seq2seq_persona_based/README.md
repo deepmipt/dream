@@ -13,6 +13,13 @@ docker-compose -f docker-compose.yml -f assistant_dists/dream_mini_persona_based
 Данная команда поднимет все необходимые серсисы для дальнейшего взаимодействия с ботом.
 
 ## Тестирование
+
+Для тестирования нужно установить библиотеку `requests==2.32.3`.
+
+```bash
+pip install requests==2.32.3
+```
+
 Для проверки на работоспособность и проверки на корректность возвращаемых данных, необходимо запустить следующую команду из директории `services/seq2seq_persona_based`:
 ```bash
 python test.py
