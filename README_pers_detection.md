@@ -12,6 +12,7 @@ docker-compose -f docker-compose.yml -f assistant_dists/dream_ocean/docker-compo
 
 ## Тестирование
 Для проведения тестов нужно установить библиотеку requests. 
+
 Для тестирования на время работы компонента, формат входных и выходных данных и точность классификации необходимо запустить компонент, перейти в директорию компонента annotators/personality_detection и из нее запустить следующие команды:
 ```
 python test_time.py
