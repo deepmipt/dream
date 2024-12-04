@@ -1,8 +1,8 @@
 import logging
 import os
-import asyncio
 import json
 import time
+import uuid
 
 import opensmile
 import torch
@@ -14,12 +14,12 @@ import aux  # noqa: F401
 from multimodal_concat.models import MultimodalClassificationModel, MainModel
 from multimodal_concat.utils import prepare_models
 
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from transformers import AutoTokenizer, AutoProcessor
-from typing import List
+from typing import List, Optional
 from urllib.request import urlretrieve
 
 
@@ -60,20 +60,29 @@ redundant_features = os.getenv("REDUNDANT_FEATURES")
 with open(redundant_features, "r") as features_file:
     redundant_features_list = features_file.read().split(",")
     
-STATE_FILE = "task_state.json"
+TASKS_DIR = "tasks"
+
+os.makedirs(TASKS_DIR, exist_ok=True)
 
 
-def read_task_state():
-    try:
-        with open(STATE_FILE, "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {"task_state": ""}
+def read_task_status(task_id):
+    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+    if os.path.exists(task_file):
+        with open(task_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        return None
 
     
-def write_task_state(state):
-    with open(STATE_FILE, "w") as file:
-        json.dump(state, file)
+def write_task_status(task_id, status, result=None):
+    task_file = os.path.join(TASKS_DIR, f"{task_id}.json")
+    task_status = {
+        "task_id": task_id,
+        "status": status,
+        "result": result
+    }
+    with open(task_file, "w", encoding="utf-8") as f:
+        json.dump(task_status, f)
 
 
 def sample_frame_indices(seg_len, clip_len=16, frame_sample_rate=4):
@@ -188,10 +197,17 @@ final_model = create_final_model()
 class EmotionsPayload(BaseModel):
     text: List[str]
     video_path: List[str]
+    task_id: Optional[list] = None
+        
+        
+class TaskStatus(BaseModel):
+    task_id: str
+    status: str
+    result: Optional[list] = None
 
 
-async def subinfer(msg_text: str, video_path: str):
-    write_task_state({"task_state": "scheduled"})
+def subinfer(task_id: str, msg_text: str, video_path: str):
+    write_task_status(task_id, "pending")
     
     try:
         if not os.path.exists(video_path):
@@ -202,16 +218,16 @@ async def subinfer(msg_text: str, video_path: str):
             filepath = video_path
         logger.info(f"File path: {filepath}")
         if not os.path.exists(filepath):
-            write_task_state({"task_state": "errored"})
+            write_task_status(task_id, "failed")
             raise ValueError(f"Failed to retrieve videofile from {filepath}")
         emotion = predict_emotion(f'{msg_text} ', filepath)
         logger.info("LONG TASK DONE")
         write_task_state({"task_state": "done", "emotion": emotion})
     except Exception as e:
-        write_task_state({"task_state": "errored"})
+        write_task_status(task_id, "failed")
         raise ValueError(f"The message format is correct, but: {e}")
 
-    return emotion
+    write_task_status(task_id, "completed", [emotion])
 
 
 app = FastAPI()
@@ -224,29 +240,25 @@ app.add_middleware(
 )
 
 
-@app.post("/model")
-async def infer(payload: EmotionsPayload):
+@app.post("/model", response_model=TaskStatus)
+def infer(payload: EmotionsPayload, background_tasks: BackgroundTasks):
     st_time = time.time()
     logger.info(f"Emotion Detection: {payload}")
-    task_state = read_task_state()
-    responses = []
     
-    if not task_state.get("task_state") and (payload.text or payload.video_path):
-        
-        for text, path in zip(payload.text, payload.video_path):
-            asyncio.create_task(subinfer(text, path))
-            
-        responses.append({"task_state": "task_scheduled"})
-                
-    if task_state.get("task_state") == "scheduled":
-        responses.append(task_state)
-    elif task_state.get("task_state") == "done":
-        responses.append(task_state)
-        write_task_state({"task_state": ""})
-
-    logger.info(f"TASK SCHEDULER RESPONSE: {responses}")
+    if not payload.task_id:
+        task_id = str(uuid.uuid4())
+        write_task_status(task_id, "pending")
+        if payload.text or payload.video_path:
+            for text, path in zip(payload.text, payload.video_path):
+                background_tasks.add_task(subinfer, task_id, text, path)
+    else:
+        task_id = payload.task_id[0]
 
     total_time = time.time() - st_time
     logger.info(f"task_scheduler exec time: {total_time:.3f}s")
+
+    task_file = read_task_status(task_id)
+    logger.info(f"Task file: {task_file}")
+    task_file = TaskStatus(**task_file)
     
-    return jsonable_encoder(responses)
+    return task_file
