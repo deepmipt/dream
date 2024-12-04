@@ -161,7 +161,7 @@ services:
       dockerfile: ./annotators/vidchapters_service/Dockerfile
     command: uvicorn server:app --host 0.0.0.0 --port 8045
     environment:
-      - CUDA_VISIBLE_DEVICES=0,1,2
+      - CUDA_VISIBLE_DEVICES=0
     deploy:
       resources:
         limits:
@@ -195,7 +195,7 @@ services:
       dockerfile: ./services/fromage/Dockerfile
     command: uvicorn server:app --host 0.0.0.0 --port 8069
     environment:
-      - CUDA_VISIBLE_DEVICES=0,1,2
+      - CUDA_VISIBLE_DEVICES=0
     deploy:
       resources:
         limits:
