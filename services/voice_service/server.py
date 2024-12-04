@@ -43,12 +43,12 @@ os.makedirs(TASKS_DIR, exist_ok=True)
 
 
 result = subprocess.run(
-    ["curl", "-F", "file=@audio_input/rain.wav", "files:3000"],
+    ["curl", "-F", "file=@audio_input/wav_rain.wav", "files:3000"],
     capture_output=True, text=True
 )
 
 result = subprocess.run(
-    ["curl", "-F", "file=@audio_input/rain.mp3", "files:3000"],
+    ["curl", "-F", "file=@audio_input/mp3_rain.mp3", "files:3000"],
     capture_output=True, text=True
 )
 
@@ -66,7 +66,7 @@ result = subprocess.run(
     capture_output=True, text=True
 )
 result = subprocess.run(
-    ["curl", "-F", "file=@audio_input/00264%20hill%20creek 1.mp3", "files:3000"],
+    ["curl", "-F", "file=@audio_input/00264_hill_creek_1.mp3", "files:3000"],
     capture_output=True, text=True
 )
 result = subprocess.run(
@@ -78,7 +78,7 @@ result = subprocess.run(
     capture_output=True, text=True
 )
 result = subprocess.run(
-    ["curl", "-F", "file=@audio_input/smeared%20bell.mp3", "files:3000"],
+    ["curl", "-F", "file=@audio_input/smeared_bell.mp3", "files:3000"],
     capture_output=True, text=True
 )
 result = subprocess.run(
@@ -86,11 +86,11 @@ result = subprocess.run(
     capture_output=True, text=True
 )
 result = subprocess.run(
-    ["curl", "-F", "file=@audio_input/Water%20Sound.mp3", "files:3000"],
+    ["curl", "-F", "file=@audio_input/Water_Sound.mp3", "files:3000"],
     capture_output=True, text=True
 )
 result = subprocess.run(
-    ["curl", "-F", "file=@audio_input/Whining%20Dog.mp3", "files:3000"],
+    ["curl", "-F", "file=@audio_input/Whining_Dog.mp3", "files:3000"],
     capture_output=True, text=True
 )
 

@@ -102,7 +102,7 @@ def test_for_bleu():
     predictions = []
     for value in df['fname']:
         file_name = re.sub(r"^[^\w\d.]+|[^\w\d.]+$", "",value)
-        file_name = file_name.replace(" ", "%20")
+        file_name = file_name.replace(" ", "_")
         sound_paths = folder_path+file_name
         sound_durations = 60
         sound_types = file_name.split(".")[1]

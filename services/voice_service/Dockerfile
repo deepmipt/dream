@@ -11,7 +11,6 @@ ARG SERVICE_NAME
 ENV SERVICE_NAME ${SERVICE_NAME}
 
 RUN python -m pip install --upgrade pip
-
 COPY ./requirements.txt /src/requirements.txt
 
 RUN mkdir -p /src/aux_files/AudioCaption/
@@ -45,13 +44,13 @@ RUN mkdir -p audio_input
 RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/00_BRUSH.mp3" -O audio_input/00_BRUSH.mp3
 RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/01-BikeDemo_Speaker.mp3" -O audio_input/01-BikeDemo_Speaker.mp3
 RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/002_78_rpm_vinyl_noise_44_16_lossless.mp3" -O audio_input/002_78_rpm_vinyl_noise_44_16_lossless.mp3
-RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/00264%20hill%20creek%201.mp3" -O audio_input/00264%20hill%20creek%201.mp3
+RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/00264%20hill%20creek%201.mp3" -O audio_input/00264_hill_creek_1.mp3
 RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/department.store.mp3" -O audio_input/department.store.mp3
 RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/mosquito.mp3" -O audio_input/mosquito.mp3
-RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/smeared%20bell.mp3" -O audio_input/smeared%20bell.mp3
+RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/smeared%20bell.mp3" -O audio_input/smeared_bell.mp3
 RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/street_corner.mp3" -O audio_input/street_corner.mp3
-RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/Water%20Sound.mp3" -O audio_input/Water%20Sound.mp3
-RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/Whining%20Dog.mp3" -O audio_input/Whining%20Dog.mp3
+RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/Water%20Sound.mp3" -O audio_input/Water_Sound.mp3
+RUN wget "https://lnsigo.mipt.ru/export/serikov/mmodal-ac/clotho_subset/Whining%20Dog.mp3" -O audio_input/Whining_Dog.mp3
 
 RUN wget "https://raw.githubusercontent.com/deeppavlov/mmodal_files_bkp/refs/heads/main/rain.wav" -O audio_input/wav_rain.wav
 RUN wget "https://raw.githubusercontent.com/deeppavlov/mmodal_files_bkp/refs/heads/main/rain.mp3" -O audio_input/mp3_rain.mp3
