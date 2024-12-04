@@ -20,9 +20,9 @@ compose:
   deploy:
     resources:
       limits:
-        memory: 1G
+        memory: 6G
       reservations:
-        memory: 1G
+        memory: 6G
   environment:
       - CUDA_VISIBLE_DEVICES=0
   ports:
