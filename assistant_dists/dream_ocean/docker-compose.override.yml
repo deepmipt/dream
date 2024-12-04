@@ -468,7 +468,7 @@ services:
           memory: 8G
     environment:
           - NVIDIA_VISIBLE_DEVICES=all
-          - CUDA_VISIBLE_DEVICES=4
+          - CUDA_VISIBLE_DEVICES=0
 
   emotion-detection:
     env_file: [ .env ]

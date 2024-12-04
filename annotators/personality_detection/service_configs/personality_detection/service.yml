@@ -12,7 +12,7 @@ compose:
     dockerfile: ./annotators/personality_detection/Dockerfile
   command: uvicorn server:app --host 0.0.0.0 --port 8026
   environment:
-      - CUDA_VISIBLE_DEVICES=4
+      - CUDA_VISIBLE_DEVICES=0
   deploy:
     resources:
       limits:
