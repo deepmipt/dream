@@ -7,6 +7,30 @@ SERVICE_PORT = 8040
 URL = f"http://0.0.0.0:{SERVICE_PORT}/model"
 
 
+def _service_call(request):
+    time_deltas = []
+    start_time = time.time()
+    response = requests.post(URL, json=request)
+    stop_time = time.time()
+    time_deltas.append(stop_time - start_time)
+    
+    my_task_id = response.json().get("task_id")
+    
+    while not response.json().get("result"):
+        start_time = time.time()
+        response = requests.post(URL, json={
+            "text": [], 
+            "video_path": [],
+            "task_id": [my_task_id]
+        })
+        stop_time = time.time()
+        time_deltas.append(stop_time - start_time)
+        
+    avg_response_time = sum(time_deltas) / len(time_deltas)
+    
+    return response, avg_response_time
+
+
 def test_launch_time(request_data):
     start_time = time.time()
     response = False
@@ -25,73 +49,50 @@ def test_launch_time(request_data):
                 continue
             else:
                 raise TimeoutError("Couldn't build the component")
+
+    my_task_id = response.json().get("task_id")
     
-    while response.json() and not response.json()[0].get("emotion"):
-        response = requests.post(URL, json={
-            "text": [], 
-            "video_path": [] 
-        })
+    while not response.json().get("result"):
+            response = requests.post(URL, json={
+                "text": [], 
+                "video_path": [],
+                "task_id": [my_task_id]
+            })
 
     assert response.status_code == 200
     print('Launch test completed in', current_time - start_time, 'seconds')
 
 
 def test_correct_emotion_guess(request_data, gold_results):
-    response = requests.post(URL, json=request_data)
-    while response.json() and not response.json()[0].get("emotion"):
-        response = requests.post(URL, json={
-            "text": [], 
-            "video_path": [] 
-        })
-    assert response.json()[0]["emotion"] == gold_results[0]
-    print('Correct emotion detected:', response.json()[0]["emotion"])
+    response, _ = _service_call(request_data)
+    assert response.json().get("result") == gold_results
+    print('Correct emotion detected:', response.json().get("result"))
     
     
 def test_emotion_is_base_emotion(request_data):
-    response = requests.post(URL, json=request_data)
-    while response.json() and not response.json()[0].get("emotion"):
-        response = requests.post(URL, json={
-            "text": [], 
-            "video_path": [] 
-        })
-    assert response.json()[0]["emotion"] in ["anger", "disgust", "fear", "joy", "neutral", "sadness", "surprise"]
-    print('Emotion', response.json()[0]["emotion"], 'is Eckmans basic emotion (["anger", "disgust", "fear", "joy", "neutral", "sadness", "surprise"])')
+    response, _ = _service_call(request_data)
+    assert response.json().get("result")[0] in ["anger", "disgust", "fear", "joy", "neutral", "sadness", "surprise"]
+    print('Emotion', response.json().get("result")[0], 'is Eckmans basic emotion (["anger", "disgust", "fear", "joy", "neutral", "sadness", "surprise"])')
     
     
 def test_response_is_json(request_data):
-    response = requests.post(URL, json=request_data)
-    while response.json() and not response.json()[0].get("emotion"):
-        response = requests.post(URL, json={
-            "text": [], 
-            "video_path": [] 
-        })
-    assert isinstance(response.json(), list)
+    response, _ = _service_call(request_data)
+    assert isinstance(response.json(), dict)
     print('Response is json:', response.json())
     
     
 def test_response_time(request_data):
-    times = []
-    start = time.time()
-    response = requests.post(URL, json=request_data)
-    end = time.time()
-    times.append(end - start)
-    while response.json() and not response.json()[0].get("emotion"):
-        start = time.time()
-        response = requests.post(URL, json={
-            "text": [], 
-            "video_path": [] 
-        })
-        times.append(time.time() - start)
-    print('Response time:', end - start, 'Times:', times)
-    assert (end - start) <= 0.4  
+    _, avg_time = _service_call(request_data)
+    print('Response time:', avg_time)
+    assert avg_time <= 0.4  
     
     
 if __name__ == '__main__':
     request_data = {
         "text": 
-        ["They treat me like a cow. A beef cow. And I'm a... people!"], 
+        ["I'm already broken"], 
         "video_path": 
-        ["emotion_detection_samples/angry_man.mp4"] 
+        ["/data/emotion_detection_samples/sad_peaky_blinders.mp4"] 
     }
     gold_results = ["anger"]
     print('Request:', request_data)
