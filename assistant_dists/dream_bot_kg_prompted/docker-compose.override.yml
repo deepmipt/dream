@@ -82,7 +82,7 @@ services:
       context: ./
       dockerfile: annotators/entity_linking/Dockerfile
     environment:
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -122,7 +122,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8103
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -162,7 +162,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8136
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=2
     deploy:
       resources:
         limits:

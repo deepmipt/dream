@@ -122,7 +122,7 @@ services:
       context: ./
       dockerfile: annotators/entity_linking/Dockerfile
     environment:
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -162,7 +162,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8103
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -202,7 +202,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8136
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=2
     deploy:
       resources:
         limits:
@@ -227,7 +227,7 @@ services:
         GENERATIVE_SERVICE_TIMEOUT: 120
         SENTENCE_RANKER_URL: http://sentence-ranker:8128/respond
         SENTENCE_RANKER_TIMEOUT: 5
-        RELEVANT_KNOWLEDGE_THRESHOLD: 0.5
+        RELEVANT_KNOWLEDGE_THRESHOLD: 0.3
         ENVVARS_TO_SEND: OPENAI_API_KEY
         USE_KG_DATA: 1
       context: ./
