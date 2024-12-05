@@ -10,6 +10,10 @@
 
 ## Запуск программного компонента для создания графового представления персоны пользователя
 
+Для запуска и тестирования данный компонент требует наличия в корневой директории файлов: 
+* `.env`, содержащего proxy url в переменной `OPENAI_BASE_URL` на случай, если сервис большой языковой модели от OpenAI недоступен;
+* `.env_secret`, содержащего ключ для сервиса большой языковой модели в переменной `OPENAI_API_KEY`.
+
 Запуск модуля `property-extraction` описан в файле [README_integration.md](/README_integration.md)
 
 Запуск модуля `custom-entity-linking` описаны в файле [README_user_persona_in_knowledge_graphs.md](/README_user_persona_in_knowledge_graphs.md)
@@ -30,11 +34,7 @@ docker-compose -f docker-compose.yml -f assistant_dists/dream_bot_kg_prompted/do
 
 ```
 pip install requests
-```
-
-Также данный компонент требует наличия в корневой директории файлов: 
-* `.env`, содержащего proxy url в переменной `OPENAI_BASE_URL` на случай, если сервис большой языковой модели от OpenAI недоступен;
-* `.env_secret`, содержащего ключ для сервиса большой языковой модели в переменной `OPENAI_API_KEY`. 
+``` 
 
 Для тестирования модуля `bot-knowledge-memorizer` необходимо выполнить следующую команду из корневой директории:
 
