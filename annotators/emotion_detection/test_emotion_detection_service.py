@@ -94,7 +94,7 @@ if __name__ == '__main__':
         "video_path": 
         ["/data/emotion_detection_samples/sad_peaky_blinders.mp4"] 
     }
-    gold_results = ["anger"]
+    gold_results = ["sadness"]
     print('Request:', request_data)
     print('Gold results:', gold_results)
     test_launch_time(request_data)
