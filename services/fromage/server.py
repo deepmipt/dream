@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 try:
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    logger.info(device)
     if torch.cuda.is_available():
         logger.info("fromage is set to run on cuda")
         processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
