@@ -222,12 +222,10 @@ def subinfer(task_id: str, msg_text: str, video_path: str):
             raise ValueError(f"Failed to retrieve videofile from {filepath}")
         emotion = predict_emotion(f'{msg_text} ', filepath)
         logger.info("LONG TASK DONE")
-        write_task_state({"task_state": "done", "emotion": emotion})
+        write_task_status(task_id, "completed", [emotion])
     except Exception as e:
         write_task_status(task_id, "failed")
         raise ValueError(f"The message format is correct, but: {e}")
-
-    write_task_status(task_id, "completed", [emotion])
 
 
 app = FastAPI()
