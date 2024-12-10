@@ -46,6 +46,10 @@
       {
         "url": "http://files.deeppavlov.ai/deeppavlov_data/odqa/bpr_encoder_index_eng.tar.gz",
         "subdir": "{MODELS_PATH}/bpr/eng"
+      },
+      {
+        "url": "http://files.deeppavlov.ai/deeppavlov_data/odqa/enwiki_l100.tar.gz",
+        "subdir": "{DOWNLOADS_PATH}/odqa"
       }
     ]
   }
