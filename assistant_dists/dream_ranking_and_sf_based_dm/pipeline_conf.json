@@ -3,7 +3,7 @@
         "sentseg": {
             "protocol": "http",
             "timeout": 1.5,
-            "url": "http://sentseg:8011/sentseg"
+            "url": "http://sentseg:8111/sentseg"
         },
         "ner": {
             "protocol": "http",
@@ -123,7 +123,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 2.0,
-                    "url": "http://prompt-selector:8135/collect_goals"
+                    "url": "http://prompt-selector:8136/collect_goals"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:prompts_goals_collector_formatter",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -139,7 +139,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 2.0,
-                    "url": "http://prompt-selector:8135/respond"
+                    "url": "http://prompt-selector:8136/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:context_formatter_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -157,7 +157,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.0,
-                    "url": "http://intent-catcher:8014/detect"
+                    "url": "http://intent-catcher:8114/detect"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_utt_sentseg_segments_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -322,7 +322,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.5,
-                    "url": "http://sentseg:8011/sentseg"
+                    "url": "http://sentseg:8111/sentseg"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_bot_utt_dialog",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -454,7 +454,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 1.0,
-                    "url": "http://sentence-ranker:8128/respond"
+                    "url": "http://sentence-ranker:8228/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:sentence_ranker_formatter",
                 "response_formatter": "state_formatters.dp_formatters:simple_formatter_service",
@@ -517,7 +517,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 2.0,
-                    "url": "http://dff-intent-responder-skill:8012/respond"
+                    "url": "http://dff-intent-responder-skill:8015/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:dff_intent_responder_skill_formatter",
                 "response_formatter": "state_formatters.dp_formatters:skill_with_attributes_formatter_service",
@@ -570,7 +570,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 3.0,
-                    "url": "http://dialogpt:8125/respond"
+                    "url": "http://dialogpt:8126/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_utt_and_history_dialog",
                 "response_formatter": "state_formatters.dp_formatters:skill_with_attributes_formatter_service",
@@ -588,7 +588,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 3.0,
-                    "url": "http://openai-api-chatgpt:8145/respond"
+                    "url": "http://openai-api-chatgpt:8245/respond"
                 },
                 "dialog_formatter": "state_formatters.dp_formatters:last_utt_and_history_dialog",
                 "response_formatter": "state_formatters.dp_formatters:skill_with_attributes_formatter_service",

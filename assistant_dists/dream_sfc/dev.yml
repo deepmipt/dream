@@ -49,7 +49,7 @@ services:
       - "./skills/dff_intent_responder_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8012:8012
+      - 8015:8015
   intent-catcher:
     volumes:
       - "./annotators/IntentCatcherTransformers:/src"

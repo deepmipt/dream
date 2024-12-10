@@ -10,7 +10,7 @@ services:
     volumes:
       - "./annotators/SentSeg:/src"
     ports:
-      - 8011:8011
+      - 8111:8111
   ranking-and-sf-based-response-selector:
     volumes:
       - "./response_selectors/ranking_and_sf_based_response_selector:/src"
@@ -22,7 +22,7 @@ services:
       - "./skills/dff_intent_responder_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8012:8012
+      - 8015:8015
   intent-catcher:
     volumes:
       - "./annotators/IntentCatcherTransformers:/src"
@@ -30,7 +30,7 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8014:8014
+      - 8114:8114
   ner:
     volumes:
       - './annotators/NER_deeppavlov:/src'
@@ -65,7 +65,7 @@ services:
       - 8077:8077
   mongo:
     ports:
-      - 27017:27017
+      - 27018:27018
     # # you can use persistent local volume if you need
     # volumes:
     #   - ./venv/data/db_data:/root/data/db
@@ -104,19 +104,19 @@ services:
       - "./services/sentence_ranker:/src"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8128:8128
+      - 8228:8228
   prompt-selector:
     volumes:
       - "./annotators/prompt_selector:/src"
       - "./common:/src/common"
     ports:
-      - 8135:8135
+      - 8136:8136
   property-extraction:
     volumes:
       - "./annotators/property_extraction:/src"
       - "~/.deeppavlov:/root/.deeppavlov"
     ports:
-      - 8136:8136
+      - 8236:8236
   dff-dream-faq-prompted-skill:
     volumes:
       - "./skills/dff_template_prompted_skill:/src"
@@ -128,7 +128,7 @@ services:
       - "./services/openai_api_lm:/src"
       - "./common:/src/common"
     ports:
-      - 8145:8145
+      - 8245:8245
   summarization-annotator:
     volumes:
       - "./annotators/summarization_annotator:/src"
@@ -145,7 +145,7 @@ services:
       - "./common:/src/common"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8125:8125
+      - 8126:8126
   speech-function-classifier:
     volumes:
       - "./annotators/speech_function_classifier:/src"
