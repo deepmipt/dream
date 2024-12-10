@@ -1,5 +1,6 @@
 #!/bin/bash
 wget http://files.deeppavlov.ai/chepurova/datasets/NQ-open.dev.jsonl  -O tests/NQ-open.dev.jsonl
+touch .env_secret
 docker-compose -f docker-compose.yml -f assistant_dists/dream/docker-compose.override.yml -f assistant_dists/dream/dev.yml up  --detach --build fact-retrieval text-qa combined-classification > build.log 2>&1
 python3 -m venv test_venv
 source test_venv/bin/activate
