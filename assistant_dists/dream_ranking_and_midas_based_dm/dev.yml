@@ -10,26 +10,26 @@ services:
     volumes:
       - "./annotators/SentSeg:/src"
     ports:
-      - 8011:8011
+      - 9011:9011
   ranking-and-intent-based-response-selector:
     volumes:
       - "./response_selectors/ranking_and_intent_based_response_selector:/src"
       - "./common:/src/common"
     ports:
-      - 8081:8081
+      - 9081:9081
   dff-intent-responder-skill:
     volumes:
       - "./skills/dff_intent_responder_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8012:8012
+      - 9012:9012
   dialogpt:
     volumes:
       - "./services/dialogpt:/src"
       - "./common:/src/common"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8125:8125
+      - 9125:9125
   intent-catcher:
     volumes:
       - "./annotators/IntentCatcherTransformers:/src"
@@ -37,42 +37,42 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8014:8014
+      - 9014:9014
   ner:
     volumes:
       - './annotators/NER_deeppavlov:/src'
       - "~/.deeppavlov:/root/.deeppavlov"
     ports:
-      - 8021:8021
+      - 9021:9021
   factoid-qa:
     volumes:
       - "./skills/factoid_qa:/src"
       - "./common:/src/common"
     ports:
-      - 8071:8071
+      - 9071:9071
   kbqa:
     volumes:
       - "./annotators/kbqa:/src"
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8072:8072
+      - 9072:9072
   entity-linking:
     volumes:
       - "./annotators/entity_linking:/src"
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8075:8075
+      - 9075:9075
   wiki-parser:
     volumes:
       - "./annotators/wiki_parser:/src"
       - "./common:/src/common"
     ports:
-      - 8077:8077
+      - 9077:9077
   mongo:
     ports:
-      - 27017:27017
+      - 37017:37017
     # # you can use persistent local volume if you need
     # volumes:
     #   - ./venv/data/db_data:/root/data/db
@@ -82,7 +82,7 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8078:8078
+      - 9078:9078
   combined-classification:
     volumes:
       - "./common:/src/common"
@@ -90,13 +90,13 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8087:8087
+      - 9087:9087
   openai-api-chatgpt:
     volumes:
       - "./services/openai_api_lm:/src"
       - "./common:/src/common"
     ports:
-      - 8145:8145
+      - 9145:9145
   fact-retrieval:
     volumes:
       - "./annotators/fact_retrieval:/src"
@@ -104,58 +104,52 @@ services:
       - "./common:/src/common"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8100:8100
+      - 9100:9100
   entity-detection:
     volumes:
       - "./annotators/entity_detection:/src"
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8103:8103
+      - 9103:9103
   sentence-ranker:
     volumes:
       - "./services/sentence_ranker:/src"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8128:8128
+      - 9128:9128
   prompt-selector:
     volumes:
       - "./annotators/prompt_selector:/src"
       - "./common:/src/common"
     ports:
-      - 8135:8135
-  openai-api-chatgpt:
-    volumes:
-      - "./services/openai_api_lm:/src"
-      - "./common:/src/common"
-    ports:
-      - 8145:8145
+      - 9135:9135
   dff-dream-persona-chatgpt-prompted-skill:
     volumes:
       - "./skills/dff_template_prompted_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8137:8137
+      - 9137:9137
   property-extraction:
     volumes:
       - "./annotators/property_extraction:/src"
       - "~/.deeppavlov:/root/.deeppavlov"
     ports:
-      - 8136:8136
+      - 9136:9136
   dff-dream-faq-prompted-skill:
     volumes:
       - "./skills/dff_template_prompted_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8170:8170
+      - 9170:9170
   summarization-annotator:
     volumes:
       - "./annotators/summarization_annotator:/src"
     ports:
-      - 8058:8058
+      - 9058:9058
   dialog-summarizer:
     volumes:
       - "./services/dialog_summarizer:/src"
     ports:
-      - 8059:8059
+      - 9059:9059
 version: "3.7"

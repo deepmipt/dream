@@ -9,19 +9,19 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=5
+      - CUDA_VISIBLE_DEVICES=0
   text-qa:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=5
+      - CUDA_VISIBLE_DEVICES=0
   combined-classification:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=8
+      - CUDA_VISIBLE_DEVICES=0
   mongo:
     command: mongod
     image: mongo:4.0.0
@@ -35,19 +35,19 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=6
+      - CUDA_VISIBLE_DEVICES=0
   ner:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
     environment:
-      - CUDA_VISIBLE_DEVICES=7
+      - CUDA_VISIBLE_DEVICES=0
   factoid-qa:
   entity-linking:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=9
+      - CUDA_VISIBLE_DEVICES=0
   wiki-parser:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
@@ -56,18 +56,18 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=7
+      - CUDA_VISIBLE_DEVICES=0
   entity-detection:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=8
+      - CUDA_VISIBLE_DEVICES=0
   sentence-ranker:
     volumes:
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=9
+      - CUDA_VISIBLE_DEVICES=0
   property-extraction:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"

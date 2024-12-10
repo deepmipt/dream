@@ -2,12 +2,12 @@ services:
   agent:
     command: sh -c 'bin/wait && python -m deeppavlov_agent.run agent.pipeline_config=assistant_dists/dream_ranking_and_midas_based_dm/pipeline_conf.json'
     environment:
-      WAIT_HOSTS: "sentseg:8011, ranking-and-intent-based-response-selector:8081,
-          dff-intent-responder-skill:8012, intent-catcher:8014, ner:8021,
-          factoid-qa:8071, kbqa:8072, entity-linking:8075, wiki-parser:8077, text-qa:8078,
-          combined-classification:8087, fact-retrieval:8100, entity-detection:8103, dialogpt:8125,
-          sentence-ranker:8128, property-extraction:8136, prompt-selector:8135, openai-api-chatgpt:8145, dff-dream-faq-prompted-skill:8170,
-          dff-dream-persona-chatgpt-prompted-skill:8137, summarization-annotator:8058, dialog-summarizer:8059"
+      WAIT_HOSTS: "sentseg:9011, ranking-and-intent-based-response-selector:9081,
+          dff-intent-responder-skill:9012, intent-catcher:9014, ner:9021,
+          factoid-qa:9071, kbqa:9072, entity-linking:9075, wiki-parser:9077, text-qa:9078,
+          combined-classification:9087, fact-retrieval:9100, entity-detection:9103, dialogpt:9125,
+          sentence-ranker:9128, property-extraction:9136, prompt-selector:9135, openai-api-chatgpt:9145, dff-dream-faq-prompted-skill:9170,
+          dff-dream-persona-chatgpt-prompted-skill:9137, summarization-annotator:9058, dialog-summarizer:9059"
       WAIT_HOSTS_TIMEOUT: ${WAIT_TIMEOUT:-1000}
       HIGH_PRIORITY_INTENTS: 1
       RESTRICTION_FOR_SENSITIVE_CASE: 1
@@ -19,18 +19,18 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8081
+        SERVICE_PORT: 9081
         SERVICE_NAME: response_selector
         LANGUAGE: EN
         SENTENCE_RANKER_ANNOTATION_NAME: sentence_ranker
-        SENTENCE_RANKER_SERVICE_URL: http://sentence-ranker:8128/respond
+        SENTENCE_RANKER_SERVICE_URL: http://sentence-ranker:9128/respond
         SENTENCE_RANKER_TIMEOUT: 3
         N_UTTERANCES_CONTEXT: 5
         FILTER_TOXIC_OR_BADLISTED: 1
         FALLBACK_FILE: fallbacks_dream_en.json
       context: .
       dockerfile: ./response_selectors/ranking_and_intent_based_response_selector/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8081
+    command: flask run -h 0.0.0.0 -p 9081
     environment:
       - FLASK_APP=server
     deploy:
@@ -44,7 +44,7 @@ services:
     env_file: [ .env ]
     build:
       context: ./annotators/SentSeg/
-    command: flask run -h 0.0.0.0 -p 8011
+    command: flask run -h 0.0.0.0 -p 9011
     environment:
       - FLASK_APP=server
     deploy:
@@ -58,12 +58,12 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8012
+        SERVICE_PORT: 9012
         SERVICE_NAME: dff_intent_responder_skill
         INTENT_RESPONSE_PHRASES_FNAME: intent_response_phrases.json
       context: .
       dockerfile: ./skills/dff_intent_responder_skill/Dockerfile
-    command: gunicorn --workers=1 server:app -b 0.0.0.0:8012 --reload
+    command: gunicorn --workers=1 server:app -b 0.0.0.0:9012 --reload
     deploy:
       resources:
         limits:
@@ -77,10 +77,10 @@ services:
       context: .
       dockerfile: ./annotators/IntentCatcherTransformers/Dockerfile
       args:
-        SERVICE_PORT: 8014
+        SERVICE_PORT: 9014
         CONFIG_NAME: intents_model_dp_config.json
         INTENT_PHRASES_PATH: intent_phrases.json
-    command: python -m flask run -h 0.0.0.0 -p 8014
+    command: python -m flask run -h 0.0.0.0 -p 9014
     environment:
       - FLASK_APP=server
       - CUDA_VISIBLE_DEVICES=0
@@ -96,12 +96,12 @@ services:
     build:
       args:
         CONFIG: ner_case_agnostic_multilingual_bert_base_extended.json
-        SERVICE_PORT: 8021
+        SERVICE_PORT: 9021
         SRC_DIR: annotators/NER_deeppavlov
         COMMIT: f5117cd9ad1e64f6c2d970ecaa42fc09ccb23144
       context: ./
       dockerfile: annotators/NER_deeppavlov/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8021
+    command: flask run -h 0.0.0.0 -p 9021
     environment:
       - FLASK_APP=server
       - CUDA_VISIBLE_DEVICES=0
@@ -117,11 +117,11 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8071
+        SERVICE_PORT: 9071
         SERVICE_NAME: factoid_qa
       context: .
       dockerfile: ./skills/factoid_qa/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8071
+    command: flask run -h 0.0.0.0 -p 9071
     environment:
       - FLASK_APP=server
     deploy:
@@ -135,7 +135,7 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8075
+        SERVICE_PORT: 9075
         SERVICE_NAME: entity_linking
         CONFIG: entity_linking_eng.json
         SRC_DIR: annotators/entity_linking
@@ -154,7 +154,7 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8077
+        SERVICE_PORT: 9077
         SERVICE_NAME: wiki_parser
         WIKI_LITE_DB: http://files.deeppavlov.ai/kbqa/wikidata/wikidata2022.hdt
         WIKI_LITE_INDEX_DB: http://files.deeppavlov.ai/kbqa/wikidata/wikidata2022.hdt.index.v1-1
@@ -165,9 +165,9 @@ services:
         FAST: 1
       context: ./
       dockerfile: annotators/wiki_parser/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8077
+    command: flask run -h 0.0.0.0 -p 9077
     environment:
-      - CUDA_VISIBLE_DEVICES=''
+      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -180,12 +180,12 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8078
+        SERVICE_PORT: 9078
         SERVICE_NAME: text_qa
         CONFIG: qa_eng.json
       context: services/text_qa
       dockerfile: Dockerfile
-    command: flask run -h 0.0.0.0 -p 8078
+    command: flask run -h 0.0.0.0 -p 9078
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -202,7 +202,7 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8125
+        SERVICE_PORT: 9125
         SERVICE_NAME: dialogpt
         PRETRAINED_MODEL_NAME_OR_PATH: microsoft/DialoGPT-medium
         N_HYPOTHESES_TO_GENERATE: 5
@@ -210,7 +210,7 @@ services:
         MAX_HISTORY_DEPTH: 2
       context: .
       dockerfile: ./services/dialogpt/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8125
+    command: flask run -h 0.0.0.0 -p 9125
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -226,14 +226,14 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8072
+        SERVICE_PORT: 9072
         SERVICE_NAME: kbqa
         CONFIG: kbqa_cq_mt_bert_lite.json
         SRC_DIR: annotators/kbqa/
         COMMIT: 283a25e322e8fedc6ff0c159e4ec76bb165ae405
       context: ./
       dockerfile: annotators/kbqa/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8072
+    command: flask run -h 0.0.0.0 -p 9072
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -248,12 +248,12 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8087
+        SERVICE_PORT: 9087
         SERVICE_NAME: combined_classification
         CONFIG: combined_classifier.json
       context: .
       dockerfile: ./annotators/combined_classification/Dockerfile
-    command: gunicorn --workers=1 server:app -b 0.0.0.0:8087 --timeout 600
+    command: gunicorn --workers=1 server:app -b 0.0.0.0:9087 --timeout 600
     environment:
       - CUDA_VISIBLE_DEVICES=0
     deploy:
@@ -267,7 +267,7 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8100
+        SERVICE_PORT: 9100
         SERVICE_NAME: fact_retrieval
         CONFIG: configs/fact_retrieval_page.json
         CONFIG_WIKI: configs/page_extractor.json
@@ -277,7 +277,7 @@ services:
         N_FACTS: 3
       context: ./
       dockerfile: annotators/fact_retrieval/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8100
+    command: flask run -h 0.0.0.0 -p 9100
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -296,12 +296,12 @@ services:
         SEQ_TAG_CONFIG: wikipedia_entity_detection_distilbert.json
         CONFIG: entity_detection_eng.json
         LOWERCASE: 1
-        SERVICE_PORT: 8103
+        SERVICE_PORT: 9103
         SRC_DIR: annotators/entity_detection/
         FINEGRAINED: 0
       context: ./
       dockerfile: annotators/entity_detection/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8103
+    command: flask run -h 0.0.0.0 -p 9103
     environment:
       - FLASK_APP=server
       - CUDA_VISIBLE_DEVICES=0
@@ -316,14 +316,14 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8135
+        SERVICE_PORT: 9135
         SERVICE_NAME: prompt_selector
-        SENTENCE_RANKER_SERVICE_URL: http://sentence-ranker:8128/respond
+        SENTENCE_RANKER_SERVICE_URL: http://sentence-ranker:9128/respond
         N_SENTENCES_TO_RETURN: 3
         PROMPTS_TO_CONSIDER: dream_persona,dream_faq
       context: .
       dockerfile: ./annotators/prompt_selector/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8135
+    command: flask run -h 0.0.0.0 -p 9135
     environment:
       - FLASK_APP=server
     deploy:
@@ -337,11 +337,11 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8128
+        SERVICE_PORT: 9128
         SERVICE_NAME: sentence_ranker
         PRETRAINED_MODEL_NAME_OR_PATH: sentence-transformers/all-MiniLM-L6-v2
       context: ./services/sentence_ranker/
-    command: flask run -h 0.0.0.0 -p 8128
+    command: flask run -h 0.0.0.0 -p 9128
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -356,13 +356,13 @@ services:
     env_file: [ .env, .env_secret ]
     build:
       args:
-        SERVICE_PORT: 8145
+        SERVICE_PORT: 9145
         SERVICE_NAME: openai_api_chatgpt
         PRETRAINED_MODEL_NAME_OR_PATH: gpt-3.5-turbo
         ENVVARS_TO_SEND: OPENAI_API_KEY,OPENAI_ORGANIZATION,OPENAI_API_BASE
       context: .
       dockerfile: ./services/openai_api_lm/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8145
+    command: flask run -h 0.0.0.0 -p 9145
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -378,10 +378,10 @@ services:
     env_file: [ .env,.env_secret ]
     build:
       args:
-        SERVICE_PORT: 8137
+        SERVICE_PORT: 9137
         SERVICE_NAME: dff_dream_persona_prompted_skill
         PROMPT_FILE: common/prompts/dream_persona.json
-        GENERATIVE_SERVICE_URL: http://openai-api-chatgpt:8145/respond
+        GENERATIVE_SERVICE_URL: http://openai-api-chatgpt:9145/respond
         GENERATIVE_SERVICE_CONFIG: openai-chatgpt.json
         GENERATIVE_TIMEOUT: 120
         N_UTTERANCES_CONTEXT: 7
@@ -401,12 +401,12 @@ services:
     build:
       args:
         CONFIG: t5_generative_ie_lite_infer.json
-        SERVICE_PORT: 8136
+        SERVICE_PORT: 9136
         SRC_DIR: annotators/property_extraction/
         SERVICE_NAME: property_extraction
       context: ./
       dockerfile: annotators/property_extraction/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8136
+    command: flask run -h 0.0.0.0 -p 9136
     environment:
       - FLASK_APP=server
     deploy:
@@ -420,10 +420,10 @@ services:
     env_file: [ .env,.env_secret ]
     build:
       args:
-        SERVICE_PORT: 8170
+        SERVICE_PORT: 9170
         SERVICE_NAME: dff_dream_faq_prompted_skill
         PROMPT_FILE: common/prompts/dream_faq.json
-        GENERATIVE_SERVICE_URL: http://openai-api-chatgpt:8145/respond
+        GENERATIVE_SERVICE_URL: http://openai-api-chatgpt:9145/respond
         GENERATIVE_SERVICE_CONFIG: openai-chatgpt.json
         GENERATIVE_TIMEOUT: 120
         N_UTTERANCES_CONTEXT: 7
@@ -442,11 +442,11 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8058
+        SERVICE_PORT: 9058
         SERVICE_NAME: summarization_annotator
         SUMMARIZATION_REQUEST_TIMEOUT: 10
       context: ./annotators/summarization_annotator/
-    command: flask run -h 0.0.0.0 -p 8058
+    command: flask run -h 0.0.0.0 -p 9058
     environment:
       - FLASK_APP=server
     deploy:
@@ -460,11 +460,11 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8059
+        SERVICE_PORT: 9059
         SERVICE_NAME: dialog_summarizer
         PRETRAINED_MODEL_NAME: "knkarthick/MEETING_SUMMARY"
       context: ./services/dialog_summarizer/
-    command: flask run -h 0.0.0.0 -p 8059
+    command: flask run -h 0.0.0.0 -p 9059
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server

@@ -27,9 +27,12 @@ def test_model_with_one_previous_phrase():
         "phrases": ["fine, thank you. and you?"],
         "prev_phrases": ["How are you doing today?"],
         "prev_speech_functions": ["Open.Demand.Fact"],
+        "annotations": {"intent_catcher": {"Topic_SwitchIntent": 0.0}}, 
     }
+
     assert all(isinstance(phrase, str) for phrase in model_test_data["phrases"]), 'Phrases must be Unicode strings'
     assert isinstance(model_test_data, dict), 'Input data is not valid'
+    assert model_test_data["annotations"]["intent_catcher"]["Topic_SwitchIntent"] is not None, "No info about topic shifts"
     print('Input data is valid and in JSON format')
     
     model_hypothesis = requests.post(f"{URL}/respond", json=model_test_data).json()
@@ -45,6 +48,7 @@ def test_annotation_no_previous_context():
         "phrases": ["Hi, Helen!"],
         "prev_phrases": [""],
         "prev_speech_functions": [""],
+        "annotations":{"intent_catcher": {"Topic_SwitchIntent": 0.0}},
     }
 
     model_hypothesis = requests.post(f"{URL}/respond", json=model_test_data).json()
