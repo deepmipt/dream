@@ -18,6 +18,8 @@ compose:
     context: .
     dockerfile: annotators/emotional_bot_response/Dockerfile
   command: flask run -h 0.0.0.0 -p 8050
+  ports:
+  - 8050:8050
   environment:
   - FLASK_APP=server
   deploy:

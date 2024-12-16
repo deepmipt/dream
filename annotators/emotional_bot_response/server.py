@@ -5,15 +5,16 @@ import time
 import json
 from os import getenv
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, g, make_response
 from healthcheck import HealthCheck
 from sentry_sdk.integrations.flask import FlaskIntegration
+from pyinstrument import Profiler
+from pyinstrument.renderers import JSONRenderer
 
 from common.prompts import (
     send_request_to_prompted_generative_service,
     compose_sending_variables,
 )
-
 
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
 
@@ -36,7 +37,6 @@ ENVVARS_TO_SEND = getenv("ENVVARS_TO_SEND", None)
 ENVVARS_TO_SEND = [] if ENVVARS_TO_SEND is None else ENVVARS_TO_SEND.split(",")
 
 available_variables = {f"{var}": getenv(var, None) for var in ENVVARS_TO_SEND}
-
 
 def make_prompt(sentence, emotion="neutral", mood="happy", intensity=7):
     with open("emotion_change_prompt.txt", "r", encoding="utf-8") as f:
@@ -76,21 +76,43 @@ def rewrite_sentences(sentence, bot_emotion, bot_mood_label):
     try:
         prompt = make_prompt(sentence, bot_emotion, bot_mood_label, 7)  # emotion, mood, intensity
         response = get_llm_emotional_response(prompt)
-        result = {"hypotheses": response}
+        result = {"hypotheses": response, "bot_emotion" : bot_emotion, "bot_mood" : bot_mood_label}
     except Exception as exc:
         logger.exception(exc)
         sentry_sdk.capture_exception(exc)
-        result = {"hypotheses": ""}
+        result = {"hypotheses": "", "bot_emotion" : bot_emotion, "bot_mood" : bot_mood_label}
     return result
+
+@app.before_request
+def before_request():
+    if "profile" in request.args:
+        g.profiler = Profiler(interval=0.0001)
+        g.profiler.start()
+
+
+@app.after_request
+def after_request(response):
+    if not hasattr(g, "profiler"):
+        return response
+    g.profiler.stop()
+    output_dict = g.profiler.output(renderer=JSONRenderer())
+    return make_response(output_dict)
 
 
 @app.route("/respond_batch", methods=["POST"])
 def respond_batch():
     st_time = time.time()
 
+    user_sentences = request.json.get("user_sentences", [])
+    annotated_utterances = request.json.get("annotated_utterances", [])
     sentences = request.json.get("sentences", [])
     bot_mood_labels = request.json.get("bot_mood_labels", [])
     bot_emotions = request.json.get("bot_emotions", [])
+
+    if bot_mood_labels == []:
+        bot_mood_labels = len(sentences) * ["happy"]
+    if bot_emotions == []:
+        bot_emotions = len(sentences) * ["neutral"]
 
     results = []
     for sentence, emotion, mood in zip(sentences, bot_emotions, bot_mood_labels):
@@ -99,6 +121,8 @@ def respond_batch():
 
     total_time = time.time() - st_time
     logger.info(f"emotional-bot-response exec time: {total_time:.3f}s")
+    logger.info(f"user_sentences: {user_sentences}")
+    logger.info(f"annotated_utterances: {annotated_utterances}")
 
     return jsonify([{"batch": results}])
 
@@ -109,7 +133,7 @@ try:
     sentences = ["I will eat pizza."]
     bot_mood_labels = ["angry"]
     bot_emotions = ["anger"]
-    responses = rewrite_sentences(sentences, bot_mood_labels, bot_emotions)
+    responses = rewrite_sentences(sentences[0], bot_mood_labels[0], bot_emotions[0])
     logger.info(f"TEST. Sentences: {sentences}")
     logger.info(f"TEST. Emotional sentences: {responses}")
 
@@ -120,4 +144,5 @@ except Exception as e:
     raise e
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=3000)
+    app.run(debug=False, host="0.0.0.0", port=8050)
+

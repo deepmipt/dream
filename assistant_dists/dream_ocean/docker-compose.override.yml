@@ -458,14 +458,19 @@ services:
         SERVICE_NAME: personality_detection
       context: annotators/personality_detection
     command: uvicorn server:app --host 0.0.0.0 --port 8026
+    ports:
+    - 8026:8026
     deploy:
       mode: replicated
       replicas: 1
       resources:
         limits:
-          memory: 312M
+          memory: 8G
         reservations:
-          memory: 312M
+          memory: 8G
+    environment:
+          - NVIDIA_VISIBLE_DEVICES=all
+          - CUDA_VISIBLE_DEVICES=0
 
   emotion-detection:
     env_file: [ .env ]
