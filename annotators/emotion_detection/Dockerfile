@@ -35,4 +35,5 @@ RUN touch /data/multimodal_concat/__init__.py
 RUN apt-get install -y wget
 
 RUN wget -O models http://files.deeppavlov.ai/dream_data/emotion_detection/emotion_detection_v1.tar.gz && tar -xf models -C /data/
+RUN wget -O emotion_detection_samples http://files.deeppavlov.ai/dream_data/emotion_detection/emotion_detection_samples.tar.gz && tar -xf emotion_detection_samples -C /data/
 RUN wget -O redundant_feat http://files.deeppavlov.ai/dream_data/emotion_detection/redundant_feat.txt && mv -f redundant_feat /data/
