@@ -41,7 +41,7 @@ normalized_no_sf_data = normalize_text(no_sf_data)
 
 
 def evaluate_dialogue(dialogue):
-    url = "http://0.0.0.0:8145/respond"
+    url = "http://0.0.0.0:8245/respond"
     formatted_prompt = LLM_eval_prompt.format(dialogue=dialogue)
 
     request = {

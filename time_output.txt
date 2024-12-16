@@ -1,0 +1,58 @@
+Some services (agent, combined-classification, dff-dream-faq-prompted-skill, dff-dream-persona-chatgpt-prompted-skill, dff-intent-responder-skill, dialog-summarizer, dialogpt, entity-detection, entity-linking, fact-retrieval, factoid-qa, intent-catcher, kbqa, ner, openai-api-chatgpt, prompt-selector, property-extraction, ranking-and-intent-based-response-selector, sentence-ranker, sentseg, summarization-annotator, text-qa, wiki-parser) use the 'deploy' key, which will be ignored. Compose does not support 'deploy' configuration - use `docker stack deploy` to deploy to a swarm.
+The Docker Engine you're using is running in swarm mode.
+
+Compose does not use swarm mode to deploy services to multiple nodes in a swarm. All containers will be scheduled on the current node.
+
+To deploy your application across the swarm, use `docker stack deploy`.
+
+Building property-extraction
+Building dialog-summarizer
+Building entity-linking
+Building ner
+Building intent-catcher
+Building sentseg
+Building fact-retrieval
+Building openai-api-chatgpt
+Building wiki-parser
+Building dialogpt
+Building dff-dream-persona-chatgpt-prompted-skill
+Building sentence-ranker
+Building summarization-annotator
+Building kbqa
+Building entity-detection
+Building prompt-selector
+Building factoid-qa
+Building agent
+Building ranking-and-intent-based-response-selector
+Building combined-classification
+Building text-qa
+Building dff-intent-responder-skill
+Building dff-dream-faq-prompted-skill
+Recreating gl_dream_sentseg_1 ... 
+Recreating gl_dream_entity-detection_1 ... 
+Recreating gl_dream_intent-catcher_1   ... 
+Recreating gl_dream_sentence-ranker_1  ... 
+Recreating gl_dream_prompt-selector_1         ... 
+Recreating gl_dream_summarization-annotator_1 ... 
+Recreating gl_dream_property-extraction_1     ... 
+Recreating gl_dream_factoid-qa_1              ... 
+Recreating gl_dream_dialogpt_1                ... 
+Recreating gl_dream_dff-dream-persona-chatgpt-prompted-skill_1 ... 
+Recreating gl_dream_dff-intent-responder-skill_1               ... 
+Recreating gl_dream_dff-dream-faq-prompted-skill_1             ... 
+Recreating gl_dream_fact-retrieval_1                           ... 
+Recreating gl_dream_entity-linking_1                           ... 
+Recreating gl_dream_text-qa_1                                  ... 
+Recreating gl_dream_combined-classification_1                  ... 
+Recreating gl_dream_openai-api-chatgpt_1                       ... 
+Recreating gl_dream_kbqa_1                                     ... 
+Recreating gl_dream_dialog-summarizer_1                        ... 
+Recreating gl_dream_mongo_1                                    ... 
+Recreating gl_dream_ner_1                                        ... 
+Recreating gl_dream_ranking-and-intent-based-response-selector_1 ... 
+Recreating gl_dream_agent_1                                    ... 
+Recreating gl_dream_wiki-parser_1                                ... 
+[17A[2KRecreating gl_dream_factoid-qa_1                                 ... [32mdone[0m[17B[12A[2KRecreating gl_dream_fact-retrieval_1                             ... [32mdone[0m[12B[24A[2KRecreating gl_dream_sentseg_1                                    ... [32mdone[0m[24B[23A[2KRecreating gl_dream_entity-detection_1                           ... [32mdone[0m[23B[6A[2KRecreating gl_dream_mongo_1                                      ... [32mdone[0m[6B[18A[2KRecreating gl_dream_property-extraction_1                        ... [32mdone[0m[18B[8A[2KRecreating gl_dream_kbqa_1                                       ... [32mdone[0m[8B[11A[2KRecreating gl_dream_entity-linking_1                             ... [32mdone[0m[11B[1A[2KRecreating gl_dream_wiki-parser_1                                ... [32mdone[0m[1B[14A[2KRecreating gl_dream_dff-intent-responder-skill_1                 ... [32mdone[0m[14B[9A[2KRecreating gl_dream_text-qa_1                                    ... [32mdone[0m[9B[22A[2KRecreating gl_dream_intent-catcher_1                             ... [32mdone[0m[22B[21A[2KRecreating gl_dream_sentence-ranker_1                            ... [32mdone[0m[21B[2A[2KRecreating gl_dream_ner_1                                        ... [32mdone[0m[2B[7A[2KRecreating gl_dream_combined-classification_1                    ... [32mdone[0m[7B[19A[2KRecreating gl_dream_prompt-selector_1                            ... [32mdone[0m[19B[10A[2KRecreating gl_dream_openai-api-chatgpt_1                         ... [32mdone[0m[10B[5A[2KRecreating gl_dream_agent_1                                      ... [32mdone[0m[5B[15A[2KRecreating gl_dream_dff-dream-persona-chatgpt-prompted-skill_1   ... [32mdone[0m[15B[20A[2KRecreating gl_dream_summarization-annotator_1                    ... [32mdone[0m[20B[3A[2KRecreating gl_dream_ranking-and-intent-based-response-selector_1 ... [32mdone[0m[3B[4A[2KRecreating gl_dream_dialog-summarizer_1                          ... [32mdone[0m[4B[13A[2KRecreating gl_dream_dff-dream-faq-prompted-skill_1               ... [32mdone[0m[13B[16A[2KRecreating gl_dream_dialogpt_1                                   ... [32mdone[0m[16B
+real	0m41,163s
+user	0m10,773s
+sys	0m2,332s
