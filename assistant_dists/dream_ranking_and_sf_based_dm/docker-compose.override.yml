@@ -521,9 +521,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 4G
         reservations:
-          memory: 1G
+          memory: 4G
 
   speech-function-predictor:
     env_file: [ .env ]
