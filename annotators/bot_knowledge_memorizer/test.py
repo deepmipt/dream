@@ -1,4 +1,6 @@
 import requests
+import json
+import re
 from deeppavlov_kg import TerminusdbKnowledgeGraph
 
 
@@ -71,6 +73,13 @@ def compare_results(results, golden_results) -> bool:
     return all(is_successfull)
 
 
+def get_service_time(pattern, time_result):
+    pattern_string = re.search(pattern, time_result.text)[0]
+    pattern_dict = json.loads("{" + pattern_string.split(',"children": [{')[0] + "}")
+
+    return pattern_dict["time"]
+
+
 def main():
     TERMINUSDB_SERVER_URL = "http://0.0.0.0:6363"
     TERMINUSDB_SERVER_TEAM = "admin"
@@ -87,7 +96,12 @@ def main():
         password=TERMINUSDB_SERVER_PASSWORD,
     )
 
-    BOT_ID = "Bot/514b2c3d-bb73-4294-9486-04f9e099835e"
+    BOT_ID = "Bot/514b2c3d-bb73-4294-9486-04f9e099835c"
+
+    PATTERN_KNOWLEDGE = r"\"function\": \"get_knowledge\".*\"time\": \d.\d+"
+    PATTERN_LLM = r"\"function\": \"convert_triplets_to_natural_language\".*\"time\": \d.\d+"
+    PATTERN_TERMINUSDB = r"\"function\": \"create_entities\".*\"time\": \d.\d+"
+    PATTERN_PROPS = r"\"function\": \"get_properties_of_entities\".*\"time\": \d.\d+"
     # get dog_id and park_id from KG
     dog_id, park_id = None, None
     try:
@@ -100,27 +114,19 @@ def main():
                 dog_id = entity_info["@id"]
             elif entity_info.get("substr") == "park":
                 park_id = entity_info["@id"]
-        print(f"Found park_id: '{park_id}' and dog_ig: '{dog_id}'")
+        # print(f"Found park_id: '{park_id}' and dog_ig: '{dog_id}'")
         added_new_entities = False
     except Exception:
-        print("Adding new entities and rels")
+        # print("Adding new entities and rels")
         added_new_entities = True
 
     request_data = [
         {
             "utterances": [
                 {
-                    "text": "i have a dog and a cat",
+                    "text": "i have a dog and a cat, i like to go to the park.",
                     "user": {"id": BOT_ID.split("/")[1]},
                     "annotations": formulate_utt_annotations(dog_id, park_id),
-                },
-                {
-                    "text": "",
-                    "user": {"id": ""},
-                    "annotations": {
-                        "property_extraction": [{}],
-                        "custom_entity_linking": [],
-                    },
                 },
             ],
             "human_utterances": [
@@ -134,6 +140,8 @@ def main():
         }
     ]
 
+    print(f"Input data: {request_data}")
+
     golden_triplets = [[[BOT_ID, "LIKE GOTO", "Place"], [BOT_ID, "HAVE PET", "Animal"]], []]
     if added_new_entities:
         golden_results = [[{"added_to_graph": golden_triplets, "triplets_already_in_graph": [[], []]}]]
@@ -142,13 +150,37 @@ def main():
 
     count = 0
     for data, golden_result in zip(request_data, golden_results):
-        result = requests.post(BOT_KNOWLEDGE_MEMORIZER_URL, json=data).json()
-        print(result)
+        result = requests.post(BOT_KNOWLEDGE_MEMORIZER_URL, json=data)
+        try:
+            result = result.json()
+            print(f"Output data: {result}")
+            print("Success. Test for input-output data in JSON-format passed.")
+        except Exception:
+            print(result)
+            print("Input-output data is not in JSON-format.")
+        time_result = requests.post(f"{BOT_KNOWLEDGE_MEMORIZER_URL}?profile", json=data)
+        output_dict = json.loads(time_result.text)
+        total_time = output_dict["duration"]
+        try:
+            knowledge_time = get_service_time(PATTERN_KNOWLEDGE, time_result)
+            # print(f"Knowledge time: {knowledge_time:.3f}s")
+            llm_time = get_service_time(PATTERN_LLM, time_result)
+            # print(f"Llm time: {llm_time:.3f}s")
+            terminusdb_time = get_service_time(PATTERN_TERMINUSDB, time_result)
+            # print(f"Terminusdb time: {terminusdb_time:.3f}s")
+            props_time = get_service_time(PATTERN_PROPS, time_result)
+            exec_time = total_time - knowledge_time - llm_time - terminusdb_time - props_time
+
+        except Exception as e:
+            raise e
+
         result = prepare_for_comparison(result)
         if compare_results(result, golden_result):
             count += 1
     assert count == len(request_data)
-    print("Success")
+    # print("Success")
+    # print(f"Total time including requests to other services: {total_time:.3f}s")
+    print(f"bot knowledge memorizer exec time = {exec_time:.1f}s")
 
 
 if __name__ == "__main__":

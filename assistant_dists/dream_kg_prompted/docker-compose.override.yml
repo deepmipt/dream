@@ -69,26 +69,6 @@ services:
         reservations:
           memory: 128M
 
-  intent-catcher:
-    env_file: [ .env ]
-    build:
-      context: .
-      dockerfile: ./annotators/IntentCatcherTransformers/Dockerfile
-      args:
-        SERVICE_PORT: 8014
-        CONFIG_NAME: intents_model_dp_config.json
-        INTENT_PHRASES_PATH: intent_phrases.json
-    command: python -m flask run -h 0.0.0.0 -p 8014
-    environment:
-      - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
-    deploy:
-      resources:
-        limits:
-          memory: 3.5G
-        reservations:
-          memory: 3.5G
-
   ner:
     env_file: [ .env ]
     build:
@@ -107,9 +87,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
         reservations:
-          memory: 2G
+          memory: 4G
 
   entity-linking:
     env_file: [.env]
@@ -122,7 +102,7 @@ services:
       context: ./
       dockerfile: annotators/entity_linking/Dockerfile
     environment:
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -143,9 +123,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
         reservations:
-          memory: 2G
+          memory: 4G
  
   entity-detection:
     env_file: [.env]
@@ -162,7 +142,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8103
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -202,7 +182,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8136
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=2
     deploy:
       resources:
         limits:
@@ -227,7 +207,7 @@ services:
         GENERATIVE_SERVICE_TIMEOUT: 120
         SENTENCE_RANKER_URL: http://sentence-ranker:8128/respond
         SENTENCE_RANKER_TIMEOUT: 5
-        RELEVANT_KNOWLEDGE_THRESHOLD: 0.5
+        RELEVANT_KNOWLEDGE_THRESHOLD: 0.3
         ENVVARS_TO_SEND: OPENAI_API_KEY
         USE_KG_DATA: 1
       context: ./

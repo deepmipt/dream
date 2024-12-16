@@ -35,6 +35,7 @@ ENVVARS_TO_SEND = {
     "http://openai-api-gpt4:8159/respond": ["OPENAI_API_KEY", "OPENAI_ORGANIZATION"],
     "http://openai-api-gpt4-32k:8160/respond": ["OPENAI_API_KEY", "OPENAI_ORGANIZATION"],
     "http://openai-api-gpt4-turbo:8180/respond": ["OPENAI_API_KEY", "OPENAI_ORGANIZATION"],
+    "http://openai-api-gpt4o:8181/respond": ["OPENAI_API_KEY", "OPENAI_ORGANIZATION"],
     "http://transformers-lm-gptjt:8161/respond": [],
     "http://anthropic-api-claude-v1:8164/respond": ["ANTHROPIC_API_KEY"],
     "http://anthropic-api-claude-instant-v1:8163/respond": ["ANTHROPIC_API_KEY"],
@@ -42,6 +43,8 @@ ENVVARS_TO_SEND = {
     "http://transformers-lm-ruxglm:8171/respond": [],
     "http://transformers-lm-rugpt35:8178/respond": [],
     "http://gigachat-api:8187/respond": ["GIGACHAT_CREDENTIAL", "GIGACHAT_SCOPE"],
+    "http://gigachat-pro-api:8188/respond": ["GIGACHAT_CREDENTIAL", "GIGACHAT_SCOPE"],
+    "http://gigachat-plus-api:8189/respond": ["GIGACHAT_CREDENTIAL", "GIGACHAT_SCOPE"],
 }
 
 

@@ -211,7 +211,7 @@
                 "connector": {
                     "protocol": "http",
                     "timeout": 120.0,
-                    "url": "http://dff-dream-persona-gpt-j-prompted-skill:8134/respond"
+                    "url": "http://dff-dream-persona-chatgpt-prompted-skill:8137/respond"
                 },
                 "dialog_formatter": {
                     "name": "state_formatters.dp_formatters:dff_prompted_skill_formatter",
@@ -224,8 +224,8 @@
                 "state_manager_method": "add_hypothesis",
                 "is_enabled": true,
                 "source": {
-                    "component": "components/6lLhP7zuoiI0bxJEDLWUg.yml",
-                    "service": "skills/dff_template_prompted_skill/service_configs/dff-dream-persona-gpt-jt-prompted-skill"
+                    "component": "components/W6hdAGshQyMwdQukRXXuKA.yml",
+                    "service": "skills/dff_template_prompted_skill/service_configs/dff-dream-persona-chatgpt-prompted-skill"
                 }
             },
             "dummy_skill": {

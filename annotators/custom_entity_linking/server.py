@@ -19,6 +19,8 @@ with open("abstract_rels.txt", "r") as inp:
 try:
     el = build_model(config_name, download=True)
     logger.info("model loaded")
+    os.chmod("/root/.deeppavlov/downloads/entity_linking_eng/custom_el_eng_dream/", 0o777)
+    os.chmod("/root/.deeppavlov/downloads/entity_linking_eng/custom_el_eng_dream/custom_database.db", 0o777)
 except Exception as e:
     sentry_sdk.capture_exception(e)
     logger.exception(e)

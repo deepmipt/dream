@@ -88,9 +88,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
         reservations:
-          memory: 2G
+          memory: 4G
 
   entity-linking:
     env_file: [ .env ]
@@ -103,7 +103,7 @@ services:
       context: ./
       dockerfile: annotators/entity_linking/Dockerfile
     environment:
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -125,9 +125,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
         reservations:
-          memory: 2G
+          memory: 4G
 
   entity-detection:
     env_file: [ .env ]
@@ -145,7 +145,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8103
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=1
     deploy:
       resources:
         limits:
@@ -167,7 +167,7 @@ services:
     command: flask run -h 0.0.0.0 -p 8136
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=2
     deploy:
       resources:
         limits:

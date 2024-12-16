@@ -138,7 +138,7 @@ def example_lets_talk_about():
 
 def get_current_user_id(ctx: Context, actor: Actor) -> bool:
     if "agent" in ctx.misc:
-        user_id = ctx.misc["agent"]["dialog"]["human_utterances"][-1]["user"]["id"]
+        user_id = ctx.misc["agent"]["dialog"]["human_utterances"][-1].get("user", {}).get("id", None)
 
         return user_id
 
@@ -151,7 +151,11 @@ def has_entity_in_graph(property):
         if user_id:
             current_user_id = "User/" + user_id
             logger.info(f"current user id -- {current_user_id}")
-            user_existing_properties = graph.get_properties_of_entity(entity_id=current_user_id)
+            try:
+                user_existing_properties = graph.get_properties_of_entity(entity_id=current_user_id)
+            except Exception:
+                logger.info(f"Current user {current_user_id} has not been created in graph yet")
+                return False
             logger.info(f"user_existing_properties -- {user_existing_properties}")
             logger.info(f"property to search for -- {property}")
             if property in user_existing_properties:

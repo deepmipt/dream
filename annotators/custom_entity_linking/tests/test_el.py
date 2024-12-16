@@ -1,26 +1,14 @@
 import os
+import time
 from pathlib import Path
 import requests
 from dotenv import load_dotenv
 from deeppavlov_kg import TerminusdbKnowledgeGraph
-import sentry_sdk
-from deeppavlov import build_model
-import nltk
+
 
 load_dotenv("./.env")
 
-config_name = "annotators/custom_entity_linking/custom_entity_linking.json"
-nltk.download("stopwords")
-
-try:
-    el = build_model(config_name, download=True)
-    print("model loaded")
-except Exception as e:
-    sentry_sdk.capture_exception(e)
-    print(e)
-    raise e
-
-INDEX_LOAD_PATH = Path(os.path.expanduser(el.pipe[-1][-1].load_path))
+INDEX_LOAD_PATH = Path(os.path.expanduser("~/.deeppavlov/downloads/entity_linking_eng/custom_el_eng_dream"))
 TERMINUSDB_SERVER_URL = "http://0.0.0.0:6363"
 TERMINUSDB_SERVER_TEAM = "admin"
 TERMINUSDB_SERVER_DB = "user_knowledge_db"
@@ -37,6 +25,7 @@ graph = TerminusdbKnowledgeGraph(
 
 
 def main():
+    st_time = time.time()
     url = "http://0.0.0.0:8153"
     inserted_data = {
         "user_id": "User/Jack",
@@ -58,15 +47,21 @@ def main():
             "user_id": ["User/Jack"],
             "entity_substr": [["forrest gump"]],
             "entity_tags": [[[("film", 1.0)]]],
-            "context": [["who directed forrest gump?"]],
+            "contexts": [["who directed forrest gump?"]],
         }
     ]
+    print(f"Input data: {request_data}")
     gold_results = [["film/123"]]
-
+    print(f"Expected result: {gold_results}")
     count = 0
     for data, gold_result in zip(request_data, gold_results):
-        result = requests.post(f"{url}/model", json=data).json()
-        print(result)
+        result = requests.post(f"{url}/model", json=data)
+        try:
+            result = result.json()
+            print(f"Output data: {result}")
+            print("Success. Test for input-output data in JSON-format passed.")
+        except Exception:
+            print("Input-output data is not in JSON-format.")
         entity_ids = []
         for entity_info_list in result:
             for entity_info in entity_info_list:
@@ -77,7 +72,9 @@ def main():
             print(f"Got {result}, but expected: {gold_result}")
 
     assert count == len(request_data)
-    print("Success")
+    total_time = time.time() - st_time
+    # print("Success")
+    print(f"custom entity linking exec time = {total_time:.3f}s")
 
 
 if __name__ == "__main__":

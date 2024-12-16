@@ -1,4 +1,6 @@
 import requests
+import json
+import re
 from deeppavlov_kg import TerminusdbKnowledgeGraph
 
 
@@ -71,12 +73,19 @@ def compare_results(results, golden_results) -> bool:
     return all(is_successfull)
 
 
+def get_service_time(pattern, time_result):
+    pattern_string = re.search(pattern, time_result.text)[0]
+    pattern_dict = json.loads("{" + pattern_string.split(',"children": [{')[0] + "}")
+
+    return pattern_dict["time"]
+
+
 def main():
     TERMINUSDB_SERVER_URL = "http://0.0.0.0:6363"
     TERMINUSDB_SERVER_TEAM = "admin"
     TERMINUSDB_SERVER_DB = "user_knowledge_db"
     TERMINUSDB_SERVER_PASSWORD = "root"
-    USER_KNOWLEDGE_MEMORIZER_PORT = 8027
+    USER_KNOWLEDGE_MEMORIZER_PORT = 8027  # tested with dream_kg_prompted distribution
 
     USER_KNOWLEDGE_MEMORIZER_URL = f"http://0.0.0.0:{USER_KNOWLEDGE_MEMORIZER_PORT}/respond"
 
@@ -87,7 +96,13 @@ def main():
         password=TERMINUSDB_SERVER_PASSWORD,
     )
 
-    USER_ID = "User/b75d2700259bdc44sdsdf85e7f530ed"
+    USER_ID = "User/b75d2700259bdc44sdsdf85e7f530ec"
+
+    PATTERN_KNOWLEDGE = r"\"function\": \"get_knowledge\".*\"time\": \d.\d+"
+    PATTERN_LLM = r"\"function\": \"convert_triplets_to_natural_language\".*\"time\": \d.\d+"
+    PATTERN_TERMINUSDB = r"\"function\": \"create_entities\".*\"time\": \d.\d+"
+    PATTERN_PROPS = r"\"function\": \"get_properties_of_entities\".*\"time\": \d.\d+"
+    # PATTERN_RELS = r"\"function\": \"search_for_relationships\".*\"time\": \d.\d+"
     # get dog_id and park_id from KG
     dog_id, park_id = None, None
     try:
@@ -100,31 +115,25 @@ def main():
                 dog_id = entity_info["@id"]
             elif entity_info.get("substr") == "park":
                 park_id = entity_info["@id"]
-        print(f"Found park_id: '{park_id}' and dog_ig: '{dog_id}'")
+        # print(f"Found park_id: '{park_id}' and dog_ig: '{dog_id}'")
         added_new_entities = False
     except Exception:
-        print("Adding new entities and rels")
+        # print("Adding new entities and rels")
         added_new_entities = True
 
     request_data = [
         {
             "last_human_annotated_utterance": [
                 {
-                    "text": "i have a dog and a cat",
+                    "text": "i have a dog and a cat, i like going to a park",
                     "user": {"id": USER_ID.split("/")[1]},
                     "annotations": formulate_utt_annotations(dog_id, park_id),
-                },
-                {
-                    "text": "",
-                    "user": {"id": ""},
-                    "annotations": {
-                        "property_extraction": [{}],
-                        "custom_entity_linking": [],
-                    },
                 },
             ]
         }
     ]
+
+    print(f"Input data: {request_data}")
 
     golden_triplets = [[[USER_ID, "LIKE GOTO", "Place"], [USER_ID, "HAVE PET", "Animal"]], []]
     if added_new_entities:
@@ -134,13 +143,36 @@ def main():
 
     count = 0
     for data, golden_result in zip(request_data, golden_results):
-        result = requests.post(USER_KNOWLEDGE_MEMORIZER_URL, json=data).json()
-        print(result)
+        result = requests.post(USER_KNOWLEDGE_MEMORIZER_URL, json=data)
+        try:
+            result = result.json()
+            print(f"Output data: {result}")
+            print("Success. Test for input-output data in JSON-format passed.")
+        except Exception:
+            print(result)
+            print("Input-output data is not in JSON-format.")
+        time_result = requests.post(f"{USER_KNOWLEDGE_MEMORIZER_URL}?profile", json=data)
+        output_dict = json.loads(time_result.text)
+        # print(output_dict)
+        total_time = output_dict["duration"]
+        # print(total_time)
+        try:
+            knowledge_time = get_service_time(PATTERN_KNOWLEDGE, time_result)
+            llm_time = get_service_time(PATTERN_LLM, time_result)
+            terminusdb_time = get_service_time(PATTERN_TERMINUSDB, time_result)
+            props_time = get_service_time(PATTERN_PROPS, time_result)
+            exec_time = total_time - knowledge_time - llm_time - terminusdb_time - props_time
+
+        except Exception as e:
+            raise e
+
         result = prepare_for_comparison(result)
         if compare_results(result, golden_result):
             count += 1
     assert count == len(request_data)
-    print("Success")
+    # print("Success")
+    # print(f"Total time including requests to other services = {total_time:.3f}s")
+    print(f"user knowledge memorizer exec time = {exec_time:.1f}s")
 
 
 if __name__ == "__main__":
