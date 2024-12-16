@@ -183,8 +183,8 @@ services:
       args:
         SERVICE_PORT: 8078
         SERVICE_NAME: text_qa
-        CONFIG: qa_eng.json
       context: services/text_qa
+      
       dockerfile: Dockerfile
     command: flask run -h 0.0.0.0 -p 8078
     environment:
@@ -235,9 +235,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 8G
         reservations:
-          memory: 2G
+          memory: 8G
 
   fact-retrieval:
     env_file: [ .env ]
@@ -246,8 +246,6 @@ services:
         SERVICE_PORT: 8100
         SERVICE_NAME: fact_retrieval
         CONFIG: configs/fact_retrieval_page.json
-        CONFIG_WIKI: configs/page_extractor.json
-        CONFIG_WHOW: configs/whow_page_extractor.json
         SRC_DIR: annotators/fact_retrieval/
         COMMIT: 4b3e60c407644b750c9dc292ac6bf206081fb9d0
         N_FACTS: 3
@@ -260,9 +258,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G
+          memory: 8G
         reservations:
-          memory: 4G
+          memory: 8G
 
   entity-detection:
     env_file: [ .env ]
@@ -483,5 +481,23 @@ services:
           memory: 4G
         reservations:
           memory: 4G
+
+  spacy-nounphrases:
+    env_file: [.env]
+    build:
+      args:
+        SERVICE_PORT: 8006
+        SERVICE_NAME: spacy_nounphrases
+      context: .
+      dockerfile: ./annotators/spacy_nounphrases/Dockerfile
+    command: flask run -h 0.0.0.0 -p 8006
+    environment:
+      - FLASK_APP=server
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 256M
 
 version: '3.7'

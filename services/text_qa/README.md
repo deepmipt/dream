@@ -1,15 +1,35 @@
-# Fact Retrieval
+# Вопросно-ответная система на основе полнтотекстовой базы знаний
 
-The service finds the answer of a factoid question in text.
+Вопросно-ответная система состоит из следующих компонентов:
 
-Example of query.
+- аннотатор **combined-classification** для предсказания того, является ли реплика пользователя вопросом;
+- аннотатор **fact-retrieval** для извлечения релевантных параграфов;
+- сервис **text-qa** для нахождения правильного ответа в релевантных параграфах.
 
-```python
-requests.post("http://0.0.0.0:8078/model", json = {"question_raw": ["Who was the founder of Apple?"],
-                                                   "top_facts": [["Apple was founded by Steve Jobs, Steve Wozniak, and Ronald Wayne in April 1976 to develop and sell Wozniak's Apple I personal computer, though Wayne sold his share back to Jobs and Wozniak within 12 days.fix"]]}).json()
+## Запуск вопросно-ответной системы
+
+Для запуска вопросно-ответной системы необходимо выполнить следующую команду из корневой директории:
+
+``` 
+docker-compose -f docker-compose.yml -f assistant_dists/dream/docker-compose.override.yml -f assistant_dists/dream/dev.yml up  --detach --build fact-retrieval text-qa combined-classification > build.log 2>&1
+```
+## Тестирование
+
+Для тестирования вопросно-ответной системы необходимо выполнить следующую команду из корневой директории:
+
+```
+bash tests/text_qa_test.sh
 ```
 
-Output: [['Steve Jobs',
-          0.9962880611419678,
-          21,
-          "Apple was founded by Steve Jobs, Steve Wozniak, and Ronald Wayne in April 1976 to develop and sell Wozniak's Apple I personal computer, though Wayne sold his share back to Jobs and Wozniak within 12 days."]]
+Скрипт ```tests/text_qa_test.sh``` выполняет следующие шаги:
+
+- запускает вопросно-ответную систему;
+- скачивает датасет для тестирования;
+- инициализирует среду для тестрирования;
+- проводит тестирование и выводит результаты тестов консоль;
+- останавливает сервис вопросно-ответной системы.
+
+По окончанию работы сервиса в корневой директории создаются следующие файлы:
+
+- ```tests.log``` - логи, отражающие результаты тестирования
+- ```build.log``` и ```service_stopping.log``` - логи процесса запуска и остановки сервиса вопросно-ответной системы соответственно

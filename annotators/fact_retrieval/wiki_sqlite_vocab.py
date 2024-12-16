@@ -12,22 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import time
-import logging
-
-import sentry_sdk
+from logging import getLogger
+from typing import List, Any, Optional, Union
 
 from deeppavlov.core.common.registry import register
 from deeppavlov.core.models.component import Component
-from deeppavlov.dataset_iterators.sqlite_iterator import SQLiteDataIterator
+from sqlite_iterator import SQLiteDataIterator
 
-sentry_sdk.init(os.getenv("SENTRY_DSN"))
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
-@register("wiki_sqlite_vocab")
+@register('wiki_sqlite_vocab')
 class WikiSQLiteVocab(SQLiteDataIterator, Component):
     """Get content from SQLite database by document ids.
 
@@ -41,11 +36,11 @@ class WikiSQLiteVocab(SQLiteDataIterator, Component):
 
     """
 
-    def __init__(self, load_path, join_docs=True, shuffle=False, **kwargs):
+    def __init__(self, load_path: str, join_docs: bool = True, shuffle: bool = False, **kwargs) -> None:
         SQLiteDataIterator.__init__(self, load_path=load_path, shuffle=shuffle)
         self.join_docs = join_docs
 
-    def __call__(self, doc_ids_batch=None, *args, **kwargs):
+    def __call__(self, doc_ids: Optional[List[List[Any]]] = None, *args, **kwargs) -> List[Union[str, List[str]]]:
         """Get the contents of files, stacked by space or as they are.
 
         Args:
@@ -54,19 +49,15 @@ class WikiSQLiteVocab(SQLiteDataIterator, Component):
         Returns:
             a list of contents / list of lists of contents
         """
-        tm_st = time.time()
-        contents_batch = []
-        logger.info(f"doc_ids_batch {doc_ids_batch}")
-        for ids_list in doc_ids_batch:
-            contents_list = []
-            for ids in ids_list:
-                contents = [self.get_doc_content(doc_id) for doc_id in ids]
-                logger.debug(f"contents {contents}")
-                if self.join_docs:
-                    contents = " ".join(contents)
-                contents_list.append(contents)
-            contents_batch.append(contents_list)
-        tm_end = time.time()
-        logger.debug(f"sqlite vocab time {tm_end - tm_st}")
+        all_contents = []
+        if not doc_ids:
+            logger.warning('No doc_ids are provided in WikiSqliteVocab, return all docs')
+            doc_ids = [self.get_doc_ids()]
 
-        return contents_batch
+        for ids in doc_ids:
+            contents = [(self.get_doc_title(doc_id), self.get_doc_content(doc_id)) for doc_id in ids]
+            if self.join_docs:
+                contents = ' '.join(contents)
+            all_contents.append(contents)
+
+        return all_contents
