@@ -7,3 +7,4 @@ Werkzeug<=2.0.3
 transformers==4.6.0
 datasets==1.11.0
 huggingface-hub==0.0.8
+torch==1.13.1
