@@ -48,7 +48,7 @@ services:
 
   mongo:
     ports:
-      - 27017:27017
+      - 27018:27018
     # # you can use persistent local volume if you need
     # volumes:
     #   - ./venv/data/db_data:/root/data/db

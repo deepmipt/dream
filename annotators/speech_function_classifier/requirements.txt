@@ -6,7 +6,9 @@ click>=7.1.2
 requests==2.25.1 
 scipy==1.6.3
 pandas==1.2.4
+numpy==1.21.4
 scikit-learn==0.22.2.post1
 jinja2<=3.0.3
 Werkzeug>=2.2.2
 gunicorn==19.9.0
+allure-pytest==2.9.45

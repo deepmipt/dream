@@ -4,6 +4,7 @@ import logging
 import numpy as np
 import requests
 import time
+import random
 from copy import deepcopy
 from os import getenv
 from typing import List
@@ -70,6 +71,8 @@ def select_response_by_scores(hypotheses, scores):
 def get_scores(dialog_context, hypotheses):
     if all([SENTENCE_RANKER_ANNOTATION_NAME in hyp.get("annotations", {}) for hyp in hypotheses]):
         scores = [hyp.get("annotations", {}).get(SENTENCE_RANKER_ANNOTATION_NAME, 0.0) for hyp in hypotheses]
+        logger.info(f'hypotheses:{hypotheses}')
+        logger.info(f'SCORES:{scores}')
         logger.info("Selected a response via Sentence Ranker Annotator.")
     else:
         try:
@@ -84,8 +87,10 @@ def get_scores(dialog_context, hypotheses):
             logger.info("Selected a response via Sentence Ranker Service.")
         except Exception as e:
             sentry_sdk.capture_exception(e)
+            logger.info(f'hypotheses:{hypotheses}')
             scores = [hyp["confidence"] for hyp in hypotheses]
             logger.exception(e)
+            logger.info(f'SCORES:{scores}')
             logger.info("Selected a response via Confidence.")
     return scores
 
@@ -167,7 +172,7 @@ def select_response(dialog_context: List[str], hypotheses: List[dict], last_huma
                 scores[hyp_id] *= 1.5
 
     # --------------------------------------------------------------------------------------------------------------
-
+    logger.info(f'hypotheses:{hypotheses}')
     logger.info(f"Scores for selection:\n`{scores}`")
     result = select_response_by_scores(hypotheses, scores)[0]
     logger.info(f"ranking_and_intent_based_response_selector selected:\n`{result}`")
@@ -189,17 +194,20 @@ def respond():
     selected_attributes = []
 
     for i, dialog in enumerate(dialogs):
+        logger.info(f'BOT UTTERANCES:{dialog["bot_utterances"]}')
         hypotheses = [hyp for hyp in dialog["human_utterances"][-1]["hypotheses"]]
         if FILTER_TOXIC_OR_BADLISTED:
             hypotheses = filter_out_badlisted_or_toxic(hypotheses)
         hypotheses_texts = "\n".join([f'{h["skill_name"]} (conf={h["confidence"]}): {h["text"]}' for h in hypotheses])
         logger.info(f"Hypotheses: {hypotheses_texts}")
         dialog_context = [uttr["text"] for uttr in dialog["utterances"][-N_UTTERANCES_CONTEXT:]]
+        logger.info(f"Dialog context: {dialog_context}")
+        bot_utterance = dialog["bot_utterances"][-1] if len(dialog["bot_utterances"])>0 else {}
         selected_resp = select_response(
             dialog_context,
             hypotheses,
             dialog["human_utterances"][-1],
-            dialog["bot_utterances"][-1],
+            bot_utterance,
         )
         try:
             best_id = hypotheses.index(selected_resp)

@@ -11,17 +11,17 @@ services:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
     environment:
-      - CUDA_VISIBLE_DEVICES=5
+      - CUDA_VISIBLE_DEVICES=0
   text-qa:
     restart: unless-stopped
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
     environment:
-      - CUDA_VISIBLE_DEVICES=5
+      - CUDA_VISIBLE_DEVICES=0
   combined-classification:
     restart: unless-stopped
     environment:
-      - CUDA_VISIBLE_DEVICES=7
+      - CUDA_VISIBLE_DEVICES=0
   mongo:
     restart: unless-stopped
     command: mongod
@@ -38,13 +38,13 @@ services:
   intent-catcher:
     restart: unless-stopped
     environment:
-      - CUDA_VISIBLE_DEVICES=9
+      - CUDA_VISIBLE_DEVICES=0
   ner:
     restart: unless-stopped
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
     environment:
-      - CUDA_VISIBLE_DEVICES=7
+      - CUDA_VISIBLE_DEVICES=0
   factoid-qa:
     restart: unless-stopped
   entity-linking:
@@ -60,17 +60,17 @@ services:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
     environment:
-      - CUDA_VISIBLE_DEVICES=8
+      - CUDA_VISIBLE_DEVICES=0
   entity-detection:
     restart: unless-stopped
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
     environment:
-      - CUDA_VISIBLE_DEVICES=9
+      - CUDA_VISIBLE_DEVICES=0
   sentence-ranker:
     restart: unless-stopped
     environment:
-      - CUDA_VISIBLE_DEVICES=9
+      - CUDA_VISIBLE_DEVICES=0
   property-extraction:
     restart: unless-stopped
     volumes:

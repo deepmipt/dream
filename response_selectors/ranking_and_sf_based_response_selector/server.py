@@ -67,6 +67,7 @@ def get_scores(dialog_context, hypotheses):
     if all([SENTENCE_RANKER_ANNOTATION_NAME in hyp.get("annotations", {}) for hyp in hypotheses]):
         scores = [hyp.get("annotations", {}).get(SENTENCE_RANKER_ANNOTATION_NAME, 0.0) for hyp in hypotheses]
         logger.info("Selected a response via Sentence Ranker Annotator.")
+        logger.info(f'HYP_SCORES:{scores}')
     else:
         try:
             dialog_context = "\n".join(dialog_context)
@@ -89,12 +90,15 @@ def get_scores(dialog_context, hypotheses):
 def select_response(dialog_context: List[str], hypotheses: List[dict], last_human_ann_uttr: dict, prev_bot_uttr: dict):
     scores = get_scores(dialog_context, hypotheses)
     scores = [score if hyp["skill_name"] != "dummy_skill" else score - 1 for score, hyp in zip(scores, hypotheses)]
+    logger.info(f'SCORES: {scores}')
 
     # ---------------------------------------------------------------------------------------------------------
     # sfc-based scaling
     try:
         speech_predictor = last_human_ann_uttr["annotations"].get("speech_function_predictor", [])
+        logger.info(f'SFP: {speech_predictor}')
         speech_annotation = last_human_ann_uttr["annotations"].get("speech_function_classifier", [])
+        logger.info(f'SFC:{speech_annotation}')
     except Exception as e:
         logger.error(f"speech functions failed: {e}")
     human_named_entities = get_entities(last_human_ann_uttr, only_named=True, with_labels=False)
@@ -158,6 +162,7 @@ def select_response(dialog_context: List[str], hypotheses: List[dict], last_huma
     # --------------------------------------------------------------------------------------------------------------
 
     logger.info(f"Scores for selection:\n`{scores}`")
+    logger.info(f'HYPOTHESES: {hypotheses}')
     result = select_response_by_scores(hypotheses, scores)[0]
     logger.info(f"ranking_and_sf_based_response_selector selected:\n`{result}`")
 
@@ -189,6 +194,7 @@ def respond():
             bot_uttr = dialog["bot_utterances"][-1]
         except IndexError:
             logger.info("bot_uttrs is empty for this dialog")
+        # selected_resp = random.choice(hypotheses)
         selected_resp = select_response(
             dialog_context,
             hypotheses,
@@ -197,7 +203,6 @@ def respond():
         )
         try:
             best_id = hypotheses.index(selected_resp)
-
             selected_responses.append(hypotheses[best_id].pop("text"))
             selected_skill_names.append(hypotheses[best_id].pop("skill_name"))
             selected_confidences.append(hypotheses[best_id].pop("confidence"))
@@ -233,7 +238,7 @@ def respond():
                 selected_confidences,
                 selected_human_attributes,
                 selected_bot_attributes,
-                selected_attributes,
+                selected_attributes
             )
         )
     )
