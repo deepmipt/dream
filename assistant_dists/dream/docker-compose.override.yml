@@ -235,9 +235,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 8G
         reservations:
-          memory: 2G
+          memory: 8G
 
   fact-retrieval:
     env_file: [ .env ]
@@ -258,9 +258,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G
+          memory: 8G
         reservations:
-          memory: 4G
+          memory: 8G
 
   entity-detection:
     env_file: [ .env ]
