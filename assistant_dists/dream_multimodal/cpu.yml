@@ -1,9 +1,5 @@
 version: '3.7'
 services:
-  dialogpt:
-    environment:
-      DEVICE: cpu
-      CUDA_VISIBLE_DEVICES: ""
   intent-catcher:
     environment:
       DEVICE: cpu
@@ -13,6 +9,10 @@ services:
       DEVICE: cpu
       CUDA_VISIBLE_DEVICES: ""
   fromage:
+    environment:
+      DEVICE: cpu
+      CUDA_VISIBLE_DEVICES: ""
+  vidchapters-service:
     environment:
       DEVICE: cpu
       CUDA_VISIBLE_DEVICES: ""

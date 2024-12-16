@@ -22,7 +22,7 @@ flows = {
             },
         },
         "caption": {
-            RESPONSE: loc_rsp.caption,
+            RESPONSE: loc_rsp.task_processing,
             PROCESSING: {},
             TRANSITIONS: {},
         },

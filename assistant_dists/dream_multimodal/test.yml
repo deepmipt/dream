@@ -19,15 +19,11 @@ services:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
-  dff-fromage-image-skill:
-    volumes:
-      - "~/.deeppavlov:/root/.deeppavlov"
-      - "~/.deeppavlov/cache:/root/.cache"
   intent-catcher:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
-  badlisted-words:
+  sentence-ranker:
     volumes:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
@@ -36,9 +32,5 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
       - "~/.deeppavlov/cache:/root/.cache"
     environment:
-      - CUDA_VISIBLE_DEVICES=0
-  sentence-ranker:
-    volumes:
-      - "~/.deeppavlov:/root/.deeppavlov"
-      - "~/.deeppavlov/cache:/root/.cache"
+      - CUDA_VISIBLE_DEVICES=0,1,2
 version: "3.7"

@@ -48,8 +48,8 @@
 8042    embodied-sender
 8043
 8044    bot-knowledge-memorizer
-8045
-8046
+8045    vidchapters-service
+8046    dff-vidchapters-skill
 8047	eliza
 8048    emotion-ranking-based-response-selector
 8049	emotion-skill
@@ -185,7 +185,7 @@
 8179	dff-robot-prompted-skill
 8180    openai-api-gpt4-turbo
 8181
-8182
+8182    german_translation_pa
 8183	external-integration-skill
 8184	external-fake-server
 8185	transformers-mistral-7b-128k

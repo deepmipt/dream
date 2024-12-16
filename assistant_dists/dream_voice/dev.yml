@@ -15,12 +15,12 @@ services:
       - "./skills/dff_program_y_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8008:8008
+      - 8019:8019
   sentseg:
     volumes:
       - "./annotators/SentSeg:/src"
     ports:
-      - 8011:8011
+      - 8039:8039
   convers-evaluation-selector:
     volumes:
       - "./response_selectors/convers_evaluation_based_selector:/src"
@@ -32,7 +32,7 @@ services:
       - "./skills/dff_intent_responder_skill:/src"
       - "./common:/src/common"
     ports:
-      - 8012:8012
+      - 8043:8043
   intent-catcher:
     volumes:
       - "./annotators/IntentCatcherTransformers:/src"
@@ -40,28 +40,19 @@ services:
       - "~/.deeppavlov:/root/.deeppavlov"
     ports:
       - 8014:8014
-  dialogpt:
-    volumes:
-      - "./services/dialogpt:/src"
-      - "./common:/src/common"
-      - "~/.deeppavlov/cache:/root/.cache"
-    ports:
-      - 8125:8125
   sentence-ranker:
     volumes:
       - "./services/sentence_ranker:/src"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8128:8128
+      - 8056:8056
   voice-service:
     volumes:
       - "~/.deeppavlov/file_server:/tmp"
-      - "./services/voice_service:/src"
     ports:
       - 8333:8333
   dff-voice-skill:
     volumes:
-      - "./skills/dff_voice_skill:/src"
       - "~/.deeppavlov/file_server:/tmp"
     ports:
       - 8444:8444

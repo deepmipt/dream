@@ -38,30 +38,35 @@ services:
       - "./annotators/IntentCatcherTransformers:/src"
       - "./common:/src/common"
       - "~/.deeppavlov:/root/.deeppavlov"
-    ports:
-      - 8014:8014
-  badlisted-words:
-    volumes:
-      - "./annotators/BadlistedWordsDetector:/src"
-      - "./common:/src/common"
-    ports:
-      - 8018:8018
-  dialogpt:
-    volumes:
-      - "./services/dialogpt:/src"
-      - "./common:/src/common"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
-      - 8125:8125
+      - 8019:8019
   sentence-ranker:
     volumes:
       - "./services/sentence_ranker:/src"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:
       - 8128:8128
+  prompt-selector:
+    volumes:
+      - "./annotators/prompt_selector:/src"
+      - "./common:/src/common"
+    ports:
+      - 8135:8135
+  vidchapters-service:
+    volumes:
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8045:8045
+  dff-vidchapters-skill:
+    volumes:
+      - "./skills/dff_vidchapters_skill:/src"
+      - "./common:/src/common"
+    ports:
+      - 8046:8046 
   fromage:
     volumes:
-      - "./services/fromage:/src"
       - "./common:/src/common"
       - "~/.deeppavlov/cache:/root/.cache"
     ports:

@@ -1,0 +1,26 @@
+name: vidchapters-service
+endpoints:
+- model
+compose:
+  env_file:
+  - .env
+  build:
+    args:
+      SERVICE_PORT: 8045
+      SERVICE_NAME: vidchapters_service
+      CUDA_VISIBLE_DEVICES: '0,1,2'
+    context: .
+    dockerfile: ./annotators/vidchapters_service/Dockerfile
+  environment:
+    - CUDA_VISIBLE_DEVICES=0
+  command: uvicorn server:app --host 0.0.0.0 --port 8045
+  deploy:
+    resources:
+      limits:
+        memory: 312M
+      reservations:
+        memory: 312M
+  volumes:
+  - ./annotators/vidchapters_service:/src
+  ports:
+  - 8045:8045

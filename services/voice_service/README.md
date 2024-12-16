@@ -1,27 +1,17 @@
 # Voice Service
+**Voice Service** -- это программный модуль мультимодальной диалогой системы, входящий в состав дистрибутива dream_voice, используемый для генерации текстовых подписей (аннотаций) к аудиофайлам поддерживаемых форматов (mp3 и wav) и формирования ответов на вопросы, связанные в полученным изображение.
 
-## Description
+## Запуск 
+Для запуска программного моделя fromage_service необходимо в корневой директории выполнить следующие команды:
+```sh
+docker-compose -f docker-compose.yml -f assistant_dists/dream_voice/docker-compose.override.yml -f assistant_dists/dream_voice/dev.yml -f assistant_dists/dream_voice/proxy.yml up --build voice-service
+```
 
-A audio captioning service.
-It receives a file in one of the following extensions:
-- `oga`
-- `mp3`
-- `ogg`
-- `flac`
-- `mp4`
+## Тестирование
 
-The service then extracts audio from the file by converting it to `wav` using ffmpeg.
+Для запуска тестирования программного моделя voice_service необходимо в корневой директории выполнить следующие команды:
 
-After the conversion, the service passes the audio as an input to the audio captioning model.
-The model then infers captions for the audio.
-
-The service returns adds the following attributes to the response:
-- `sound_type`
-- `sound_duration`
-- `sound_path`
-- `caption`
-
-Sound type is either an audio attachment, a voice message, or a videonote.
-Sound duration is the duration of the audiofile in seconds.
-Sound path is the path to the audiofile on the local server.
-Caption is the text that captioning model outputs.
+```sh
+bash tests/test_launch_audio.sh
+bash tests/test_voice_service.sh
+```

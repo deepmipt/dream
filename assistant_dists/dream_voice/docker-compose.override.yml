@@ -1,10 +1,10 @@
 services:
   agent:
-    command: sh -c 'bin/wait && python -m deeppavlov_agent.run agent.pipeline_config=assistant_dists/dream_voice/pipeline_conf.json'
+    command: sh -c 'bin/wait && python -m deeppavlov_agent.run agent.channel=telegram agent.telegram_token=$TG_TOKEN agent.pipeline_config=assistant_dists/dream_voice/pipeline_conf.json agent.db_config=assistant_dists/dream_voice/db_conf.json'
     environment:
-      WAIT_HOSTS: "dff-program-y-skill:8008, sentseg:8011, convers-evaluation-selector:8009, 
-          dff-intent-responder-skill:8012, intent-catcher:8014,
-          dialogpt:8125, sentence-ranker:8128,
+      WAIT_HOSTS: "dff-program-y-skill:8019, sentseg:8039, convers-evaluation-selector:8009, 
+          dff-intent-responder-skill:8043, intent-catcher:8014, ranking-based-response-selector:8055,
+          sentence-ranker:8056, german-translation-pa:8076,
           voice-service:8333, dff-voice-skill:8444"
       WAIT_HOSTS_TIMEOUT: ${WAIT_TIMEOUT:-1200}
       HIGH_PRIORITY_INTENTS: 1
@@ -20,12 +20,12 @@ services:
     env_file: [.env]
     build:
       args:
-        SERVICE_PORT: 8008
+        SERVICE_PORT: 8019
         SERVICE_NAME: dff_program_y_skill
         LANGUAGE: EN
       context: .
       dockerfile: ./skills/dff_program_y_skill/Dockerfile
-    command: gunicorn --workers=1 server:app -b 0.0.0.0:8008 --reload
+    command: gunicorn --workers=1 server:app -b 0.0.0.0:8019 --reload
     deploy:
       resources:
         limits:
@@ -38,7 +38,7 @@ services:
     env_file: [.env]
     build:
       context: ./annotators/SentSeg/
-    command: flask run -h 0.0.0.0 -p 8011
+    command: flask run -h 0.0.0.0 -p 8039
     environment:
       - FLASK_APP=server
     deploy:
@@ -47,6 +47,31 @@ services:
           memory: 1.5G
         reservations:
           memory: 1.5G
+
+  ranking-based-response-selector:
+    env_file: [ .env ]
+    build:
+      args:
+        SERVICE_PORT: 8055
+        SERVICE_NAME: response_selector
+        LANGUAGE: EN
+        SENTENCE_RANKER_ANNOTATION_NAME: sentence_ranker
+        SENTENCE_RANKER_SERVICE_URL: http://sentence-ranker:8055/respond
+        SENTENCE_RANKER_TIMEOUT: 3
+        N_UTTERANCES_CONTEXT: 5
+        FILTER_TOXIC_OR_BADLISTED: 1
+        FALLBACK_FILE: fallbacks_dream_en.json
+      context: .
+      dockerfile: ./response_selectors/ranking_based_response_selector/Dockerfile
+    command: flask run -h 0.0.0.0 -p 8055
+    environment:
+      - FLASK_APP=server
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 100M
 
   convers-evaluation-selector:
     env_file: [.env]
@@ -88,12 +113,12 @@ services:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8012
+        SERVICE_PORT: 8043
         SERVICE_NAME: dff_intent_responder_skill
         INTENT_RESPONSE_PHRASES_FNAME: intent_response_phrases.json
       context: .
       dockerfile: ./skills/dff_intent_responder_skill/Dockerfile
-    command: gunicorn --workers=1 server:app -b 0.0.0.0:8012 --reload
+    command: gunicorn --workers=1 server:app -b 0.0.0.0:8043 --reload
     deploy:
       resources:
         limits:
@@ -121,38 +146,15 @@ services:
         reservations:
           memory: 3.5G
 
-  dialogpt:
-    env_file: [ .env ]
-    build:
-      args:
-        SERVICE_PORT: 8125
-        SERVICE_NAME: dialogpt
-        PRETRAINED_MODEL_NAME_OR_PATH: microsoft/DialoGPT-medium
-        N_HYPOTHESES_TO_GENERATE: 5
-        CONFIG_NAME: dialogpt_en.json
-        MAX_HISTORY_DEPTH: 2
-      context: .
-      dockerfile: ./services/dialogpt/Dockerfile
-    command: flask run -h 0.0.0.0 -p 8125
-    environment:
-      - CUDA_VISIBLE_DEVICES=0
-      - FLASK_APP=server
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 2G
-
   sentence-ranker:
     env_file: [ .env ]
     build:
       args:
-        SERVICE_PORT: 8128
+        SERVICE_PORT: 8056
         SERVICE_NAME: sentence_ranker
         PRETRAINED_MODEL_NAME_OR_PATH: sentence-transformers/all-MiniLM-L6-v2
       context: ./services/sentence_ranker/
-    command: flask run -h 0.0.0.0 -p 8128
+    command: flask run -h 0.0.0.0 -p 8056
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
@@ -170,10 +172,9 @@ services:
         SERVICE_PORT: 8333
         SERVICE_NAME: voice_service
       context: ./services/voice_service/
-    command: python -m flask run -h 0.0.0.0 -p 8333
+    command: uvicorn server:app --host 0.0.0.0 --port 8333
     environment:
       - CUDA_VISIBLE_DEVICES=0
-      - FLASK_APP=server
     deploy:
       resources:
         limits:
@@ -197,5 +198,17 @@ services:
         limits:
           memory: 5G
         reservations:
-          memory: 5G       
+          memory: 5G    
+
+  german-translation-pa:
+    env_file: [ .env, .env_secret ]
+    build:
+      context: ./annotators/german_translation_pa/
+    command: uvicorn server:app --host 0.0.0.0 --port 8076
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 500M
 version: '3.7'
