@@ -87,9 +87,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
         reservations:
-          memory: 2G
+          memory: 4G
 
   entity-linking:
     env_file: [.env]
@@ -123,9 +123,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
         reservations:
-          memory: 2G
+          memory: 4G
  
   entity-detection:
     env_file: [.env]
