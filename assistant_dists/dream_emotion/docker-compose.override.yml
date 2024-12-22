@@ -225,7 +225,7 @@ services:
         GENERATIVE_SERVICE_CONFIG: openai-chatgpt.json
         GENERATIVE_TIMEOUT: 30.0
         N_UTTERANCES_CONTEXT: 1
-        ENVVARS_TO_SEND: OPENAI_API_KEY
+        ENVVARS_TO_SEND: OPENAI_API_KEY,OPENAI_API_BASE
       context: .
       dockerfile: annotators/emotional_bot_response/Dockerfile
     command: flask run -h 0.0.0.0 -p 8050
