@@ -135,10 +135,9 @@ services:
         SERVICE_PORT: 8014
         CONFIG_NAME: intents_model_dp_config.json
         INTENT_PHRASES_PATH: intent_phrases.json
-    command:  python -m flask run -h 0.0.0.0 -p 8014
+    command:  /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) python -m flask run -h 0.0.0.0 -p 8014'
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
     deploy:
       resources:
         limits:
@@ -154,9 +153,8 @@ services:
         SERVICE_NAME: sentence_ranker
         PRETRAINED_MODEL_NAME_OR_PATH: sentence-transformers/all-MiniLM-L6-v2
       context: ./services/sentence_ranker/
-    command: flask run -h 0.0.0.0 -p 8056
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 8056'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -172,9 +170,7 @@ services:
         SERVICE_PORT: 8333
         SERVICE_NAME: voice_service
       context: ./services/voice_service/
-    command: uvicorn server:app --host 0.0.0.0 --port 8333
-    environment:
-      - CUDA_VISIBLE_DEVICES=0
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) uvicorn server:app --host 0.0.0.0 --port 8333'
     deploy:
       resources:
         limits:

@@ -80,10 +80,9 @@ services:
         SERVICE_PORT: 9014
         CONFIG_NAME: intents_model_dp_config.json
         INTENT_PHRASES_PATH: intent_phrases.json
-    command: python -m flask run -h 0.0.0.0 -p 9014
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) python -m flask run -h 0.0.0.0 -p 9014'
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
     deploy:
       resources:
         limits:
@@ -101,10 +100,9 @@ services:
         COMMIT: f5117cd9ad1e64f6c2d970ecaa42fc09ccb23144
       context: ./
       dockerfile: annotators/NER_deeppavlov/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9021
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9021'
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
     tty: true
     deploy:
       resources:
@@ -165,9 +163,8 @@ services:
         FAST: 1
       context: ./
       dockerfile: annotators/wiki_parser/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9077
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9077'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -185,9 +182,8 @@ services:
         CONFIG: qa_eng.json
       context: services/text_qa
       dockerfile: Dockerfile
-    command: flask run -h 0.0.0.0 -p 9078
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9078'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
       - LANGUAGE=EN
     deploy:
@@ -210,9 +206,8 @@ services:
         MAX_HISTORY_DEPTH: 2
       context: .
       dockerfile: ./services/dialogpt/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9125
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9125'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -233,9 +228,8 @@ services:
         COMMIT: 283a25e322e8fedc6ff0c159e4ec76bb165ae405
       context: ./
       dockerfile: annotators/kbqa/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9072
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9072'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -253,9 +247,7 @@ services:
         CONFIG: combined_classifier.json
       context: .
       dockerfile: ./annotators/combined_classification/Dockerfile
-    command: gunicorn --workers=1 server:app -b 0.0.0.0:9087 --timeout 600
-    environment:
-      - CUDA_VISIBLE_DEVICES=0
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) gunicorn --workers=1 server:app -b 0.0.0.0:9087 --timeout 600'
     deploy:
       resources:
         limits:
@@ -277,9 +269,8 @@ services:
         N_FACTS: 3
       context: ./
       dockerfile: annotators/fact_retrieval/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9100
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9100'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -301,10 +292,9 @@ services:
         FINEGRAINED: 0
       context: ./
       dockerfile: annotators/entity_detection/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9103
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9103'
     environment:
       - FLASK_APP=server
-      - CUDA_VISIBLE_DEVICES=0
     deploy:
       resources:
         limits:
@@ -341,9 +331,8 @@ services:
         SERVICE_NAME: sentence_ranker
         PRETRAINED_MODEL_NAME_OR_PATH: sentence-transformers/all-MiniLM-L6-v2
       context: ./services/sentence_ranker/
-    command: flask run -h 0.0.0.0 -p 9128
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9128'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -362,9 +351,8 @@ services:
         ENVVARS_TO_SEND: OPENAI_API_KEY,OPENAI_ORGANIZATION,OPENAI_API_BASE
       context: .
       dockerfile: ./services/openai_api_lm/Dockerfile
-    command: flask run -h 0.0.0.0 -p 9145
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9145'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
@@ -464,9 +452,8 @@ services:
         SERVICE_NAME: dialog_summarizer
         PRETRAINED_MODEL_NAME: "knkarthick/MEETING_SUMMARY"
       context: ./services/dialog_summarizer/
-    command: flask run -h 0.0.0.0 -p 9059
+    command: /bin/bash -c 'CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=memory.free --format=csv,nounits,noheader | nl -v 0 | sort -nrk 2 | cut -f 1 | head -n 1 | xargs) flask run -h 0.0.0.0 -p 9059'
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - FLASK_APP=server
     deploy:
       resources:
