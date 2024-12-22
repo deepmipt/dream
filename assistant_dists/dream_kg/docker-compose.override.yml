@@ -103,7 +103,7 @@ services:
       context: ./
       dockerfile: annotators/entity_linking/Dockerfile
     environment:
-      - CUDA_VISIBLE_DEVICES=1
+      - CUDA_VISIBLE_DEVICES=0
     deploy:
       resources:
         limits:
