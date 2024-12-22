@@ -10,9 +10,11 @@ RUN apt-get update && apt-get install -y --allow-unauthenticated git curl && rm 
 RUN pip install git+https://github.com/deeppavlov/DeepPavlov.git@e2ae2d91edad414736d15520eb1820cb6c06565d && \
         python -m deeppavlov download speech_fn
 
-COPY . ./
+COPY ./requirements.txt ./requirements.txt
 
 RUN pip install -r requirements.txt
+
+COPY . .
 
 ARG SERVICE_NAME
 ENV SERVICE_NAME ${SERVICE_NAME}

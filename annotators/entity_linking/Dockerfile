@@ -34,12 +34,16 @@ ARG SED_ARG=" | "
 ENV CONFIG=$CONFIG
 ENV SERVICE_PORT=$SERVICE_PORT
 
-COPY ./annotators/entity_linking/requirements.txt /src/requirements.txt
-COPY $SRC_DIR /src
 WORKDIR /src
+
+COPY ./annotators/entity_linking/requirements.txt /src/requirements.txt
+
+COPY ./$SRC_DIR/$CONFIG /src/$CONFIG
 
 RUN pip install --upgrade pip && pip install -r /src/requirements.txt && \
     python -m deeppavlov install $CONFIG
+
+COPY $SRC_DIR /src
 
 RUN sed -i "s|$SED_ARG|g" "$CONFIG"
 

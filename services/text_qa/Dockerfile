@@ -9,11 +9,12 @@ ENV CONFIG=$CONFIG
 ENV SERVICE_PORT=$SERVICE_PORT
 
 COPY ./requirements.txt /src/requirements.txt
-COPY . /src
 WORKDIR /src
 
 RUN pip freeze | grep deeppavlov && \
     pip install -r /src/requirements.txt && \
     python -m spacy download en_core_web_sm
+
+COPY . /src
 
 CMD gunicorn --workers=1 --timeout 500 server:app -b 0.0.0.0:8078
