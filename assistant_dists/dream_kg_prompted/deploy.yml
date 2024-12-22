@@ -1,0 +1,66 @@
+# С такими volumes удобно дебажить, не нужно пересобирать контейнер каждый раз при изменении кода
+services:
+  agent:
+    volumes:
+      - ".:/dp-agent"
+    ports:
+      - 6242:4242
+  sentseg:
+    volumes:
+      - "./annotators/SentSeg:/src"
+  ranking-based-response-selector:
+    volumes:
+      - "./response_selectors/ranking_based_response_selector:/src"
+      - "./common:/src/common"
+  ner:
+    volumes:
+      - './annotators/NER_deeppavlov:/src'
+      - "~/.deeppavlov:/root/.deeppavlov"
+  entity-linking:
+    volumes:
+      - "./annotators/entity_linking:/src"
+      - "/archive/evseev/.deeppavlov:/root/.deeppavlov"
+  combined-classification:
+    volumes:
+      - "./common:/src/common"
+      - "./annotators/combined_classification:/src"
+  entity-detection:
+    volumes:
+      - "./annotators/entity_detection:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  custom-entity-linking:
+    volumes:
+      - "./annotators/custom_entity_linking:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  property-extraction:
+    volumes:
+      - "./annotators/property_extraction:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  user-knowledge-memorizer-prompted:
+    volumes:
+      - "./annotators/user_knowledge_memorizer:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  sentence-ranker:
+    volumes:
+      - "./services/sentence_ranker:/src"
+      - "~/.deeppavlov/cache:/root/.cache"
+  prompt-selector:
+    volumes:
+      - "./annotators/prompt_selector:/src"
+      - "./common:/src/common"
+  terminusdb-server:
+    volumes:
+      - "~/.deeppavlov:/root/.deeppavlov"
+  openai-api-chatgpt:
+    volumes:
+      - "./services/openai_api_lm:/src"
+      - "./common:/src/common"
+  dff-knowledge-prompted-skill:
+    volumes:
+      - "./skills/dff_knowledge_prompted_skill:/src"
+      - "./common:/src/common"
+    ports:
+      - 8084:8084
+
+version: "3.7"

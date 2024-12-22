@@ -1,0 +1,63 @@
+# С такими volumes удобно дебажить, не нужно пересобирать контейнер каждый раз при изменении кода
+services:
+  agent:
+    volumes:
+      - ".:/dp-agent"
+    ports:
+      - 5242:4242
+  sentence-ranker:
+    volumes:
+      - "./services/sentence_ranker:/src"
+      - "~/.deeppavlov/cache:/root/.cache"
+  sentseg:
+    volumes:
+      - "./annotators/SentSeg:/src"
+  ranking-based-response-selector:
+    volumes:
+      - "./response_selectors/ranking_based_response_selector:/src"
+      - "./common:/src/common"
+  ner:
+    volumes:
+      - './annotators/NER_deeppavlov:/src'
+      - "~/.deeppavlov:/root/.deeppavlov"
+  entity-linking:
+    volumes:
+      - "./annotators/entity_linking:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+      - "~/.deeppavlov/cache:/root/.cache"
+  combined-classification:
+    volumes:
+      - "./common:/src/common"
+      - "./annotators/combined_classification:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+      - "~/.deeppavlov/cache:/root/.cache"
+  entity-detection:
+    volumes:
+      - "./annotators/entity_detection:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+      - "~/.deeppavlov/cache:/root/.cache"
+  property-extraction:
+    volumes:
+      - "./annotators/property_extraction:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  custom-entity-linking:
+    volumes:
+      - "./annotators/custom_entity_linking:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  terminusdb-server:
+    volumes:
+      - "~/.deeppavlov:/root/.deeppavlov"
+  user-knowledge-memorizer:
+    volumes:
+      - "./annotators/user_knowledge_memorizer:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  dff-user-kg-skill:
+    volumes:
+      - "./skills/dff_user_kg_skill:/src"
+      - "./common:/src/common"
+  dff-travel-italy-skill:
+    volumes:
+      - "./skills/dff_travel_italy_skill:/src"
+      - "./common:/src/common"
+version: "3.7"

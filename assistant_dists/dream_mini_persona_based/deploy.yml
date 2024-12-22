@@ -1,0 +1,53 @@
+# С такими volumes удобно дебажить, не нужно пересобирать контейнер каждый раз при изменении кода
+services:
+  agent:
+    volumes:
+      - ".:/dp-agent"
+  midas-classification:
+    volumes:
+      - "./annotators/midas_classification:/src"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  sentseg:
+    volumes:
+      - "./annotators/SentSeg:/src"
+  convers-evaluation-selector:
+    volumes:
+      - "./response_selectors/convers_evaluation_based_selector:/src"
+      - "./common:/src/common"
+  dff-intent-responder-skill:
+    volumes:
+      - "./skills/dff_intent_responder_skill:/src"
+      - "./common:/src/common"
+  intent-catcher:
+    volumes:
+      - "./annotators/IntentCatcherTransformers:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  badlisted-words:
+    volumes:
+      - "./annotators/BadlistedWordsDetector:/src"
+      - "./common:/src/common"
+  spelling-preprocessing:
+    volumes:
+      - "./annotators/spelling_preprocessing:/src"
+  dialogpt:
+    volumes:
+      - "./services/dialogpt:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+  sentence-ranker:
+    volumes:
+      - "./services/sentence_ranker:/src"
+      - "~/.deeppavlov/cache:/root/.cache"
+  seq2seq-persona-based:
+    volumes:
+      - "./services/seq2seq_persona_based:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8140:8140
+  relative-persona-extractor:
+    volumes:
+      - "./annotators/relative_persona_extractor:/src"
+      - "./common:/src/common"
+version: "3.7"

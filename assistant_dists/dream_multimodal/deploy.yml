@@ -1,0 +1,58 @@
+# С такими volumes удобно дебажить, не нужно пересобирать контейнер каждый раз при изменении кода
+services:
+  agent:
+    volumes:
+      - ".:/dp-agent"
+  files:
+    volumes:
+      - "~/.deeppavlov/file_server:/tmp"
+  sentseg:
+    volumes:
+      - "./annotators/SentSeg:/src"
+  ranking-based-response-selector:
+    volumes:
+      - "./response_selectors/ranking_based_response_selector:/src"
+      - "./common:/src/common"
+  dff-program-y-skill:
+    volumes:
+      - "./skills/dff_program_y_skill:/src"
+      - "./common:/src/common"
+  dff-intent-responder-skill:
+    volumes:
+      - "./skills/dff_intent_responder_skill:/src"
+      - "./common:/src/common"
+  intent-catcher:
+    volumes:
+      - "./annotators/IntentCatcherTransformers:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov:/root/.deeppavlov"
+      - "~/.deeppavlov/cache:/root/.cache"
+  sentence-ranker:
+    volumes:
+      - "./services/sentence_ranker:/src"
+      - "~/.deeppavlov/cache:/root/.cache"
+  prompt-selector:
+    volumes:
+      - "./annotators/prompt_selector:/src"
+      - "./common:/src/common"
+  vidchapters-service:
+    volumes:
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8045:8045
+  dff-vidchapters-skill:
+    volumes:
+      - "./skills/dff_vidchapters_skill:/src"
+      - "./common:/src/common"
+  fromage:
+    volumes:
+      - "./common:/src/common"
+      - "~/.deeppavlov/cache:/root/.cache"
+    ports:
+      - 8069:8069
+  dff-fromage-image-skill:
+    volumes:
+      - "./skills/dff_fromage_image_skill:/src"
+      - "./common:/src/common"
+version: "3.7"

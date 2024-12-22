@@ -1,0 +1,41 @@
+# С такими volumes удобно дебажить, не нужно пересобирать контейнер каждый раз при изменении кода
+services:
+  agent:
+    volumes:
+      - ".:/dp-agent"
+  files:
+    volumes:
+      - "~/.deeppavlov/file_server:/tmp"
+  dff-program-y-skill:
+    volumes:
+      - "./skills/dff_program_y_skill:/src"
+      - "./common:/src/common"
+  sentseg:
+    volumes:
+      - "./annotators/SentSeg:/src"
+  convers-evaluation-selector:
+    volumes:
+      - "./response_selectors/convers_evaluation_based_selector:/src"
+      - "./common:/src/common"
+  dff-intent-responder-skill:
+    volumes:
+      - "./skills/dff_intent_responder_skill:/src"
+      - "./common:/src/common"
+  intent-catcher:
+    volumes:
+      - "./annotators/IntentCatcherTransformers:/src"
+      - "./common:/src/common"
+      - "~/.deeppavlov:/root/.deeppavlov"
+  sentence-ranker:
+    volumes:
+      - "./services/sentence_ranker:/src"
+      - "~/.deeppavlov/cache:/root/.cache"
+  voice-service:
+    volumes:
+      - "~/.deeppavlov/file_server:/tmp"
+    ports:
+      - 8333:8333
+  dff-voice-skill:
+    volumes:
+      - "~/.deeppavlov/file_server:/tmp"
+version: "3.7"
